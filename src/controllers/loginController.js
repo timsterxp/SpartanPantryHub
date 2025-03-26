@@ -24,4 +24,3 @@ export function handleLogout(setUser) {
     setUser(null);
 }
 
-//Add code to send data to database after retrieving the info from user

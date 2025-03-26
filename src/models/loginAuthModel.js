@@ -8,3 +8,6 @@ export function decodeJwt(token) {
     return JSON.parse(atob(base64));
 }
 
+
+
+//Model may potentially hold database operations?
