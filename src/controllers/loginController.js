@@ -1,6 +1,7 @@
 import { decodeJwt } from "../models/loginAuthModel";
 
-const CLIENT_ID = ""; // Replace with your actual Google Client ID
+
+const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID; //Currently using env files for this. Recommend moving our project over to backend auth later on. However, env will be enough for now
 
 export function initializeGoogleLogin(handleCredentialResponse) {
     window.google.accounts.id.initialize({
