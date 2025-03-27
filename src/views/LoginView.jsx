@@ -26,7 +26,10 @@ export default function GoogleLogin() {
                     <button onClick = {()=>handleLogout(setUser)}>Logout</button>
                 </div>
 
+
+
             )}
+
 
         </div>
 
