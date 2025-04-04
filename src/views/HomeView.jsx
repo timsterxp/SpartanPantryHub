@@ -13,11 +13,11 @@ const HomeView = () => {
 
     return (
         <div>
-            <h2>Welcome to the online food pantry {user.name}</h2>
+
             {user ? (
                 <>
 
-
+                    <h2>Welcome to the online food pantry {user.name}</h2>
                     <div className="image-container">
                         <figure>
                             <Link to="/recipe">  <img src ="/placeholder.png" alt="Logo" className ="image" />  </Link>
