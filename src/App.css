@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap');
+
 .App {
   text-align: center;
 }
@@ -38,20 +40,23 @@
 }
 
 html, body {
+  min-height:100vh;
   margin: 0;
   padding: 0;
   height: 100%;
-  background: linear-gradient(to bottom, #F7FEFD 0%, #78B0D0 50%, #949191 90%);
+  font-family: 'Oswald', sans-serif;
 }
 
+
+
 nav {
-  height: 44px;
+  height: 90px;
   background: #323232;
 }
 
 nav ul {
   display: flex;
-  height: 40px;
+  height: 90px;
   justify-content: space-around;
   align-items: center;
   padding: 0;
@@ -77,7 +82,15 @@ nav ul {
 }
 
 .mainContent{
-  padding-top: 20px;
+  padding-top: 10px;
+  background: linear-gradient(
+          to bottom,
+          #F7FEFD 0%,     /* light teal */
+          #CDE5F0 25%,    /* soft pastel blue */
+          #78B0D0 50%,    /* sky blue */
+          #A2B5C3 75%,    /* desaturated blue-gray */
+          #949191 100%    /* soft warm gray */
+  );
 }
 
 /* Review this later */
@@ -98,3 +111,4 @@ nav ul {
   display: inline-block;
   margin-right:10px;
 }
+
