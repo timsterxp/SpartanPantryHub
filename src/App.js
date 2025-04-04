@@ -5,9 +5,15 @@ import RecipeView from './views/RecipeView';
 import RequestRoleView from "./views/RequestRoleView";
 import InventoryView from './views/InventoryView';
 import CheckoutView from './views/CheckoutView';
+import HomeView from "./views/HomeView";
+import {GoogleOAuthProvider} from "@react-oauth/google";
+
 // npm install react-router-dom
+const clientId= process.env.REACT_APP_GOOGLE_CLIENT_ID;
 function App() {
   return (
+
+    <GoogleOAuthProvider clientId={clientId}>
 
 
           <Router>
@@ -15,7 +21,7 @@ function App() {
                   <nav>
                       <div className ="appleNavigation">
                           <ul>
-                              <li> <Link to= "/" className="navItems"> LoginPage</Link> </li>
+                              <li> <Link to= "/home" className="navItems"> Home</Link> </li>
                               <li> <Link to= "/recipe" className="navItems">Recipes</Link></li>
                               <li> <Link to= "/RoleRequest" className="navItems">Role Upgrade</Link></li>
                              <li><Link to= "/Inventory" className="navItems">Check Inventory</Link> </li>
@@ -27,6 +33,7 @@ function App() {
               </div>
               <div className="mainContent">       <Routes>
                   <Route path="/" element={<LoginView />} />
+                  <Route path="/home" element={<HomeView />} />
                   <Route path="/recipe" element = {<RecipeView />} />
                   <Route path="/RoleRequest" element = {<RequestRoleView/>} />
                   <Route path="/Inventory" element = {<InventoryView/>} />
@@ -40,7 +47,7 @@ function App() {
           </Router>
 
 
-
+    </GoogleOAuthProvider>
   );
 }
 
