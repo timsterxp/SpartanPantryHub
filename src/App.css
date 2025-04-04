@@ -43,3 +43,39 @@ html, body {
   height: 100%;
   background: linear-gradient(to bottom, #F7FEFD 0%, #78B0D0 50%, #949191 90%);
 }
+
+nav {
+  height: 44px;
+  background: #323232;
+}
+
+nav ul {
+  display: flex;
+  height: 50 px;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.navItems {
+  display:block;
+  color:white;
+  font-size:20px;
+  font-weight: lighter;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.appleNavigation {
+  max-width:980px;
+  margin: 0 auto;
+}
+
+.wrapper {
+  height:100vh;
+}
+
+.mainContent{
+  padding-top: 20px;
+}
