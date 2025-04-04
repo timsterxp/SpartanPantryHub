@@ -1,37 +1,29 @@
-import { useEffect, useState } from "react";
-import { initializeGoogleLogin, handleGoogleResponse, handleLogout } from "../controllers/loginController";
+import { GoogleLogin } from "@react-oauth/google";
+import { useNavigate } from "react-router-dom";
+import { saveUser } from "../models/UserModel";
+import { processGoogleLogin } from "../models/loginAuthModel";
 
-export default function GoogleLogin() {
-    const [user, setUser] = useState(null);
 
-    useEffect(() => {
-        initializeGoogleLogin((response) => handleGoogleResponse(response, setUser));
-    }, []);
+const LoginView = () => {
+    const navigate = useNavigate();
+
+    const handleLoginSuccess = (credentialResponse) => {
+        const user = processGoogleLogin(credentialResponse);
+        if (user) {
+            saveUser(user);
+            navigate("/home");
+        }
+    };
 
     return (
         <div>
-            <img src="/PantryLogo.png" alt="Logo" />
-            <h1>Welcome to PantryHub, your one stop for the food pantry located on campus!</h1>
-            <h2>The pantry is located next to the Student Union, in front of the Engineering Building and is open Monday - Friday from 10:00 AM - 5:00 PM</h2>
-
-            {!user ? (
-
-                <div id="signInDiv"></div> // Google Sign-In Button
-
-            ) : (
-                <div>
-                    <h2>You are logged in with the following information:</h2>
-                    <h2>Name: {user.name}</h2>
-                    <p>Email: {user.email}</p>
-                    <button onClick = {()=>handleLogout(setUser)}>Logout</button>
-                </div>
-
-
-
-            )}
-
-
+            <h2>Login Page</h2>
+            <GoogleLogin
+                onSuccess={handleLoginSuccess}
+                onError={() => console.log("Login Failed")}
+            />
         </div>
-
     );
-}
+};
+
+export default LoginView;

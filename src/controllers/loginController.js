@@ -1,26 +1,20 @@
-import { decodeJwt } from "../models/loginAuthModel";
+
+import { processGoogleLogin } from "../models/loginAuthModel";
+import { saveUser} from "../models/UserModel";
 
 
-const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID; //Currently using env files for this. Recommend moving our project over to backend auth later on. However, env will be enough for now
+// Function to handle the successful login
+export const handleLoginSuccess = (credentialResponse, navigate) => {
+    const user = processGoogleLogin(credentialResponse);
 
-export function initializeGoogleLogin(handleCredentialResponse) {
-    window.google.accounts.id.initialize({
-        client_id: CLIENT_ID,
-        callback: handleCredentialResponse,  // Pass the response to the callback function
-    });
+    if (user) {
+        saveUser(user); // Save user data in localStorage
+        navigate("/home"); // Redirect to Home View
+    }
+};
 
-    window.google.accounts.id.renderButton(
-        document.getElementById("signInDiv"),
-        { theme: "outline", size: "large" }  // Customize button style
-    );
-}
-export function handleGoogleResponse(response, setUser) {
-    const jwt = response.credential;
-    const user = decodeJwt(jwt);
-    setUser(user);
-}
-
-export function handleLogout(setUser) {
-    setUser(null);
-}
-
+// Function to handle login failure
+export const handleLoginError = () => {
+    console.error("Login Failed");
+    alert("There was an error logging in. Please try again.");
+};
