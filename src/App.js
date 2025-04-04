@@ -15,6 +15,7 @@ function App() {
                   <nav>
                       <div className ="appleNavigation">
                           <ul>
+                              <li> <Link to= "/" className="navItems"> LoginPage</Link> </li>
                               <li> <Link to= "/recipe" className="navItems">Recipes</Link></li>
                               <li> <Link to= "/RoleRequest" className="navItems">Role Upgrade</Link></li>
                              <li><Link to= "/Inventory" className="navItems">Check Inventory</Link> </li>
