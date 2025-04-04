@@ -51,7 +51,7 @@ nav {
 
 nav ul {
   display: flex;
-  height: 50 px;
+  height: 40px;
   justify-content: space-around;
   align-items: center;
   padding: 0;
