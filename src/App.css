@@ -79,3 +79,22 @@ nav ul {
 .mainContent{
   padding-top: 20px;
 }
+
+/* Review this later */
+
+.image-container {
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0;
+  list-style:none;
+  display:flex;
+  justify-content: center;
+}
+
+.image {
+  width: 200px;
+  height: 200px;
+  float: left;
+  display: inline-block;
+  margin-right:10px;
+}
