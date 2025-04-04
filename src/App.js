@@ -11,28 +11,33 @@ function App() {
 
 
           <Router>
-              <Routes>
+              <div>
+                  <nav>
+                      <div className ="appleNavigation">
+                          <ul>
+                              <li> <Link to= "/recipe" className="navItems">Recipes</Link></li>
+                              <li> <Link to= "/RoleRequest" className="navItems">Role Upgrade</Link></li>
+                             <li><Link to= "/Inventory" className="navItems">Check Inventory</Link> </li>
+                             <li> <Link to= "/Checkout" className="navItems">Checkout</Link></li>
+                          </ul>
+                      </div>
+
+                  </nav>
+              </div>
+              <div className="mainContent">       <Routes>
                   <Route path="/" element={<LoginView />} />
                   <Route path="/recipe" element = {<RecipeView />} />
                   <Route path="/RoleRequest" element = {<RequestRoleView/>} />
                   <Route path="/Inventory" element = {<InventoryView/>} />
                   <Route path="/Checkout" element = {<CheckoutView/>} />
-              </Routes>
-              <nav>
-                  <button>
-                      <Link to= "/recipe">Recipes</Link>
-                  </button>
-                  <button>
-                      <Link to= "/RoleRequest">Role Upgrade</Link>
-                  </button>
-                  <button>
-                      <Link to= "/Inventory">Check Inventory</Link>
-                  </button>
-                  <button>
-                      <Link to= "/Checkout">Checkout</Link>
-                  </button>
-              </nav>
+              </Routes></div>
+
+
+
+
+
           </Router>
+
 
 
   );
