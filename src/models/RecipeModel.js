@@ -13,22 +13,28 @@ const RecipeModel = {
         }
 
         recipeText = recipeText.replace(/\*\*/g, ""); //Remove all bolding that OpenAI provides
+
         const recipeName = recipeText.split("\n")[0]; // Get the first line as the recipe name
-        console.log(recipeName);
+
 
         const ingredientsSection = recipeText.match(/Ingredients:[\s\S]*?Instructions:/i);
         const ingredients = ingredientsSection
             ? ingredientsSection[0]
-                .replace(/Ingredients:/i, '')
-                .split("\n")
-                .map(line => line.trim())
-                .filter(line => line && line !== "Ingredients:")
+                .replace(/Ingredients:/i, '')             // Remove the 'Ingredients:' label
+                .replace(/Instructions:/i, '')           // Remove the 'Instructions:' label
+                .split("\n")                             // Split by newlines
+                .map(line => line.trim())                // Trim each line
+                .filter(line => line.length > 0)         // Ensure no empty lines remain
             : [];
 
-        const instructionsSection = recipeText.split("Instructions:")[1];
+        const instructionsSection = recipeText.split("Instructions:")[1];  // Split after 'Instructions:'
         const instructions = instructionsSection
-            ? instructionsSection.split("\n").map(line => line.trim()).filter(line => line)
+            ? instructionsSection
+                .split("\n")                             // Split instructions by lines
+                .map(line => line.trim())                // Trim extra whitespace
+                .filter(line => line.length > 0)         // Ensure no empty lines remain
             : [];
+
 
         return {
             recipeName,
