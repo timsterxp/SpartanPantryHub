@@ -4,6 +4,47 @@
 import React from 'react';
 import {useState} from "react";
 import RecipeController from "../controllers/RecipeController";
+import "./RecipeView.css";
+
+// Move the below code elsewhere later. Set up dummy cards.
+
+const recipes = [
+    {
+        id: 1,
+        name: "Random Spaghetti",
+        ingredients: ["Spaghetti", "Tomato", "Ground Beef", "Onion", "Garlic"],
+        instructions: "Random instructions.",
+    },
+    {
+        id: 2,
+        name: "Avocado Toast",
+        ingredients: ["Bread", "Avocado", "Salt", "Lemon"],
+        instructions: "Toast ... mash... combine",
+    },
+    // Add more recipes as needed
+];
+
+const RecipeCard = ({ recipe, isExpanded, onClick }) => (
+    <div
+        className={`recipe-card ${isExpanded ? 'expanded' : ''}`}
+        onClick={onClick}
+    >
+        <h2 className="recipe-title">{recipe.name}</h2>
+
+        {isExpanded && (
+            <div className="recipe-details">
+                <h3>Ingredients:</h3>
+                <ul>
+                    {recipe.ingredients.map((ing, idx) => (
+                        <li key={idx}>{ing}</li>
+                    ))}
+                </ul>
+                <h3>Instructions:</h3>
+                <p>{recipe.instructions}</p>
+            </div>
+        )}
+    </div>
+);
 
 const RecipeView = () => {
         const [inputValue, setInputValue] = useState("");
@@ -13,6 +54,10 @@ const RecipeView = () => {
             ingredients: [],
             instructions: [],
         })
+        const [expandedId, setExpandedId] = useState(null);
+    const handleCardClick = (id) => {
+        setExpandedId(prev => (prev === id ? null : id));
+    };
 
         const handleChange = (event) => {
             setInputValue(event.target.value);
@@ -44,7 +89,16 @@ const RecipeView = () => {
 
     return (
         <div>
-            <h2>Edit me in RecipeView</h2>
+            <h2>Edit me in RecipeView
+                {recipes.map((recipe) => (
+                    <RecipeCard
+                        key={recipe.id}
+                        recipe={recipe}
+                        isExpanded={expandedId === recipe.id}
+                        onClick={() => handleCardClick(recipe.id)}
+                    />
+                ))}</h2>
+            <h2>Want to generate a whole new recipe? Input your ingredient items below!</h2>
             <input
                 type="text"
                 value={inputValue}
