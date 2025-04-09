@@ -4,6 +4,8 @@ import { saveUser } from "../models/UserModel";
 import { processGoogleLogin } from "../models/loginAuthModel";
 
 
+
+
 const LoginView = () => {
     const navigate = useNavigate();
 
@@ -13,6 +15,7 @@ const LoginView = () => {
             saveUser(user);
             navigate("/home");
         }
+
     };
 
     return (
