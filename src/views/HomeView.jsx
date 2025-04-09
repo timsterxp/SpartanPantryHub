@@ -1,5 +1,6 @@
 import { getUser, clearUser } from "../models/UserModel";
 import { useNavigate, Link } from "react-router-dom";
+import {useEffect} from "react";
 
 
 const HomeView = () => {
@@ -10,6 +11,22 @@ const HomeView = () => {
         clearUser();
         navigate("/");
     };
+
+    useEffect(() => {
+        const pingDB = async() => {
+            try {
+                const res = await fetch("http://localhost:5000/api/test-db-connection");
+                const data = await res.json();
+                console.log("✅ DB Response:", data.message);
+            } catch (err) {
+                console.error("❌ Could not connect to DB:", err);
+            }
+        };
+
+        if (user) {
+            pingDB();
+        }
+    }, [user]);
 
     return (
         <div>

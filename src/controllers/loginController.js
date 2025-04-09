@@ -1,16 +1,13 @@
 
 import { processGoogleLogin } from "../models/loginAuthModel";
 import { saveUser} from "../models/UserModel";
+import { UserModelMongo} from "../models/UserModelMongo";
 
 
 // Function to handle the successful login
-export const handleLoginSuccess = (credentialResponse, navigate) => {
-    const user = processGoogleLogin(credentialResponse);
+export const checkDB = (user) => {
 
-    if (user) {
-        saveUser(user); // Save user data in localStorage
-        navigate("/home"); // Redirect to Home View
-    }
+    UserModelMongo.findOrCreateUser(user);
 };
 
 // Function to handle login failure
