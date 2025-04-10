@@ -9,6 +9,7 @@ import DummyCheckout from './views/DummyCheckout';
 import CheckoutView from './views/CheckoutView';
 import HomeView from "./views/HomeView";
 import {GoogleOAuthProvider} from "@react-oauth/google";
+import UserProfileView from "./views/UserProfileView";
 
 // npm install react-router-dom
 const clientId= process.env.REACT_APP_GOOGLE_CLIENT_ID;
@@ -37,7 +38,7 @@ function App() {
                   <Route path="/" element={<LoginView />} />
                   <Route path="/home" element={<HomeView />} />
                   <Route path="/recipe" element = {<RecipeView />} />
-                  <Route path="/RoleRequest" element = {<RequestRoleView/>} />
+                  <Route path="/RoleRequest" element = {<UserProfileView/>} />
                   <Route path="/Inventory" element = {<InventoryViewConcept/>} />
                   <Route path="/Checkout" element = {<DummyCheckout/>} />
               </Routes></div>
