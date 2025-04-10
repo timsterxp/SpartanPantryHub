@@ -23,8 +23,28 @@ const HomeView = () => {
             }
         };
 
+       async function retrieveUser(name, email){
+            try {
+                const res = await fetch("http://localhost:5000/api/user-check", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({name: name, email:email}),
+                });
+
+
+            } catch (error){
+                console.log(error);
+            }
+
+        };
+
         if (user) {
+            console.log (user.name, user.email);
             pingDB();
+            console.log (user.name, user.email);
+            retrieveUser(user.name,user.email);
         }
     }, [user]);
 
