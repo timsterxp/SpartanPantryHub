@@ -31,13 +31,13 @@
     height: 100px;
     object-fit: cover;
     border-radius: 8px;
-    margin-bottom: 0.5rem;
+    margin-bottom: -1rem;
 }
 
 .item-name {
     font-size: 1.1rem;
     font-weight: bold;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.1rem;
 }
 
 .item-details {

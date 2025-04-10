@@ -4,7 +4,6 @@ import LoginView from './views/LoginView';
 import RecipeView from './views/RecipeView';
 import RequestRoleView from "./views/RequestRoleView";
 import InventoryView from './views/InventoryView';
-import InventoryViewConcept from './views/InventoryViewConcept';
 import DummyCheckout from './views/DummyCheckout';
 import CheckoutView from './views/CheckoutView';
 import HomeView from "./views/HomeView";
@@ -39,7 +38,7 @@ function App() {
                   <Route path="/home" element={<HomeView />} />
                   <Route path="/recipe" element = {<RecipeView />} />
                   <Route path="/RoleRequest" element = {<UserProfileView/>} />
-                  <Route path="/Inventory" element = {<InventoryViewConcept/>} />
+                  <Route path="/Inventory" element = {<InventoryView/>} />
                   <Route path="/Checkout" element = {<DummyCheckout/>} />
               </Routes></div>
 
