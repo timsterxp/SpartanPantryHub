@@ -42,6 +42,27 @@ async function getUserNames() {
     } catch (err) {
         console.error("Error fetching users:", err);
     }
+
+}
+
+async function checkUser(name, email){
+    try {
+        const db = await connectToDB();
+        const usersCollections = db.collection("users");
+        let user = await usersCollections.findOne({ email });
+        if (!user) {
+            const newUser = {name: name, email: email, role: 'guest'};
+            const result = await usersCollections.insertOne(newUser);
+            user = {_id: result._id, ...newUser};
+            console.log("new user created", user);
+        }else {
+            console.log("User already exists!");
+
+        }
+    }catch (error){
+        console.error("Error creating user:", error);
+    }
+
 }
 
 async function listCollections() {
@@ -64,4 +85,4 @@ async function listCollections() {
 
 
 
-module.exports = { connectToDB, getUserNames, listCollections };
+module.exports = { connectToDB, getUserNames, listCollections, checkUser };
