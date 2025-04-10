@@ -5,6 +5,7 @@ import RecipeView from './views/RecipeView';
 import RequestRoleView from "./views/RequestRoleView";
 import InventoryView from './views/InventoryView';
 import InventoryViewConcept from './views/InventoryViewConcept';
+import DummyCheckout from './views/DummyCheckout';
 import CheckoutView from './views/CheckoutView';
 import HomeView from "./views/HomeView";
 import {GoogleOAuthProvider} from "@react-oauth/google";
@@ -38,7 +39,7 @@ function App() {
                   <Route path="/recipe" element = {<RecipeView />} />
                   <Route path="/RoleRequest" element = {<RequestRoleView/>} />
                   <Route path="/Inventory" element = {<InventoryViewConcept/>} />
-                  <Route path="/Checkout" element = {<CheckoutView/>} />
+                  <Route path="/Checkout" element = {<DummyCheckout/>} />
               </Routes></div>
 
 
