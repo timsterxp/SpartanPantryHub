@@ -11,3 +11,21 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.inventory .inventory-image{
+  width: 100px;
+  height: 100px;
+  margin-bottom: -40px;
+}
+.inventory-text {
+font-family: Arial, Helvetica, sans-serif;
+position: relative;
+bottom: 60px;
+left: 110px;
+}
+.inventory-text1 {
+  font-family: Arial, Helvetica, sans-serif;
+  position: relative;
+  bottom: 58px;
+  left: 110px;
+  }
