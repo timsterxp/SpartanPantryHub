@@ -20,7 +20,7 @@ function App() {
 
 
           <Router>
-              <div>
+              <div className = "mainContent">
                   <nav>
                       <div className ="appleNavigation">
                           <ul>
@@ -33,15 +33,16 @@ function App() {
                       </div>
 
                   </nav>
+                  <div className="mainContent">       <Routes>
+                      <Route path="/" element={<LoginView />} />
+                      <Route path="/home" element={<HomeView />} />
+                      <Route path="/recipe" element = {<RecipeView />} />
+                      <Route path="/RoleRequest" element = {<UserProfileView/>} />
+                      <Route path="/Inventory" element = {<InventoryView/>} />
+                      <Route path="/Checkout" element = {<DummyCheckout/>} />
+                  </Routes></div>
               </div>
-              <div className="mainContent">       <Routes>
-                  <Route path="/" element={<LoginView />} />
-                  <Route path="/home" element={<HomeView />} />
-                  <Route path="/recipe" element = {<RecipeView />} />
-                  <Route path="/RoleRequest" element = {<UserProfileView/>} />
-                  <Route path="/Inventory" element = {<InventoryView/>} />
-                  <Route path="/Checkout" element = {<DummyCheckout/>} />
-              </Routes></div>
+
 
 
 

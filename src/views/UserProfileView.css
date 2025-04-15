@@ -1,7 +1,55 @@
 #user1:checked ~ #studentid{
     display:block;
 }
-
+/*
+Might not use these 2 anymore
+ */
 #studentid {
+
     display: none;
+}
+
+.user-profile-container {
+    max-width: 500px;
+    padding: 20px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    font-family: Arial, sans-serif;
+
+}
+
+.change-role-button {
+    padding: 10px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.change-role-button:hover {
+    background-color: #0056b3;
+}
+
+.dropdown-container {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.role-select,
+.student-id-input {
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.instruction-text {
+    font-size: 14px;
+    color: #555;
+    margin-top: -4px;
 }
