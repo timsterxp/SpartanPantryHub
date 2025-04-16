@@ -73,6 +73,10 @@ const HomeView = () => {
                             <Link to="/Checkout">  <img src ="/placeholder.png" alt="Logo" className ="image" />  </Link>
                             <figcaption> Checkout </figcaption>
                         </figure>
+                        <figure>
+                            <Link to="/Orders">  <img src ="/placeholder.png" alt="Logo" className ="image" />  </Link>
+                            <figcaption> Order History </figcaption>
+                        </figure>
 
                     </div>
                     <div className="centered">
