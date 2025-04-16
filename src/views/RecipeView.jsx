@@ -11,40 +11,38 @@ import "./RecipeView.css";
 const recipes = [
     {
         id: 1,
-        name: "Random Spaghetti",
-        ingredients: ["Spaghetti", "Tomato", "Ground Beef", "Onion", "Garlic"],
-        instructions: "Random instructions.",
+        name: 'Spaghetti Carbonara',
+        ingredients: ['Spaghetti', 'Eggs', 'Pancetta', 'Parmesan Cheese', 'Black Pepper'],
+        instructions: [
+            'Boil pasta until al dente.',
+            'Cook pancetta until crispy.',
+            'Mix eggs and cheese in a bowl.',
+            'Combine all ingredients and stir over low heat.'
+        ]
     },
     {
         id: 2,
-        name: "Avocado Toast",
-        ingredients: ["Bread", "Avocado", "Salt", "Lemon"],
-        instructions: "Toast ... mash... combine",
+        name: 'Chicken Alfredo',
+        ingredients: ['Fettuccine', 'Chicken Breast', 'Heavy Cream', 'Butter', 'Parmesan'],
+        instructions: [
+            'Cook pasta.',
+            'Sauté chicken until golden.',
+            'Simmer cream and butter, add cheese.',
+            'Combine everything together.'
+        ]
     },
+    {
+        id: 3,
+        name: 'Beef Tacos',
+        ingredients: ['Ground Beef', 'Taco Shells', 'Lettuce', 'Cheddar', 'Salsa'],
+        instructions: [
+            'Cook beef with seasoning.',
+            'Assemble in taco shells with toppings.'
+        ]
+    }
     // Add more recipes as needed
 ];
 
-const RecipeCard = ({ recipe, isExpanded, onClick }) => (
-    <div
-        className={`recipe-card ${isExpanded ? 'expanded' : ''}`}
-        onClick={onClick}
-    >
-        <h2 className="recipe-title">{recipe.name}</h2>
-
-        {isExpanded && (
-            <div className="recipe-details">
-                <h3>Ingredients:</h3>
-                <ul>
-                    {recipe.ingredients.map((ing, idx) => (
-                        <li key={idx}>{ing}</li>
-                    ))}
-                </ul>
-                <h3>Instructions:</h3>
-                <p>{recipe.instructions}</p>
-            </div>
-        )}
-    </div>
-);
 
 const RecipeView = () => {
         const [inputValue, setInputValue] = useState("");
@@ -54,9 +52,16 @@ const RecipeView = () => {
             ingredients: [],
             instructions: [],
         })
-        const [expandedId, setExpandedId] = useState(null);
-    const handleCardClick = (id) => {
-        setExpandedId(prev => (prev === id ? null : id));
+    const [searchQuery, setSearchQuery] = useState('');
+    const [expanded, setExpanded] = useState(null);
+    const [clickedButton, setClickedButton] = useState(false);
+
+    const filteredRecipes = recipes.filter(recipe =>
+        recipe.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const toggleExpand = (id) => {
+        setExpanded(prev => (prev === id ? null : id));
     };
 
         const handleChange = (event) => {
@@ -65,7 +70,7 @@ const RecipeView = () => {
 
     const handleConfirm = async () => {
         if (!inputValue) return;
-
+        setClickedButton(true);
         const response = await RecipeController.sendRecipeToAPI(inputValue);
 
         //Note that server response is just me checking to see what my backend is sending. Do not use serverResponse anywhere
@@ -88,17 +93,50 @@ const RecipeView = () => {
     };
 
     return (
-        <div>
-            <h2>Edit me in RecipeView
-                {recipes.map((recipe) => (
-                    <RecipeCard
+        <div className="recipe-container">
+            <h1 className="recipe-title">Recipes</h1>
+            <input
+                type="text"
+                placeholder="Search recipes..."
+                className="search-bar"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+            />
+
+            <div className="recipe-grid">
+                {filteredRecipes.map((recipe) => (
+                    <div
                         key={recipe.id}
-                        recipe={recipe}
-                        isExpanded={expandedId === recipe.id}
-                        onClick={() => handleCardClick(recipe.id)}
-                    />
-                ))}</h2>
-            <h2>Want to generate a whole new recipe? Input your ingredient items below!</h2>
+                        className="recipe-card"
+                        onClick={() => toggleExpand(recipe.id)}
+                    >
+                        <h2 className="recipe-name">{recipe.name}</h2>
+
+                        {expanded === recipe.id && (
+                            <div className="recipe-details">
+                                <h3>Ingredients:</h3>
+                                <ul>
+                                    {recipe.ingredients.map((item, idx) => (
+                                        <li key={idx}>{item}</li>
+                                    ))}
+                                </ul>
+
+                                <h3>Instructions:</h3>
+                                <ol>
+                                    {recipe.instructions.map((step, idx) => (
+                                        <li key={idx}>{step}</li>
+                                    ))}
+                                </ol>
+                            </div>
+                        )}
+                    </div>
+                ))}
+
+                {filteredRecipes.length === 0 && (
+                    <p className="no-results">No recipes match your search.</p>
+                )}
+            </div>
+            <h2> Can't find a recipe you like? Generate one here with your ingredients! Note that it'll take a few seconds to generate! </h2>
             <input
                 type="text"
                 value={inputValue}
@@ -106,12 +144,21 @@ const RecipeView = () => {
                 placeholder="Enter inventory item"
             />
             <button onClick={handleConfirm}>Confirm</button>
-            <h2>{recipe.recipeName}</h2>
-            <h2>Ingredients:</h2>
+            {clickedButton &&
+                <div>
+                    <h2>{recipe.recipeName}</h2>
+                <h2>Ingredients:</h2>
             {renderList(recipe.ingredients)}
-            <h2>Instructions:</h2>
+                <h2>Instructions:</h2>
             {renderList(recipe.instructions)}
+                </div>
+
+
+            }
+
         </div>
+
+
     );
 };
 
