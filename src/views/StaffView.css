@@ -1,0 +1,100 @@
+.staff-view {
+    padding: 20px;
+    font-family: sans-serif;
+    max-width: 800px;
+    margin: auto;
+}
+
+.section {
+    margin-bottom: 40px;
+}
+
+.role-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.role-table th,
+.role-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+
+.role-table input {
+    width: 100%;
+    padding: 6px;
+    box-sizing: border-box;
+}
+
+.orders-list {
+    list-style: none;
+    padding: 0;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    background: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+.order-info {
+    flex: 1;
+}
+
+.item-list {
+    margin: 5px 0 0 0;
+    padding-left: 16px;
+}
+
+.order-item button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    height: fit-content;
+    margin-left: 16px;
+}
+
+.order-item button:hover {
+    background-color: #218838;
+}
+
+.action-btn {
+    display: flex;
+    gap: 10px;
+}
+
+.accept,
+.deny {
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+
+.accept {
+    background-color: #28a745;
+}
+
+.accept:hover {
+    background-color: #218838;
+}
+
+.deny {
+    background-color: #dc3545;
+}
+
+.deny:hover {
+    background-color: #c82333;
+}

@@ -9,6 +9,7 @@ import CheckoutView from './views/CheckoutView';
 import HomeView from "./views/HomeView";
 import {GoogleOAuthProvider} from "@react-oauth/google";
 import UserProfileView from "./views/UserProfileView";
+import StaffView from "./views/StaffView";
 
 
 // npm install react-router-dom
@@ -29,6 +30,7 @@ function App() {
                               <li> <Link to= "/RoleRequest" className="navItems">Profile</Link></li>
                              <li><Link to= "/Inventory" className="navItems">Check Inventory</Link> </li>
                              <li> <Link to= "/Checkout" className="navItems">Checkout</Link></li>
+                              <li><Link to="/StaffActions" className="navItems">Staff Actions</Link></li>
                           </ul>
                       </div>
 
@@ -40,6 +42,7 @@ function App() {
                       <Route path="/RoleRequest" element = {<UserProfileView/>} />
                       <Route path="/Inventory" element = {<InventoryView/>} />
                       <Route path="/Checkout" element = {<DummyCheckout/>} />
+                      <Route path="/StaffActions" element = {<StaffView/>} />
                   </Routes></div>
               </div>
 
