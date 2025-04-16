@@ -89,7 +89,7 @@ const HomeView = () => {
                         <h2> Thursday 10:00 AM - 5:00 PM</h2>
                         <h2> Friday 10:00 AM - 5:00 PM</h2>
                         <img src="/PantryLogo.png" alt="Logo" />
-                        <h2></h2>
+                        <th></th>
                         <button onClick = {()=>handleLogout()}>Logout</button></div>
 
                 </>
