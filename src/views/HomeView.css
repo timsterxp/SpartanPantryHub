@@ -1,0 +1,9 @@
+.centered {
+    width: 800px;       /* Set your desired width */
+    margin: 0 auto;     /* Horizontally center the div */
+    text-align: center; /* Optional: center text inside the div */
+}
+figcaption {
+    text-align:center;
+
+}
