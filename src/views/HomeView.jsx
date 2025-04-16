@@ -73,6 +73,10 @@ const HomeView = () => {
                             <Link to="/Checkout">  <img src ="/placeholder.png" alt="Logo" className ="image" />  </Link>
                             <figcaption> Checkout </figcaption>
                         </figure>
+                        <figure>
+                            <Link to="/Orders">  <img src ="/placeholder.png" alt="Logo" className ="image" />  </Link>
+                            <figcaption> Order History </figcaption>
+                        </figure>
 
                     </div>
                     <div className="centered">
@@ -85,7 +89,7 @@ const HomeView = () => {
                         <h2> Thursday 10:00 AM - 5:00 PM</h2>
                         <h2> Friday 10:00 AM - 5:00 PM</h2>
                         <img src="/PantryLogo.png" alt="Logo" />
-                        <h2></h2>
+                        <th></th>
                         <button onClick = {()=>handleLogout()}>Logout</button></div>
 
                 </>
