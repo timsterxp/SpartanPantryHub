@@ -11,6 +11,7 @@ import {GoogleOAuthProvider} from "@react-oauth/google";
 import UserProfileView from "./views/UserProfileView";
 import StaffView from "./views/StaffView";
 import OrderView from "./views/OrdersView";
+import OrderEdit from "./views/OrderEditView";
 
 
 // npm install react-router-dom
@@ -33,6 +34,7 @@ function App() {
                              <li> <Link to= "/Checkout" className="navItems">Checkout</Link></li>
                               <li> <Link to="/Orders" className="navItems">Order History</Link></li>
                               <li><Link to="/StaffActions" className="navItems">Staff Actions</Link></li>
+                              <li><Link to="/OrderEditView" className="navItems">Edit Order</Link></li>
                           </ul>
                       </div>
 
@@ -46,6 +48,7 @@ function App() {
                       <Route path="/Checkout" element = {<DummyCheckout/>} />
                       <Route path="/StaffActions" element = {<StaffView/>} />
                       <Route path="/Orders" element = {<OrderView/>} />
+                      <Route path="/OrderEditView" element = {<OrderEdit/>} />
                   </Routes></div>
               </div>
 
