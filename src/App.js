@@ -26,7 +26,7 @@ function App() {
                           <ul>
                               <li> <Link to= "/home" className="navItems"> Home</Link> </li>
                               <li> <Link to= "/recipe" className="navItems">Recipes</Link></li>
-                              <li> <Link to= "/RoleRequest" className="navItems">Role Upgrade</Link></li>
+                              <li> <Link to= "/RoleRequest" className="navItems">Profile</Link></li>
                              <li><Link to= "/Inventory" className="navItems">Check Inventory</Link> </li>
                              <li> <Link to= "/Checkout" className="navItems">Checkout</Link></li>
                           </ul>
