@@ -5,7 +5,7 @@
     padding: 1rem;
 }
 
-.item-card {
+.item-card-inventory {
     background-color: white;
     border: 2px solid #ccc;
     border-radius: 12px;
@@ -16,12 +16,12 @@
     text-align: center;
 }
 
-.item-card:hover {
+.item-card-inventory:hover {
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     border-color: #007bff;
 }
 
-.item-card.expanded {
+.item-card-inventory.expanded {
     transform: scale(1.03);
     border-color: #0056b3;
 }

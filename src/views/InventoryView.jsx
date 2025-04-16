@@ -98,7 +98,7 @@ const InventoryView = () => {
             {inventoryItems.map(item => (
                 <div
                     key={item.id}
-                    className={`item-card ${expandedItem === item.id ? 'expanded' : ''}`}
+                    className={`item-card-inventory ${expandedItem === item.id ? 'expanded' : ''}`}
                     onClick={() => handleToggle(item.id)}
                 >
                     <img src={item.imageUrl} alt={item.name} className="item-image" />
