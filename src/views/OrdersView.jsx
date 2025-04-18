@@ -29,7 +29,7 @@ const OrdersView = () => {
             datePlaced: '2025-04-05',
             status: 'Picked Up',
             items: [
-                { name: 'Beef Stew', quantity: 3 },
+                { name: 'Cucumber', quantity: 3 },
                 { name: 'RTE', quantity: 1 },
             ],
         },
