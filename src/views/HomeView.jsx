@@ -58,23 +58,23 @@ const HomeView = () => {
                     <h2 className="centered">Welcome, {user.name}</h2>
                     <div className="image-container">
                         <figure>
-                            <Link to="/recipe">  <img src ="/placeholder.png" alt="Logo" className ="image" />  </Link>
+                            <Link to="/recipe">  <img src ="https://www.iconpacks.net/icons/2/free-opened-book-icon-3163-thumb.png" alt="Logo" className ="image" />  </Link>
                             <figcaption> Recipes</figcaption>
                         </figure>
                         <figure>
-                            <Link to="/RoleRequest">  <img src ="/placeholder.png" alt="Logo" className ="image" />  </Link>
+                            <Link to="/RoleRequest">  <img src ="https://cdn-icons-png.flaticon.com/512/6522/6522516.png" alt="Logo" className ="image" />  </Link>
                             <figcaption> Profile</figcaption>
                         </figure>
                         <figure>
-                            <Link to="/Inventory">  <img src ="/placeholder.png" alt="Logo" className ="image" />  </Link>
+                            <Link to="/Inventory">  <img src ="https://cdn-icons-png.flaticon.com/512/3081/3081986.png" alt="Logo" className ="image" />  </Link>
                             <figcaption> Inventory </figcaption>
                         </figure>
                         <figure>
-                            <Link to="/Checkout">  <img src ="/placeholder.png" alt="Logo" className ="image" />  </Link>
+                            <Link to="/Checkout">  <img src ="https://cdn0.iconfinder.com/data/icons/shopping-and-commerce-outline/512/Shopping_and_Commerce_-_Outline_21-512.png" alt="Logo" className ="image" />  </Link>
                             <figcaption> Checkout </figcaption>
                         </figure>
                         <figure>
-                            <Link to="/Orders">  <img src ="/placeholder.png" alt="Logo" className ="image" />  </Link>
+                            <Link to="/Orders">  <img src ="https://static.thenounproject.com/png/3157802-200.png" alt="Logo" className ="image" />  </Link>
                             <figcaption> Order History </figcaption>
                         </figure>
 

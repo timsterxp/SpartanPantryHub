@@ -20,7 +20,7 @@ const StaffView = () => {
             id: 2,
             user: 'Dana',
             items: [
-                { name: 'Beef Stew', quantity: 3 },
+                { name: 'Radish', quantity: 12 },
                 { name: 'RTE', quantity: 1 }
             ]
         }
