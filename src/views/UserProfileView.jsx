@@ -8,18 +8,32 @@ const user = getUser();
 const UserProfileView = () => {
     const [showDropdown, setShowDropdown] = useState(false);
     const [selectedRole,setSelectedRole] = useState('');
-    const [studentId, setStudentId] = useState('');
+    const [text, setText] = useState('');
 
-    const handleConfirm = () => {
-        if (selectedRole === 'Student' && !studentId) {
+    const handleConfirm = async () => {
+        if (selectedRole === 'Student' && !text) {
             alert('Please enter a Student ID.');
             return;
         }
+        try {
+            const res = await fetch("http://localhost:5000/api/send-role-request",{
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({name:user.name,email:user.email,role:selectedRole,text:text}),
+            });
+
+        }catch (error){
+            console.error("Error creating request:", error);
+        }
     }
+
+
 
         const updatedData = {
             role: selectedRole,
-            studentId: selectedRole === 'Student' ? studentId : null,
+            studentId: selectedRole === 'Student' ? text : null,
         };
 
 
@@ -61,8 +75,8 @@ const UserProfileView = () => {
                                 <input
                                     type="text"
                                     placeholder="Enter Student ID"
-                                    value={studentId}
-                                    onChange={(e) => setStudentId(e.target.value)}
+                                    value={text}
+                                    onChange={(e) => setText(e.target.value)}
                                 />
                             </>
                         )}
@@ -80,6 +94,8 @@ const UserProfileView = () => {
                                 <input
                                     type="text"
                                     placeholder=""
+                                    value = {text}
+                                    onChange={(e) => setText(e.target.value)}
                                 />
                             </>
                         )}
