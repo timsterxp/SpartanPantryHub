@@ -28,6 +28,19 @@ async function connectToDB() {
     return db;
 }
 
+async function retrieveRequests(req,res) {
+    try {
+        if (!db){
+            const db = await connectToDB();
+        }
+        const requestCollections = db.collection("requests");
+        const allRequests = await requestCollections.find({}).toArray();
+        res.json(allRequests);
+    } catch (err) {
+        console.error("Error connecting to MongoDB:", err);
+    }
+}
+
 //Fx to test the users collection db and that MongoDB can read it
 
 async function getUserNames() {
@@ -93,4 +106,4 @@ async function listCollections() {
 
 
 
-module.exports = { connectToDB, getUserNames, listCollections, checkUser, sendRequestToDB };
+module.exports = { connectToDB, getUserNames, listCollections, checkUser, sendRequestToDB, retrieveRequests };

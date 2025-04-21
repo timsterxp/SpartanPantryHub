@@ -1,5 +1,5 @@
 const express = require('express');
-const {connectToDB,  checkUser, sendRequestToDB } = require('./MongoModel');
+const {connectToDB,  checkUser, sendRequestToDB,retrieveRequests } = require('./MongoModel');
 const cors = require ('cors');
 
 
@@ -19,6 +19,9 @@ app.get("/api/test-db-connection", async (req, res) => {
         res.status(500).json({ error: "MongoDB connection failed", details: err.message });
     }
 });
+
+//Note, need to fix send role-request to also send current role.
+app.get("/api/retrieve-request", retrieveRequests);
 
 app.post("/api/user-check", async(req, res) => {
     const {name, email} = req.body;

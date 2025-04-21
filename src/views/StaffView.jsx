@@ -1,11 +1,8 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './StaffView.css';
 
 const StaffView = () => {
-    const [roleRequests, setRoleRequests] = useState([
-        { id: 1, name: 'Tim Nguyen', email: 'random@example.com', currentRole: 'Guest', newRole: 'Student', notes: '11111111' },
-        { id: 2, name: 'Vance Nguyen', email: 'vn@example.com', currentRole: 'Guest', newRole: 'Staff', notes: '' },
-    ]);
+    const [roleRequests, setRoleRequests] = useState([]);
 
     const [orders, setOrders] = useState([
         {
@@ -50,6 +47,9 @@ const StaffView = () => {
         setOrders(prev => prev.filter(req => req.id!==id));
     };
 
+    useEffect(()=>{
+        fetch('http://localhost:5000/api/retrieve-request').then(res => res.json()).then((data) => setRoleRequests(data)).catch((err) => console.log(err));
+    })
     return (
         <div className="staff-view">
             <div className="section">
@@ -72,10 +72,10 @@ const StaffView = () => {
                             <td>{req.name}</td>
                             <td>{req.email}</td>
                             <td>{req.currentRole}</td>
-                            <td>{req.newRole}</td>
+                            <td>{req.role}</td>
                             <td>
 
-                                  {req.notes}
+                                  {req.text}
 
                             </td>
                             <td>
