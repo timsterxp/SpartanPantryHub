@@ -1,5 +1,5 @@
 const express = require('express');
-const {connectToDB, checkUser,getUserNames, listCollections, db} = require('./MongoModel');
+const {connectToDB,  checkUser, sendRequestToDB } = require('./MongoModel');
 const cors = require ('cors');
 
 
@@ -27,6 +27,16 @@ app.post("/api/user-check", async(req, res) => {
         await checkUser(name, email);
     } catch (error){
         console.error("MongoDB error:", error);
+    }
+});
+
+app.post("/api/send-role-request", async(req, res) => {
+    const {name, email, role, text} = req.body;
+
+    try {
+        await sendRequestToDB(name, email, role, text);
+    } catch (err) {
+        console.error("MongoDB error:", err);
     }
 });
 

@@ -18,11 +18,8 @@ const client = new MongoClient(uri, {
 let db;
 async function connectToDB() {
     try {
-        console.log("Attempting to connect to MongoDB...");
         await client.connect();
-        console.log("MongoDB connection successful");
         await client.db("admin").command({ ping: 1 });
-        console.log("Pinged MongoDB deployment. Connection successful!");
         db = client.db("PantryHub");
     } catch (err) {
         console.error("Error connecting to MongoDB:", err);  // Log the specific error
@@ -30,6 +27,8 @@ async function connectToDB() {
     }
     return db;
 }
+
+//Fx to test the users collection db and that MongoDB can read it
 
 async function getUserNames() {
     try {
@@ -54,10 +53,7 @@ async function checkUser(name, email){
             const newUser = {name: name, email: email, role: 'guest'};
             const result = await usersCollections.insertOne(newUser);
             user = {_id: result._id, ...newUser};
-            console.log("new user created", user);
         }else {
-            console.log("User already exists!");
-
         }
     }catch (error){
         console.error("Error creating user:", error);
@@ -65,6 +61,18 @@ async function checkUser(name, email){
 
 }
 
+async function sendRequestToDB(name,email, role, text){
+    try {
+        const db = await connectToDB();
+        const requestCollections = db.collection("requests");
+        const newRequest = {name: name, email: email, role: role, text: text};
+        const result = await requestCollections.insertOne(newRequest);
+    }catch (error){
+        console.error("Error creating request:", error);
+    }
+}
+
+//Fx to test all collections in MongoDB ' delete later.
 async function listCollections() {
     if (!db) {
         console.error("❌ DB connection is not established.");
@@ -85,4 +93,4 @@ async function listCollections() {
 
 
 
-module.exports = { connectToDB, getUserNames, listCollections, checkUser };
+module.exports = { connectToDB, getUserNames, listCollections, checkUser, sendRequestToDB };
