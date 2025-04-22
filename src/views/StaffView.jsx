@@ -3,6 +3,7 @@ import './StaffView.css';
 
 const StaffView = () => {
     const [roleRequests, setRoleRequests] = useState([]);
+    const [updateFlag, setUpdateFlag] = useState(false); // Calling this after each confirm/deny to update the state more cleaner.
 
     const [orders, setOrders] = useState([
         {
@@ -24,18 +25,43 @@ const StaffView = () => {
     ]);
 
 
-    const handleConfirmRoleRequest = (id,email,role) => {
+    const handleConfirmRoleRequest = async (id,email,role,text) => {
        // add code to change in database
+        try {
+            const res = await fetch("http://localhost:5000/api/role-change", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({email: email, role:role, text:text}),
+            });
 
-        // This code just filters out whatever id was clicked but as this is dummy code, refreshing will put it back
-        setRoleRequests(prev => prev.filter(req => req.id!==id));
+
+        } catch (error){
+            console.log(error);
+        }
+        setUpdateFlag(prev=>!prev);
+        setRoleRequests( prev => prev.filter(req => req.id!==id));
 
     };
 
-    const handleDenyRoleRequest = (id,email) => {
+    const handleDenyRoleRequest = async (id,email) => {
         // add code to change in database
+        try {
+            const res = await fetch("http://localhost:5000/api/role-change-deny", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({email: email}),
+            });
 
-        setRoleRequests(prev => prev.filter(req => req.id!==id));
+
+        } catch (error){
+            console.log(error);
+        }
+        setUpdateFlag(prev=>!prev);
+        setRoleRequests( prev => prev.filter(req => req.id!==id));
     };
 
     const handleConfirmOrder = (id) => {
@@ -49,7 +75,7 @@ const StaffView = () => {
 
     useEffect(()=>{
         fetch('http://localhost:5000/api/retrieve-request').then(res => res.json()).then((data) => setRoleRequests(data)).catch((err) => console.log(err));
-    })
+    },[updateFlag]);
     return (
         <div className="staff-view">
             <div className="section">
@@ -80,7 +106,7 @@ const StaffView = () => {
                             </td>
                             <td>
                                 <div className="action-btn">
-                                    <button className="accept" onClick={() => handleConfirmRoleRequest(req.id, req.email, req.newRole)}>
+                                    <button className="accept" onClick={() => handleConfirmRoleRequest(req.id, req.email, req.role,req.text)}>
                                         Accept
                                     </button>
 
