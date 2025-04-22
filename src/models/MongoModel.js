@@ -84,6 +84,39 @@ async function sendRequestToDB(name,email, role, text){
         console.error("Error creating request:", error);
     }
 }
+//Need to add studentID aspect if student
+async function changeRole(email, role, text){
+    try {
+        if (!db){
+            const db = await connectToDB();
+        }
+        const usersCollections = db.collection("users");
+        const updating = await usersCollections.findOneAndUpdate(
+            { email},
+            { $set: {role:role, text: text}},
+
+        )
+       await removeRequest(email);
+
+    } catch (err) {
+        console.error("Error connecting to MongoDB:", err);
+    }
+}
+
+async function removeRequest(email){
+    try {
+        if (!db){
+            const db = await connectToDB();
+        }
+        const requestsCollections = db.collection("requests");
+        const deleting = await requestsCollections.findOneAndDelete(
+            { email: email }
+        )
+    } catch (err) {
+        console.error("Error connecting to MongoDB:", err);
+    }
+
+}
 
 //Fx to test all collections in MongoDB ' delete later.
 async function listCollections() {
@@ -106,4 +139,4 @@ async function listCollections() {
 
 
 
-module.exports = { connectToDB, getUserNames, listCollections, checkUser, sendRequestToDB, retrieveRequests };
+module.exports = { connectToDB, getUserNames, listCollections, checkUser, sendRequestToDB, retrieveRequests, changeRole,removeRequest };
