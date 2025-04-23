@@ -40,8 +40,7 @@ const StaffView = () => {
         } catch (error){
             console.log(error);
         }
-        setUpdateFlag(prev=>!prev);
-        setRoleRequests( prev => prev.filter(req => req.id!==id));
+        setRoleRequests( prev => prev.filter(req => req.email!==email));
 
     };
 
@@ -61,7 +60,7 @@ const StaffView = () => {
             console.log(error);
         }
         setUpdateFlag(prev=>!prev);
-        setRoleRequests( prev => prev.filter(req => req.id!==id));
+        setRoleRequests( prev => prev.filter(req => req.email!==email));
     };
 
     const handleConfirmOrder = (id) => {
@@ -75,7 +74,7 @@ const StaffView = () => {
 
     useEffect(()=>{
         fetch('http://localhost:5000/api/retrieve-request').then(res => res.json()).then((data) => setRoleRequests(data)).catch((err) => console.log(err));
-    },[updateFlag]);
+    });
     return (
         <div className="staff-view">
             <div className="section">
@@ -106,9 +105,10 @@ const StaffView = () => {
                             </td>
                             <td>
                                 <div className="action-btn">
-                                    <button className="accept" onClick={() => handleConfirmRoleRequest(req.id, req.email, req.role,req.text)}>
-                                        Accept
-                                    </button>
+
+                                        <button className="accept" onClick={() => handleConfirmRoleRequest(req.id, req.email, req.role,req.text)}>
+                                            Accept
+                                        </button>
 
                                     <button className="deny" onClick={() => handleDenyRoleRequest(req.id, req.email)}>
                                         Deny
