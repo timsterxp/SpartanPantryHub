@@ -1,6 +1,6 @@
 import { getUser, clearUser } from "../models/UserModel";
 import './UserProfileView.css';
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 
 const user = getUser();
 
@@ -9,14 +9,25 @@ const UserProfileView = () => {
     const [showDropdown, setShowDropdown] = useState(false);
     const [selectedRole,setSelectedRole] = useState('');
     const [text, setText] = useState('');
+    const [roleRequested, setRoleRequested] = useState('');
 
     const handleConfirm = async () => {
         if (selectedRole === 'Student' && !text) {
             alert('Please enter a Student ID.');
             return;
         }
+        if (roleRequested.role === selectedRole){
+            alert("This is a role you are already requesting. Please be patient");
+            return;
+        }
+        if (roleRequested){
+            alert("You already have a pending request");
+            return;
+        }
+
+
         try {
-            const res = await fetch("http://localhost:5000/api/send-role-request",{
+            const res = await fetch("http://localhost:5000/api/role-change/send",{
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -37,6 +48,26 @@ const UserProfileView = () => {
         };
 
 
+    const checkCurrentRequests = async() => {
+        try {
+            const res = await fetch("http://localhost:5000/api/role-change/check", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({email:user.email}),
+            });
+            const data = await res.json();
+            setRoleRequested(data);
+
+        } catch (error){
+            console.log(error);
+        }
+    }
+
+
+
+
         return (
             <div className="user-profile-container">
             <h2>You are logged in with the following information:</h2>
@@ -48,7 +79,10 @@ const UserProfileView = () => {
 
                 <button
 
-                    onClick={() => setShowDropdown(!showDropdown)}
+                    onClick={() => {
+                        setShowDropdown(!showDropdown)
+                        checkCurrentRequests()
+                    }}
                 >
                     Need to request a change to your role?
                 </button>
@@ -110,6 +144,18 @@ const UserProfileView = () => {
                     </div>
                 )}
             </div>
+                <div>
+                    {roleRequested ? (
+                        <>
+
+                        <p>Warning! You already have a request pending. You are currently requesting the role below. Please cancel before sending another request.</p>
+                            <td> {roleRequested.role}</td>
+                        </>
+                    ) : null}
+
+
+                </div>
+
         </div>
 
     )

@@ -1,5 +1,5 @@
 const express = require('express');
-const {connectToDB,  checkUser, sendRequestToDB,retrieveRequests, changeRole,removeRequest } = require('./MongoModel');
+const {connectToDB,  checkUser, sendRequestToDB,retrieveRequests, changeRole,removeRequest, retrieveRequest } = require('./MongoModel');
 const cors = require ('cors');
 
 
@@ -33,18 +33,18 @@ app.post("/api/user-check", async(req, res) => {
     }
 });
 
-app.post("/api/role-change", async(req, res) => {
+app.post("/api/role-change/confirm", async(req, res) => {
     const {email, role, text} = req.body;
     await changeRole(email,role,text);
 })
 
-app.post("/api/role-change-deny", async(req, res) => {
+app.post("/api/role-change/deny", async(req, res) => {
     const {email} = req.body;
     await removeRequest(email);
 })
 
 
-app.post("/api/send-role-request", async(req, res) => {
+app.post("/api/role-change/send", async(req, res) => {
     const {name, email, role, text} = req.body;
 
     try {
@@ -53,6 +53,15 @@ app.post("/api/send-role-request", async(req, res) => {
         console.error("MongoDB error:", err);
     }
 });
+
+app.post("/api/role-change/check", async(req, res) => {
+    const {email} = req.body;
+    try {
+        await retrieveRequest(req,res,email);
+    }catch (err){
+        console.error("MongoDB error:", err);
+    }
+})
 
 app.listen(PORT, () => {
     console.log(`🚀 Server is running at http://localhost:${PORT}`);
