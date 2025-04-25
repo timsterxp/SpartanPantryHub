@@ -28,7 +28,7 @@ const StaffView = () => {
     const handleConfirmRoleRequest = async (id,email,role,text) => {
        // add code to change in database
         try {
-            const res = await fetch("http://localhost:5000/api/role-change", {
+            const res = await fetch("http://localhost:5000/api/role-change/confirm", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -47,7 +47,7 @@ const StaffView = () => {
     const handleDenyRoleRequest = async (id,email) => {
         // add code to change in database
         try {
-            const res = await fetch("http://localhost:5000/api/role-change-deny", {
+            const res = await fetch("http://localhost:5000/api/role-change/deny", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

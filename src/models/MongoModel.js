@@ -109,13 +109,34 @@ async function removeRequest(email){
             const db = await connectToDB();
         }
         const requestsCollections = db.collection("requests");
-        const deleting = await requestsCollections.findOneAndDelete(
+        const deleting= await requestsCollections.findOneAndDelete(
             { email: email }
         )
     } catch (err) {
         console.error("Error connecting to MongoDB:", err);
     }
 
+}
+
+
+async function retrieveRequest(req,res,email) {
+    try {
+        if (!db){
+            const db = await connectToDB();
+        }
+        const requestsCollections = db.collection("requests");
+        const request = await requestsCollections.findOne(
+            { email: email }
+        )
+        if (request){
+            res.json(request);
+        }else {
+            res.status(404).send("Not Found");
+        }
+
+    } catch (err) {
+        console.error("Error connecting to MongoDB:", err);
+    }
 }
 
 //Fx to test all collections in MongoDB ' delete later.
@@ -139,4 +160,4 @@ async function listCollections() {
 
 
 
-module.exports = { connectToDB, getUserNames, listCollections, checkUser, sendRequestToDB, retrieveRequests, changeRole,removeRequest };
+module.exports = { connectToDB, getUserNames, listCollections, checkUser, sendRequestToDB, retrieveRequests, changeRole,removeRequest, retrieveRequest };
