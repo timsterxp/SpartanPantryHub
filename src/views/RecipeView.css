@@ -1,68 +1,76 @@
 .recipe-container {
-    max-width: 900px;
-    margin: 2rem auto;
-    padding: 1rem;
-    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
 }
 
 .recipe-title {
     font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-}
-
-.search-bar {
-    width: 100%;
-    padding: 0.75rem;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    margin-bottom: 2rem;
+    margin-bottom: 20px;
 }
 
 .recipe-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    width: 100%;
 }
 
 .recipe-card {
-    background-color: white;
-    border: 1px solid #e0e0e0;
-    border-radius: 16px;
-    padding: 1rem;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    transition: box-shadow 0.3s ease;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 200px;
     cursor: pointer;
-    align-self: start;
+    transition: transform 0.3s ease, opacity 0.3s ease, width 0.5s ease;
+    position: relative;
+    z-index: 1;
+    opacity: 1;
+}
+
+.recipe-card h2 {
+    margin: 0;
+}
+
+.recipe-card .recipe-details {
+    margin-top: 20px;
+}
+
+.recipe-card.expanded {
+    width: 80%;
+    align-items: center;
+    margin-bottom: 20px;
+    z-index: 2;
+}
+
+.recipe-card.expanded ~ .recipe-card {
+    opacity: 0;
+}
+
+.recipe-card:not(.expanded) {
+    opacity: 1;
+}
+
+.recipe-container.expanded-card .recipe-card:not(.expanded) {
+    opacity: 0;
 }
 
 .recipe-card:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transform: scale(1.05);
 }
 
-.recipe-name {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
+h3 {
+    margin: 10px 0 5px;
 }
 
-.recipe-details {
-    margin-top: 1rem;
+ul {
+    list-style-type: disc;
+    margin-left: 20px;
 }
 
-.recipe-details h3 {
-    margin: 0.5rem 0;
-}
-
-.recipe-details ul,
-.recipe-details ol {
-    padding-left: 1.25rem;
-}
-
-.no-results {
-    grid-column: 1 / -1;
-    text-align: center;
-    color: #888;
-    font-style: italic;
+ol {
+    margin-left: 20px;
 }

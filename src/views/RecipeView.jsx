@@ -93,21 +93,14 @@ const RecipeView = () => {
     };
 
     return (
-        <div className="recipe-container">
+        <div className={`recipe-container ${expanded !== null ? 'expanded-card' : ''}`}>
             <h1 className="recipe-title">Recipes</h1>
-            <input
-                type="text"
-                placeholder="Search recipes..."
-                className="search-bar"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-            />
 
             <div className="recipe-grid">
-                {filteredRecipes.map((recipe) => (
+                {recipes.map((recipe) => (
                     <div
                         key={recipe.id}
-                        className="recipe-card"
+                        className={`recipe-card ${expanded === recipe.id ? 'expanded' : ''}`}
                         onClick={() => toggleExpand(recipe.id)}
                     >
                         <h2 className="recipe-name">{recipe.name}</h2>
