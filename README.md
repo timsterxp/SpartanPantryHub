@@ -1,70 +1,37 @@
-# Getting Started with Create React App
+CMPE 133 Software Engineering II Project
+by: Timothy Nguyen, Vance Nguyen, Josh Pastores, Isa Pudiyapura
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+SJSU Food Pantry Prototype
 
-## Available Scripts
+Overview
+This project is a prototype web application designed to modernize and improve the efficiency of the San José State University (SJSU) Food Pantry. The current pantry system operates entirely in person with no online presence. This prototype demonstrates how technology can enhance food distribution, inventory tracking, and user access.
 
-In the project directory, you can run:
+Goals
+- Provide an online platform for students to view pantry inventory and make checkout requests.
 
-### `npm start`
+- Simplify administrative tasks such as inventory management and visit tracking.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Offer a structured way to quantify the pantry’s impact on the student population.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Recreate official pantry policies and workflows in a digital format.
 
-### `npm test`
+- Improve accessibility and reduce manual overhead in pantry operations.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Features
+- Utilizes open authentication protocol with Google Login to provide security and authentication to user identities
 
-### `npm run build`
+- User roles: Admin, Staff, Student, Donor, Guest
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Item categories: Perishable (Dairy vs others), Non-perishables, Toiletries
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Centralized recipe location including integration with OpenAI API for ChatGPT curated recipes
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Weekly visit limits and category-specific restrictions
 
-### `npm run eject`
+- Inventory and order database updates on checkout
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- MVC architecture with the MERN(MongoDB, Express, React, NodeJS) stack
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Disclaimer
+This project is not affiliated with the official SJSU Food Pantry in any way. It is an academic prototype created for educational purposes only.
+Official pantry recipes and publicly available policies were referenced to ensure the prototype closely reflects the real-world process.
