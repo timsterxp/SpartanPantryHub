@@ -55,42 +55,61 @@ const HomeView = () => {
             {user ? (
                 <>
 
-                    <h2 className="centered">Welcome, {user.name}</h2>
+                    <h2 className="centered">Hello, {user.name}
+                        .                                       <button onClick = {()=>handleLogout()}>Logout</button></h2>
+
                     <div className="image-container">
-                        <figure>
-                            <Link to="/recipe">  <img src ="https://www.iconpacks.net/icons/2/free-opened-book-icon-3163-thumb.png" alt="Logo" className ="image" />  </Link>
+                        <figure className="button-3d">
+                            <Link to="/recipe"> <img
+                                src="https://www.iconpacks.net/icons/2/free-opened-book-icon-3163-thumb.png" alt="Logo"
+                                className="image"/> </Link>
                             <figcaption> Recipes</figcaption>
                         </figure>
-                        <figure>
-                            <Link to="/RoleRequest">  <img src ="https://cdn-icons-png.flaticon.com/512/6522/6522516.png" alt="Logo" className ="image" />  </Link>
+                        <figure className="button-3d">
+                            <Link to="/RoleRequest"> <img src="https://cdn-icons-png.flaticon.com/512/6522/6522516.png"
+                                                          alt="Logo" className="image"/> </Link>
                             <figcaption> Profile</figcaption>
                         </figure>
-                        <figure>
-                            <Link to="/Inventory">  <img src ="https://cdn-icons-png.flaticon.com/512/3081/3081986.png" alt="Logo" className ="image" />  </Link>
-                            <figcaption> Inventory </figcaption>
+                        <figure className="button-3d">
+                            <Link to="/Inventory"> <img src="https://cdn-icons-png.flaticon.com/512/3081/3081986.png"
+                                                        alt="Logo" className="image"/> </Link>
+                            <figcaption> Inventory</figcaption>
                         </figure>
-                        <figure>
-                            <Link to="/Checkout">  <img src ="https://cdn0.iconfinder.com/data/icons/shopping-and-commerce-outline/512/Shopping_and_Commerce_-_Outline_21-512.png" alt="Logo" className ="image" />  </Link>
-                            <figcaption> Checkout </figcaption>
+                        <figure className="button-3d">
+                            <Link to="/Checkout"> <img
+                                src="https://cdn0.iconfinder.com/data/icons/shopping-and-commerce-outline/512/Shopping_and_Commerce_-_Outline_21-512.png"
+                                alt="Logo" className="image"/> </Link>
+                            <figcaption> Checkout</figcaption>
                         </figure>
-                        <figure>
-                            <Link to="/Orders">  <img src ="https://static.thenounproject.com/png/3157802-200.png" alt="Logo" className ="image" />  </Link>
-                            <figcaption> Order History </figcaption>
+                        <figure className="button-3d">
+                            <Link to="/Orders"> <img src="https://static.thenounproject.com/png/3157802-200.png"
+                                                     alt="Logo" className="image"/> </Link>
+                            <figcaption> Order History</figcaption>
                         </figure>
 
                     </div>
                     <div className="centered">
-                        <h1> This is PantryHub, your one stop for the food pantry located on campus!</h1>
-                        <h2>The pantry is located next to the Student Union, in front of the Engineering Building and is open:
-                        </h2>
-                        <h2> Monday 10:00 AM - 5:00 PM</h2>
-                        <h2> Tuesday 10:00 AM - 5:00 PM</h2>
-                        <h2> Wednesday 10:00 AM - 5:00 PM</h2>
-                        <h2> Thursday 10:00 AM - 5:00 PM</h2>
-                        <h2> Friday 10:00 AM - 5:00 PM</h2>
-                        <img src="/PantryLogo.png" alt="Logo" />
-                        <th></th>
-                        <button onClick = {()=>handleLogout()}>Logout</button></div>
+                        <h1> Welcome to PantryHub, your one stop for the food pantry located on campus!</h1>
+                        <img src="/PantryLogo.png" alt="Logo"/>
+                        <p> The pantry is located next to the Student Union, in front of the Engineering Building and is
+                            open:
+                        </p>
+
+                    </div>
+                    <div className="hours-container">
+                        <div className="hours">
+                            <p> <span style = {{fontWeight:'bold'}} > Monday </span> 10:00 AM - 5:00 PM</p>
+                            <p> <span style = {{fontWeight:'bold'}} > Tuesday </span> 10:00 AM - 5:00 PM</p>
+                            <p> <span style = {{fontWeight:'bold'}} > Wednesday </span> 10:00 AM - 5:00 PM</p>
+                            <p> <span style = {{fontWeight:'bold'}} > Thursday </span> 10:00 AM - 5:00 PM</p>
+                            <p> <span style = {{fontWeight:'bold'}} > Friday </span> 10:00 AM - 5:00 PM</p>
+                        </div>
+
+                        <div className="map">
+                            <img src="https://i.gyazo.com/db39be6249840d8aa20f65b4be6c42ec.png" alt="Map Location"/>
+                        </div>
+                    </div>
+
 
                 </>
             ) : (

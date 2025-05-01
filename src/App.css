@@ -50,6 +50,7 @@ html, body {
 nav {
   height: 90px;
   background: #323232;
+  position:sticky;
 }
 
 nav ul {
@@ -73,6 +74,7 @@ nav ul {
 .appleNavigation {
   max-width:980px;
   margin: 0 auto;
+  position:sticky;
 }
 
 .wrapper {

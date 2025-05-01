@@ -27,7 +27,7 @@ const OrdersView = () => {
         {
             id: 3,
             datePlaced: '2025-04-05',
-            status: 'Picked Up',
+            status: 'Completed',
             items: [
                 { name: 'Cucumber', quantity: 3 },
                 { name: 'RTE', quantity: 1 },

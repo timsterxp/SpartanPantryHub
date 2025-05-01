@@ -79,7 +79,7 @@ const StaffView = () => {
         <div className="staff-view">
             <div className="section">
                 <h2>Role Requests</h2>
-                <h6>*Important*. Before confirming students, check that they have completed the online survey.</h6>
+                <p><span style ={{fontWeight: 'bold', textDecoration: 'underline' }}> *Important*. Before confirming students, check that they have completed the online survey. </span></p>
                 <table className="role-table">
                     <thead>
                     <tr>
