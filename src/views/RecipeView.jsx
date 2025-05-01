@@ -46,7 +46,6 @@ const recipes = [
 
 const RecipeView = () => {
         const [inputValue, setInputValue] = useState("");
-        const [responseMessage, setResponseMessage] = useState("");
         const [recipe, setRecipe] = useState({
             recipeName:"",
             ingredients: [],
@@ -73,15 +72,6 @@ const RecipeView = () => {
         setClickedButton(true);
         const response = await RecipeController.sendRecipeToAPI(inputValue);
 
-        //Note that server response is just me checking to see what my backend is sending. Do not use serverResponse anywhere
-        if (response) {
-            setResponseMessage(`Server Response: ${JSON.stringify(response)}`);
-            setRecipe(response);
-        } else {
-            setResponseMessage("Failed to send ingredient list to the server.");
-        }
-
-     //   setInputValue(""); // Clear input after sending
     };
 
     const renderList = (items) => {
