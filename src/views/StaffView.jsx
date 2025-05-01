@@ -3,7 +3,6 @@ import './StaffView.css';
 
 const StaffView = () => {
     const [roleRequests, setRoleRequests] = useState([]);
-    const [updateFlag, setUpdateFlag] = useState(false); // Calling this after each confirm/deny to update the state more cleaner.
 
     const [orders, setOrders] = useState([
         {
@@ -59,7 +58,6 @@ const StaffView = () => {
         } catch (error){
             console.log(error);
         }
-        setUpdateFlag(prev=>!prev);
         setRoleRequests( prev => prev.filter(req => req.email!==email));
     };
 
