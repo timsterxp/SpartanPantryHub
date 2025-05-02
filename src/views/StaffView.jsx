@@ -3,7 +3,12 @@ import './StaffView.css';
 
 const StaffView = () => {
     const [roleRequests, setRoleRequests] = useState([]);
-
+    const [item_name, setitem_name] = useState('');
+    const [item_url, setitem_url] = useState('');
+    const [item_quantity, setitem_quantity] = useState('');
+    const [item_category, setitem_category] = useState('');
+    const [item_calories, setitem_calories] = useState('');
+    const [item_protein, setitem_protein] = useState('');
     const [orders, setOrders] = useState([
         {
             id: 1,
@@ -69,6 +74,23 @@ const StaffView = () => {
 
         setOrders(prev => prev.filter(req => req.id!==id));
     };
+    const handleAddItem = async () => {
+        //resets the input boxes
+        setitem_name(""); setitem_url(""); setitem_quantity(""); setitem_calories(""); setitem_protein("");
+        //check if the items variables were there
+        console.log(item_name, item_url, item_quantity, item_category, item_calories, item_protein)
+         try {
+             const res = await fetch("http://localhost:5000/api/inventory-add/send", {
+                 method: "POST",
+                 headers: {
+                     "Content-Type": "application/json",
+                 },
+                 body: JSON.stringify({name: item_name, imageUrl: item_url, quantity: item_quantity, category: item_category, calories: item_calories, protein: item_protein}),
+             }); 
+         } catch (error){
+             console.log(error);
+         }
+     };
 
     useEffect(()=>{
         fetch('http://localhost:5000/api/retrieve-request').then(res => res.json()).then((data) => setRoleRequests(data)).catch((err) => console.log(err));
@@ -139,6 +161,75 @@ const StaffView = () => {
                         </li>
                     ))}
                 </ul>
+            </div>
+            <div className="section">
+                <h2>Add item to Inventory</h2>
+                <p><span style ={{fontWeight: 'bold'}}> Warning: Don't spam the confirm button. And there are no validations </span></p>
+                <table className="inventory-add-table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>imageUrl</th>
+                        <th>Quantity</th>
+                        <th>Category</th>
+                        <th>Calories</th>
+                        <th>Protein</th>
+                        <th>Confirm</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td> <input
+                                    type="text"
+                                    placeholder="Item Name"
+                                    value={item_name}
+                                    onChange={(e) => setitem_name(e.target.value)}
+                                /></td>
+                        <td><input
+                                    type="text"
+                                    placeholder="Item Url"
+                                    value={item_url}
+                                    onChange={(e) => setitem_url(e.target.value)}
+                                /></td>
+                        <td><input
+                                    type="Int32"
+                                    placeholder="Item Quantity"
+                                    value={item_quantity}
+                                    onChange={(e) => setitem_quantity(e.target.value)}
+                                /></td>
+                        <td>
+                            <div>
+                                <select 
+                                value={item_category}  className="category"
+                                onChange={(e) => setitem_category(e.target.value)}>
+                                    <option value="">select a category</option>
+                                    <option value="perishable">perishable</option>
+                                    <option value="non-perishable">non-perishable</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td><input
+                                    type="Int32"
+                                    placeholder="Item Calories"
+                                    value={item_calories}
+                                    onChange={(e) => setitem_calories(e.target.value)}
+                                /></td>
+                        <td><input
+                                    type="Double"
+                                    placeholder="Item Protein"
+                                    value={item_protein}
+                                    onChange={(e) => setitem_protein(e.target.value)}
+                                /></td>
+                        <td>
+                        <div className="action-btn">
+                            <button className="accept" onClick={handleAddItem}> 
+                                Add item
+                            </button>
+                        </div>
+                        </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     );

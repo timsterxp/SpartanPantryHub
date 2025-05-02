@@ -98,3 +98,21 @@
 .deny:hover {
     background-color: #c82333;
 }
+.inventory-add-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.inventory-add-table th,
+.inventory-add-table td {
+    border: 1px solid #ffffff;
+    padding: 10px;
+    text-align: left;
+}
+
+.inventory-add-table input {
+    width: 100%;
+    padding: 6px;
+    box-sizing: border-box;
+}
