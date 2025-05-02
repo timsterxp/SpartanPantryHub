@@ -1,5 +1,5 @@
 const express = require('express');
-const {connectToDB,  checkUser, sendRequestToDB,retrieveRequests, changeRole,removeRequest, retrieveRequest, retrieveInventory } = require('./MongoModel');
+const {connectToDB,  checkUser, sendRequestToDB,retrieveRequests, changeRole,removeRequest, retrieveRequest, retrieveInventory, senditemToinventoryDB } = require('./MongoModel');
 const cors = require ('cors');
 
 
@@ -24,6 +24,16 @@ app.get("/api/test-db-connection", async (req, res) => {
 app.get("/api/retrieve-request", retrieveRequests);
 
 app.get("/api/retrieve-inventory", retrieveInventory);
+
+app.post("/api/inventory-add/send", async(req, res) => {
+    const {name, imageUrl, quantity, category, calories, protein} = req.body;
+
+    try {
+        await senditemToinventoryDB(name, imageUrl, quantity, category, calories, protein);
+    } catch (err) {
+        console.error("MongoDB error:", err);
+    }
+});
 
 app.post("/api/user-check", async(req, res) => {
     const {name, email} = req.body;

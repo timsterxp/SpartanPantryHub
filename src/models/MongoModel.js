@@ -53,6 +53,16 @@ async function retrieveInventory(req,res) {
         console.error("Error connecting to MongoDB:", err);
     }
 }
+async function senditemToinventoryDB(name, imageUrl, quantity, category, calories, protein){
+    try {
+        const db = await connectToDB();
+        const inventoryCollections = db.collection("inventory");
+        const newitem = {name: name, imageUrl: imageUrl, quantity: quantity, category: category, calories: calories, protein: protein};
+        const result = await inventoryCollections.insertOne(newitem);
+    }catch (error){
+        console.error("Error creating request:", error);
+    }
+}
 
 //Fx to test the users collection db and that MongoDB can read it
 
@@ -173,4 +183,4 @@ async function listCollections() {
 
 
 
-module.exports = { connectToDB, getUserNames, listCollections, checkUser, sendRequestToDB, retrieveRequests, changeRole,removeRequest, retrieveRequest, retrieveInventory };
+module.exports = { connectToDB, getUserNames, listCollections, checkUser, sendRequestToDB, retrieveRequests, changeRole,removeRequest, retrieveRequest, retrieveInventory, senditemToinventoryDB };
