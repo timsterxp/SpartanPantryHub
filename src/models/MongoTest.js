@@ -31,7 +31,8 @@ app.post("/api/user-check", async(req, res) => {
     const {name, email} = req.body;
 
     try {
-        await checkUser(name, email);
+        const user=await checkUser(name, email);
+        res.status(200).json(user);
     } catch (error){
         console.error("MongoDB error:", error);
     }

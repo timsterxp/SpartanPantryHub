@@ -93,6 +93,7 @@ async function checkUser(name, email){
             const result = await usersCollections.insertOne(newUser);
             user = {_id: result._id, ...newUser};
         }else {
+            return user;
         }
     }catch (error){
         console.error("Error creating user:", error);
@@ -117,11 +118,20 @@ async function changeRole(email, role, text){
             const db = await connectToDB();
         }
         const usersCollections = db.collection("users");
-        const updating = await usersCollections.findOneAndUpdate(
-            { email},
-            { $set: {role:role, text: text}},
+        if (role==="Student"){
+            const updating = await usersCollections.findOneAndUpdate(
+                { email},
+                { $set: {role:role, text: text, visits: 1}},
 
-        )
+            )
+        }else {
+            const updating = await usersCollections.findOneAndUpdate(
+                { email},
+                { $set: {role:role, text: text}},
+
+            )
+        }
+
        await removeRequest(email);
 
     } catch (err) {

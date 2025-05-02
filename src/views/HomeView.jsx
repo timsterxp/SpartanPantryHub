@@ -1,4 +1,4 @@
-import { getUser, clearUser } from "../models/UserModel";
+import { getUser, clearUser, addMoreFields } from "../models/UserModel";
 import { useNavigate, Link } from "react-router-dom";
 import {useEffect} from "react";
 import "./HomeView.css";
@@ -14,7 +14,7 @@ const HomeView = () => {
     };
 
     useEffect(() => {
-        const pingDB = async() => {
+        const pingDB = async () => {
             try {
                 const res = await fetch("http://localhost:5000/api/test-db-connection");
                 const data = await res.json();
@@ -24,29 +24,44 @@ const HomeView = () => {
             }
         };
 
-       async function retrieveUser(name, email){
+        const retrieveUser = async (name, email) => {
             try {
                 const res = await fetch("http://localhost:5000/api/user-check", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({name: name, email:email}),
+                    body: JSON.stringify({ name, email }),
                 });
 
-
-            } catch (error){
-                console.log(error);
+                const data = await res.json();
+                return data;
+            } catch (error) {
+                console.error("❌ Error retrieving user:", error);
+                return null;
             }
-
         };
 
-        if (user) {
-            console.log (user.name, user.email);
-            pingDB();
-            console.log (user.name, user.email);
-            retrieveUser(user.name,user.email);
-        }
+        const init = async () => {
+            if (user) {
+                await pingDB();
+                const userData = await retrieveUser(user.name, user.email);
+                console.log("👤 Retrieved User:", userData);
+                if (userData){
+                    if (userData.text){
+                        addMoreFields("text", userData.text);
+                    }
+                    if (userData.role){
+                        addMoreFields("role", userData.role);
+                    }
+                    if (userData.visits){
+                        addMoreFields("visits", userData.visits);
+                    }
+                }
+            }
+        };
+
+        init();
     }, [user]);
 
     return (

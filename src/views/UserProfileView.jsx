@@ -25,6 +25,8 @@ const UserProfileView = () => {
             return;
         }
 
+        alert("You submitted the request!");
+        setShowDropdown(!showDropdown);
 
         try {
             const res = await fetch("http://localhost:5000/api/role-change/send",{
@@ -38,6 +40,7 @@ const UserProfileView = () => {
         }catch (error){
             console.error("Error creating request:", error);
         }
+
     }
 
 
@@ -73,7 +76,14 @@ const UserProfileView = () => {
             <h2>You are logged in with the following information:</h2>
             <h2>Name: {user.name}</h2>
             <p>Email: {user.email}</p>
-            <p>You have 0 remaining visit available this week</p>
+                <p> Role: {user.role}</p>
+                {user.text && (
+                    <p>{user.role === "Student" ? "Student ID:" : "Extra Info:"} {user.text}</p>
+                )}
+
+                {user.visits !== undefined && (
+                    <p>You have {user.visits} remaining visit{user.visits !== 1 && 's'} available this week</p>
+                )}
 
             <div>
 
@@ -95,9 +105,9 @@ const UserProfileView = () => {
                             onChange={(e) => setSelectedRole(e.target.value)}
                         >
                             <option value="">Select a role</option>
-                            <option value="Student">Student</option>
-                            <option value="Donor">Donor</option>
-                            <option value="Staff">Staff</option>
+                            {user.role !== "Student" && <option value="Student">Student</option>}
+                            {user.role !== "Donor" && <option value="Donor">Donor</option>}
+                            {user.role !== "Staff" && <option value="Staff">Staff</option>}
                         </select>
 
                         {selectedRole === 'Student' && (
@@ -148,7 +158,7 @@ const UserProfileView = () => {
                     {roleRequested ? (
                         <>
 
-                        <p>Warning! You already have a request pending. You are currently requesting the role below. Please cancel before sending another request.</p>
+                        <p>Warning! You already have a request pending. You are currently requesting the role below. Please wait for the previous request to be reviewed before requesting another.</p>
                             <td> {roleRequested.role}</td>
                         </>
                     ) : null}
