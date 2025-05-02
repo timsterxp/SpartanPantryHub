@@ -1,5 +1,5 @@
 const express = require('express');
-const {connectToDB,  checkUser, sendRequestToDB,retrieveRequests, changeRole,removeRequest, retrieveRequest, retrieveInventory } = require('./MongoModel');
+const {connectToDB,  checkUser, sendRequestToDB,retrieveRequests, changeRole,removeRequest, retrieveRequest, retrieveInventory, retrieveRecipe } = require('./MongoModel');
 const cors = require ('cors');
 
 
@@ -24,6 +24,8 @@ app.get("/api/test-db-connection", async (req, res) => {
 app.get("/api/retrieve-request", retrieveRequests);
 
 app.get("/api/retrieve-inventory", retrieveInventory);
+
+app.get("/api/retrieve-recipe", retrieveRecipe);
 
 app.post("/api/user-check", async(req, res) => {
     const {name, email} = req.body;

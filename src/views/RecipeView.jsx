@@ -1,7 +1,7 @@
 // add code for viewing / adding recipes here
 
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useState} from "react";
 import RecipeController from "../controllers/RecipeController";
 import "./RecipeView.css";
@@ -51,6 +51,9 @@ const RecipeView = () => {
             ingredients: [],
             instructions: [],
         })
+
+        const [officalRecipe, setOfficialRecipe] = useState(  []);
+
     const [searchQuery, setSearchQuery] = useState('');
     const [expanded, setExpanded] = useState(null);
     const [clickedButton, setClickedButton] = useState(false);
@@ -71,8 +74,12 @@ const RecipeView = () => {
         if (!inputValue) return;
         setClickedButton(true);
         const response = await RecipeController.sendRecipeToAPI(inputValue);
-
+        setRecipe (response);
     };
+
+    useEffect(()=>{
+        fetch('http://localhost:5000/api/retrieve-recipe').then(res => res.json()).then((data) => setOfficialRecipe(data)).catch((err) => console.log(err));
+    });
 
     const renderList = (items) => {
         return items.map((item, index) => (
@@ -82,34 +89,52 @@ const RecipeView = () => {
         ));
     };
 
+    const renderRecipeList = (str) => {
+        const items = str.split(/\d+\.\s/).filter(item => item.trim() !== '');
+        return (
+            <ul>
+                {items.map((item, idx) => (
+                    <li key={idx}>{item.trim()}</li>
+                ))}
+            </ul>
+        );
+    };
+
+    const renderOrderedList = (str) => {
+        const items = str.split(/\d+\.\s/).filter(item => item.trim() !== '');
+        return (
+            <ol>
+                {items.map((item, idx) => (
+                    <li key={idx}>{item.trim()}</li>
+                ))}
+            </ol>
+        );
+    };
+
     return (
         <div className={`recipe-container ${expanded !== null ? 'expanded-card' : ''}`}>
             <h1 className="recipe-title">Recipes</h1>
 
             <div className="recipe-grid">
-                {recipes.map((recipe) => (
+                {officalRecipe.map((recipe) => (
                     <div
-                        key={recipe.id}
-                        className={`recipe-card ${expanded === recipe.id ? 'expanded' : ''}`}
-                        onClick={() => toggleExpand(recipe.id)}
+                        key={recipe._id}
+                        className={`recipe-card ${expanded === recipe._id ? 'expanded' : ''}`}
+                        onClick={() => toggleExpand(recipe._id)}
                     >
-                        <h2 className="recipe-name">{recipe.name}</h2>
+                        <h2 className="recipe-name">{recipe.recipeName}</h2>
 
-                        {expanded === recipe.id && (
+                        {expanded === recipe._id && (
                             <div className="recipe-details">
                                 <h3>Ingredients:</h3>
-                                <ul>
-                                    {recipe.ingredients.map((item, idx) => (
-                                        <li key={idx}>{item}</li>
-                                    ))}
-                                </ul>
+
+                                {renderRecipeList(recipe.Ingredients)}
+
 
                                 <h3>Instructions:</h3>
-                                <ol>
-                                    {recipe.instructions.map((step, idx) => (
-                                        <li key={idx}>{step}</li>
-                                    ))}
-                                </ol>
+
+                                {renderOrderedList(recipe.Instructions)}
+
                             </div>
                         )}
                     </div>
@@ -124,8 +149,9 @@ const RecipeView = () => {
                 type="text"
                 value={inputValue}
                 onChange={handleChange}
-                placeholder="Enter inventory item"
+                placeholder="Enter ingredients"
             />
+            <p style={{paddingBottom: '1px'}}></p>
             <button onClick={handleConfirm}>Confirm</button>
             {clickedButton &&
                 <div>
