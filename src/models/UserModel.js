@@ -12,3 +12,11 @@ export const getUser = () => {
 export const clearUser = () => {
     localStorage.removeItem(USER_KEY);
 };
+
+export const addMoreFields = (key,value) => {
+    const user = getUser();
+    if (user){
+        user[key] = value;
+            saveUser(user);
+    }
+}
