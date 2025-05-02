@@ -10,6 +10,7 @@ import UserProfileView from "./views/UserProfileView";
 import StaffView from "./views/StaffView";
 import OrderView from "./views/OrdersView";
 import OrderEdit from "./views/OrderEditView";
+import MoreResourcesView from "./views/MoreResourcesView";
 
 
 // npm install react-router-dom
@@ -33,6 +34,7 @@ function App() {
                             <li><Link to="/Orders" className="navItems">Order History</Link></li>
                             <li><Link to="/StaffActions" className="navItems">Staff Actions</Link></li>
                             <li><Link to="/OrderEditView" className="navItems">Edit Order</Link></li>
+                            <li><Link to="/MoreResourcesView" className = "navItems">More Resources</Link></li>
                         </ul>
                     </div>
                 </nav>
@@ -48,6 +50,7 @@ function App() {
                         <Route path="/StaffActions" element={<StaffView />} />
                         <Route path="/Orders" element={<OrderView />} />
                         <Route path="/OrderEditView" element={<OrderEdit />} />
+                        <Route path="/MoreResourcesView" element={<MoreResourcesView />} />
                     </Routes>
                 </div>
             </div>
