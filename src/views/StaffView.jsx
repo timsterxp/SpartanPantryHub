@@ -9,24 +9,9 @@ const StaffView = () => {
     const [item_category, setitem_category] = useState('');
     const [item_calories, setitem_calories] = useState('');
     const [item_protein, setitem_protein] = useState('');
-    const [orders, setOrders] = useState([
-        {
-            id: 1,
-            user: 'Charlie',
-            items: [
-                { name: 'Milk', quantity: 2 },
-                { name: 'Cereal: Frosted Flakes ', quantity: 1 }
-            ]
-        },
-        {
-            id: 2,
-            user: 'Dana',
-            items: [
-                { name: 'Radish', quantity: 12 },
-                { name: 'RTE', quantity: 1 }
-            ]
-        }
-    ]);
+    const [orders, setOrders] = useState([]);
+    const [readyForPickUp, setReadyForPickUp] = useState([]);
+    const [updatePage, setUpdatePage] = useState(false);
 
 
     const handleConfirmRoleRequest = async (id,email,role,text) => {
@@ -66,14 +51,43 @@ const StaffView = () => {
         setRoleRequests( prev => prev.filter(req => req.email!==email));
     };
 
-    const handleConfirmOrder = (id) => {
+    const handleConfirmOrder = async (userID) => {
         // add code to change order status to ready
-        // Note that code down there needs to change from using dummy order ids to using order ids in database
+        try {
+            const res = await fetch("http://localhost:5000/api/order/ready", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({userID: userID}),
+            });
+        } catch (error){
+            console.log(error);
+        }
 
-
-
-        setOrders(prev => prev.filter(req => req.id!==id));
+        setOrders(prev => prev.filter(req => req.userID!==userID));
+        setUpdatePage(prev => !prev);
     };
+
+    const handlePickUpOrder = async (userID) => {
+        // add code to change order status to ready
+        try {
+            const res = await fetch("http://localhost:5000/api/order/complete", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({userID: userID}),
+            });
+        } catch (error){
+            console.log(error);
+        }
+
+        setOrders(prev => prev.filter(req => req.userID!==userID));
+        setUpdatePage(prev => !prev);
+    };
+
+
     const handleAddItem = async () => {
         //resets the input boxes
         setitem_name(""); setitem_url(""); setitem_quantity(""); setitem_calories(""); setitem_protein("");
@@ -92,9 +106,22 @@ const StaffView = () => {
          }
      };
 
-    useEffect(()=>{
-        fetch('http://localhost:5000/api/retrieve-request').then(res => res.json()).then((data) => setRoleRequests(data)).catch((err) => console.log(err));
-    });
+    useEffect(() => {
+        fetch('http://localhost:5000/api/retrieve-request')
+            .then(res => res.json())
+            .then((data) => setRoleRequests(data))
+            .catch((err) => console.log(err));
+
+        fetch('http://localhost:5000/api/retrieve-orders')
+            .then(res => res.json())
+            .then((data) => {
+                const placedOrders = data.filter(order => order.status === "placed");
+                const readyForPickupOrders = data.filter(order => order.status === "Ready for pickup");
+                setOrders(placedOrders);
+                setReadyForPickUp(readyForPickupOrders);
+            })
+            .catch((err) => console.log(err));
+    }, []);
     return (
         <div className="staff-view">
             <div className="section">
@@ -142,13 +169,13 @@ const StaffView = () => {
             </div>
 
             <div className="section">
-                <h2>Orders Requiring Action</h2>
+                <h2>Confirm Orders</h2>
                 <h6>*Warning* You cannot undo an order. Ensure all items are accounted before confirming an order.</h6>
                 <ul className="orders-list">
                     {orders.map((order) => (
                         <li key={order.id} className="order-item">
                             <div className="order-info">
-                                <strong>{order.user}</strong>
+                                <strong>{order.userName} | {order.userID}</strong>
                                 <ul className="item-list">
                                     {order.items.map((item, index) => (
                                         <li key={index}>
@@ -157,7 +184,29 @@ const StaffView = () => {
                                     ))}
                                 </ul>
                             </div>
-                            <button onClick={() => handleConfirmOrder(order.id)}>Confirm</button>
+                            <button onClick={() => handleConfirmOrder(order.userID)}>Ready for Pick Up</button>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
+            <div className="section">
+                <h2>Confirm Pick-Up</h2>
+                <h6>*Warning* You cannot undo a pick up. Ensure the student has provided an ID.</h6>
+                <ul className="orders-list">
+                    {readyForPickUp.map((order) => (
+                        <li key={readyForPickUp.id} className="order-item">
+                            <div className="order-info">
+                                <strong>{order.userName} | {order.userID}</strong>
+                                <ul className="item-list">
+                                    {order.items.map((item, index) => (
+                                        <li key={index}>
+                                            {item.name} (x{item.quantity})
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <button onClick={() => handlePickUpOrder(order.userID)}>Completed</button>
                         </li>
                     ))}
                 </ul>

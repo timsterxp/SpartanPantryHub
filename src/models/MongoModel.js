@@ -41,6 +41,19 @@ async function retrieveRequests(req,res) {
     }
 }
 
+async function retrieveOrders(req,res) {
+    try {
+        if (!db){
+            const db = await connectToDB();
+        }
+        const ordersCollections = db.collection("orders");
+        const allRequests = await ordersCollections.find({}).toArray();
+        res.json(allRequests);
+    } catch (err) {
+        console.error("Error connecting to MongoDB:", err);
+    }
+}
+
 async function retrieveInventory(req,res) {
     try {
         if (!db){
@@ -73,6 +86,40 @@ async function retrieveRecipe(req,res) {
         const recipeCollections = db.collection("recipes");
         const recipes = await recipeCollections.find({}).toArray();
         res.json(recipes);
+    } catch (err) {
+        console.error("Error connecting to MongoDB:", err);
+    }
+}
+
+async function changeOrderToReady(userID) {
+    try {
+        if (!db){
+            const db = await connectToDB();
+        }
+        const ordersCollections = db.collection("orders");
+        const update = await ordersCollections.updateOne(
+            { userID},  // Corrected: use req.userID instead of req
+            { $set: { status: 'Ready for pickup' } }  // Set the status to "Ready for Pickup"
+        );
+
+        console.log("Updated");
+    } catch (err) {
+        console.error("Error connecting to MongoDB:", err);
+    }
+}
+
+async function changeOrderToComplete(userID) {
+    try {
+        if (!db){
+            const db = await connectToDB();
+        }
+        const ordersCollections = db.collection("orders");
+        const update = await ordersCollections.updateOne(
+            { userID},  // Corrected: use req.userID instead of req
+            { $set: { status: 'Completed' } }  // Set the status to "Ready for Pickup"
+        );
+
+        console.log("Updated");
     } catch (err) {
         console.error("Error connecting to MongoDB:", err);
     }
@@ -123,6 +170,8 @@ async function sendRequestToDB(name,email, role, text){
         console.error("Error creating request:", error);
     }
 }
+
+
 
 
 //Need to add studentID aspect if student
@@ -210,4 +259,4 @@ async function listCollections() {
 
 
 
-module.exports = { connectToDB, getUserNames, listCollections, checkUser, sendRequestToDB, retrieveRequests, changeRole,removeRequest, retrieveRequest, retrieveInventory, retrieveRecipe, senditemToinventoryDB };
+module.exports = { connectToDB, getUserNames, listCollections, checkUser, sendRequestToDB, retrieveRequests, changeRole,removeRequest, retrieveRequest, retrieveInventory, retrieveRecipe, senditemToinventoryDB,retrieveOrders, changeOrderToReady, changeOrderToComplete };
