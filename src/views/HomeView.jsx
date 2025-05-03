@@ -11,6 +11,7 @@ const HomeView = () => {
     const handleLogout = () => {
         clearUser();
         navigate("/");
+        window.location.reload();
     };
 
     useEffect(() => {
