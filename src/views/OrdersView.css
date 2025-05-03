@@ -49,12 +49,12 @@ h2 {
     color: #fff;
 }
 
-.status.ready {
+.status.ready-for-pickup {
     background-color: #17a2b8;
     color: #fff;
 }
 
-.status.picked-up {
+.status.completed {
     background-color: #28a745;
     color: #fff;
 }
