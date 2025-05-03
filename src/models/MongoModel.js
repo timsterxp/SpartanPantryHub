@@ -3,7 +3,7 @@
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
-const {MongoClient, ServerApiVersion} = require ('mongodb');
+const {MongoClient, ServerApiVersion, ObjectId} = require ('mongodb');
 const uri = process.env.MONGO_URL;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -91,14 +91,15 @@ async function retrieveRecipe(req,res) {
     }
 }
 
-async function changeOrderToReady(userID) {
+async function changeOrderToReady(_id) {
     try {
         if (!db){
             const db = await connectToDB();
         }
+        const { ObjectId } = require('mongodb');
         const ordersCollections = db.collection("orders");
         const update = await ordersCollections.updateOne(
-            { userID},  // Corrected: use req.userID instead of req
+            { _id: new ObjectId(_id) },
             { $set: { status: 'Ready for pickup' } }  // Set the status to "Ready for Pickup"
         );
 
@@ -108,14 +109,16 @@ async function changeOrderToReady(userID) {
     }
 }
 
-async function changeOrderToComplete(userID) {
+async function changeOrderToComplete(_id) {
+    console.log("changing this" + _id);
+    const { ObjectId } = require('mongodb');
     try {
         if (!db){
             const db = await connectToDB();
         }
         const ordersCollections = db.collection("orders");
         const update = await ordersCollections.updateOne(
-            { userID},  // Corrected: use req.userID instead of req
+            { _id: new ObjectId(_id) },
             { $set: { status: 'Completed' } }  // Set the status to "Ready for Pickup"
         );
 
