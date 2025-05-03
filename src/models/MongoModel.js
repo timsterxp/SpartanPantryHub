@@ -171,6 +171,21 @@ async function sendRequestToDB(name,email, role, text){
     }
 }
 
+async function reduceVisits(studentID) {
+    try {
+        const db = await connectToDB();
+        const usersCollection = await db.collection("users");
+        console.log("Reducing user:", studentID);
+        await usersCollection.updateOne(
+            {text: studentID},
+            {$inc: {visits: -1}},
+        )
+    } catch (error) {
+        console.error("Error updating user:", error);
+    }
+}
+
+
 async function getOrderHistory(studentID) {
     try {
         const db = await connectToDB();
@@ -270,4 +285,4 @@ async function listCollections() {
 
 
 
-module.exports = { connectToDB, getUserNames, listCollections, checkUser, sendRequestToDB, retrieveRequests, changeRole,removeRequest, retrieveRequest, retrieveInventory, retrieveRecipe, senditemToinventoryDB,retrieveOrders, getOrderHistory, changeOrderToReady, changeOrderToComplete };
+module.exports = { connectToDB, getUserNames, listCollections, checkUser, sendRequestToDB, retrieveRequests, changeRole,removeRequest, retrieveRequest, retrieveInventory, retrieveRecipe, reduceVisits, senditemToinventoryDB,retrieveOrders, getOrderHistory, changeOrderToReady, changeOrderToComplete };

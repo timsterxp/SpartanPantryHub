@@ -107,14 +107,23 @@ const DummyCheckout = () => {
 
     // handle place order, checking the non-perishable limit
     const handlePlaceOrder = () => {
+        const updateUser = JSON.parse(localStorage.getItem("user"));
         if (!canPlaceOrder) {
             setErrorMessage("Non-perishable item limit exceeded (max 6 items).");
+            return;
+        }
+
+        if (updateUser.visits==0){
+            setErrorMessage("You have used up your visits for the week");
             return;
         }
         setErrorMessage("");
         // Proceed with placing the order
         sendCartToDatabase();
         alert("Order placed!");
+
+        updateUser.visits -=1;
+        localStorage.setItem("user", JSON.stringify(updateUser));
 
         //add order to database, and set cart to empty
         const emptyCart = []
