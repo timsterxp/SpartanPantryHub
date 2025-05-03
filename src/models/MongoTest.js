@@ -95,6 +95,31 @@ app.post("/api/create-order", async  (req, res) => {
         const ordersCollections = db.collection("orders");
         const result = await ordersCollections.insertOne(cartData);
         await reduceVisits(userID);
+
+
+        const inventoryCollection = db.collection("inventory");
+
+        for (let item of items) {
+            const { name, quantity } = item;
+
+            // Find the item in the inventory and decrement the quantity
+            const inventoryItem = await inventoryCollection.findOne({ name: name });
+
+            if (inventoryItem) {
+                if (inventoryItem.quantity >= quantity) {
+                    // Update inventory by decreasing the quantity
+                    await inventoryCollection.updateOne(
+                        { name: name },
+                        { $inc: { quantity: -quantity } }  // Decrease by ordered quantity
+                    );
+                } else {
+                    // If not enough stock, handle the error (optional)
+                    res.status(400).json({ error: `Not enough stock for item: ${name}` });
+                    return;
+                }
+            }
+        }
+
         res.status(201).json({ message: "Cart saved successfully!" });
     } catch (error) {
         console.error("Error saving cart:", error);
