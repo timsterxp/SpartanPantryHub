@@ -1,7 +1,7 @@
 const express = require('express');
 const {connectToDB,  checkUser, sendRequestToDB,retrieveRequests, changeRole,removeRequest, retrieveRequest, retrieveInventory, retrieveRecipe, senditemToinventoryDB } = require('./MongoModel');
 const cors = require ('cors');
-
+const mongoose = require("mongoose");
 
 const app = express();
 const PORT =  5000;
@@ -45,6 +45,29 @@ app.post("/api/user-check", async(req, res) => {
         res.status(200).json(user);
     } catch (error){
         console.error("MongoDB error:", error);
+    }
+});
+
+
+
+app.post("/api/create-order", async  (req, res) => {
+    try {
+        const { items, userName, userID } = req.body;  // Get data sent from React
+
+        const cartData = {
+            items: items,
+            userName: userName,
+            userID: userID,
+            status: "placed",
+        };
+
+        const db = await connectToDB();
+        const ordersCollections = db.collection("orders");
+        const result = await ordersCollections.insertOne(cartData);
+        res.status(201).json({ message: "Cart saved successfully!" });
+    } catch (error) {
+        console.error("Error saving cart:", error);
+        res.status(500).json({ error: "Internal server error" });
     }
 });
 
