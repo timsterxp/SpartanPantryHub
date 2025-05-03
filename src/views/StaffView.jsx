@@ -30,6 +30,8 @@ const StaffView = () => {
             console.log(error);
         }
         setRoleRequests( prev => prev.filter(req => req.email!==email));
+        setUpdatePage(prev=> !prev);
+        window.location.reload();
 
     };
 
@@ -49,6 +51,8 @@ const StaffView = () => {
             console.log(error);
         }
         setRoleRequests( prev => prev.filter(req => req.email!==email));
+        setUpdatePage(prev=> !prev);
+        window.location.reload();
     };
 
     const handleConfirmOrder = async (userID) => {
@@ -67,6 +71,7 @@ const StaffView = () => {
 
         setOrders(prev => prev.filter(req => req.userID!==userID));
         setUpdatePage(prev => !prev);
+        window.location.reload();
     };
 
     const handlePickUpOrder = async (userID) => {
@@ -85,6 +90,7 @@ const StaffView = () => {
 
         setOrders(prev => prev.filter(req => req.userID!==userID));
         setUpdatePage(prev => !prev);
+        window.location.reload();
     };
 
 
@@ -104,6 +110,7 @@ const StaffView = () => {
          } catch (error){
              console.log(error);
          }
+        window.location.reload();
      };
 
     useEffect(() => {
@@ -121,7 +128,7 @@ const StaffView = () => {
                 setReadyForPickUp(readyForPickupOrders);
             })
             .catch((err) => console.log(err));
-    }, []);
+    }, [updatePage]);
     return (
         <div className="staff-view">
             <div className="section">
@@ -132,7 +139,6 @@ const StaffView = () => {
                     <tr>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>Current Role</th>
                         <th>Requested Role</th>
                         <th>Student ID / Extra Info</th>
                         <th>Action</th>
@@ -143,7 +149,6 @@ const StaffView = () => {
                         <tr key={req.id}>
                             <td>{req.name}</td>
                             <td>{req.email}</td>
-                            <td>{req.currentRole}</td>
                             <td>{req.role}</td>
                             <td>
 
