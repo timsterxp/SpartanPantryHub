@@ -99,7 +99,11 @@ const DummyCheckout = () => {
             });
 
             const result = await response.json();
-            console.log("Cart sent to database:", result);
+            if (result.ok){
+                alert("Your order has been placed successfully");
+            }else {
+                alert(result.error);
+            }
         } catch (error) {
             console.error("Error sending cart to database:", error);
         }
@@ -113,7 +117,7 @@ const DummyCheckout = () => {
             return;
         }
 
-        if (updateUser.visits==0){
+        if (updateUser.visits===0){
             setErrorMessage("You have used up your visits for the week");
             return;
         }
