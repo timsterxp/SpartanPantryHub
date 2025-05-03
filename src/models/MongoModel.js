@@ -40,28 +40,44 @@ async function retrieveRequests(req,res) {
         console.error("Error connecting to MongoDB:", err);
     }
 }
-
+//retrieves inventory from the db
 async function retrieveInventory(req,res) {
     try {
         if (!db){
             const db = await connectToDB();
         }
-        const inventoryCollections = db.collection("inventory");
-        const inventory = await inventoryCollections.find({}).toArray();
+        const inventoryCollections = db.collection("inventory");//find the inventory db
+        const inventory = await inventoryCollections.find({}).toArray(); //put the inventory db into an array
         res.json(inventory);
     } catch (err) {
         console.error("Error connecting to MongoDB:", err);
     }
 }
-
-async function senditemToinventoryDB(name, imageUrl, quantity, category, calories, protein){
+//adds an item to the db
+async function senditemToinventoryDB(name, imageUrl, quantity, category, calories, protein){//item parameters that are needed for the db
     try {
         const db = await connectToDB();
         const inventoryCollections = db.collection("inventory");
-        const newitem = {name: name, imageUrl: imageUrl, quantity: quantity, category: category, calories: calories, protein: protein};
+        const newitem = {name: name, imageUrl: imageUrl, quantity: quantity, category: category, calories: calories, protein: protein};//creates the new item
         const result = await inventoryCollections.insertOne(newitem);
     }catch (error){
         console.error("Error creating request:", error);
+    }
+}
+
+async function updateItem(name, imageUrl, quantity, category, calories, protein){
+    try {
+        if (!db){
+            const db = await connectToDB();
+        }
+        const usersCollections = db.collection("inventory");
+        const updating = await usersCollections.findOneAndUpdate(//find and updates and existing item
+            { name},
+            { $set: {imageUrl: imageUrl, quantity: quantity, category: category, calories: calories, protein: protein}},
+        )
+
+    } catch (err) {
+        console.error("Error connecting to MongoDB:", err);
     }
 }
 
@@ -208,4 +224,4 @@ async function listCollections() {
 
 
 
-module.exports = { connectToDB, getUserNames, listCollections, checkUser, sendRequestToDB, retrieveRequests, changeRole,removeRequest, retrieveRequest, retrieveInventory, retrieveRecipe, senditemToinventoryDB };
+module.exports = { connectToDB, getUserNames, listCollections, checkUser, sendRequestToDB, retrieveRequests, changeRole,removeRequest, retrieveRequest, retrieveInventory, retrieveRecipe, senditemToinventoryDB, updateItem };

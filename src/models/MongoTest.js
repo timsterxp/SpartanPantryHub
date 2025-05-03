@@ -1,5 +1,5 @@
 const express = require('express');
-const {connectToDB,  checkUser, sendRequestToDB,retrieveRequests, changeRole,removeRequest, retrieveRequest, retrieveInventory, retrieveRecipe, senditemToinventoryDB } = require('./MongoModel');
+const {connectToDB,  checkUser, sendRequestToDB,retrieveRequests, changeRole,removeRequest, retrieveRequest, retrieveInventory, retrieveRecipe, senditemToinventoryDB, updateItem } = require('./MongoModel');
 const cors = require ('cors');
 
 
@@ -23,7 +23,7 @@ app.get("/api/test-db-connection", async (req, res) => {
 //Note, need to fix send role-request to also send current role.
 app.get("/api/retrieve-request", retrieveRequests);
 
-app.get("/api/retrieve-inventory", retrieveInventory);
+app.get("/api/retrieve-inventory", retrieveInventory);// an api call to retrieve the inventory
 
 app.get("/api/retrieve-recipe", retrieveRecipe);
 
@@ -36,6 +36,11 @@ app.post("/api/inventory-add/send", async(req, res) => {
         console.error("MongoDB error:", err);
     }
 });
+
+app.post("/api/inventory-update/send", async(req, res) => {
+    const {name, imageUrl, quantity, category, calories, protein} = req.body;
+    await updateItem(name, imageUrl, quantity, category, calories, protein);
+})
 
 app.post("/api/user-check", async(req, res) => {
     const {name, email} = req.body;

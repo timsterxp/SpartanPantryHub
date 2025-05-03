@@ -9,6 +9,8 @@ const StaffView = () => {
     const [item_category, setitem_category] = useState('');
     const [item_calories, setitem_calories] = useState('');
     const [item_protein, setitem_protein] = useState('');
+    const [InventoryItem, setInventoryItem] = useState([]);
+    const [inventorymenu, setinventorymenu] = useState('');
     const [orders, setOrders] = useState([
         {
             id: 1,
@@ -74,11 +76,15 @@ const StaffView = () => {
 
         setOrders(prev => prev.filter(req => req.id!==id));
     };
+    //handles when the adding button
     const handleAddItem = async () => {
         //resets the input boxes
         setitem_name(""); setitem_url(""); setitem_quantity(""); setitem_calories(""); setitem_protein("");
         //check if the items variables were there
         console.log(item_name, item_url, item_quantity, item_category, item_calories, item_protein)
+        //tells the users what item was added
+        alert("You added " + item_name + " to the inventory list")
+        //connecting to the api to tell it add a new item
          try {
              const res = await fetch("http://localhost:5000/api/inventory-add/send", {
                  method: "POST",
@@ -91,10 +97,38 @@ const StaffView = () => {
              console.log(error);
          }
      };
+     //handles updating an item.
+     const handleupdateItem = async () => {
+        //resets the input boxes
+        setitem_name(""); setitem_url(""); setitem_quantity(""); setitem_calories(""); setitem_protein("");
+        //check if the items variables were there
+        console.log(item_name, item_url, item_quantity, item_category, item_calories, item_protein)
+        //tells the users what item was added
+        alert("You updated " + item_name + " to the inventory list")
+        //tell api to update a certain item
+         try {
+             const res = await fetch("http://localhost:5000/api/inventory-update/send", {
+                 method: "POST",
+                 headers: {
+                     "Content-Type": "application/json",
+                 },
+                 body: JSON.stringify({name: item_name, imageUrl: item_url, quantity: item_quantity, category: item_category, calories: item_calories, protein: item_protein}),
+             }); 
+         } catch (error){
+             console.log(error);
+         }
+     };
+
 
     useEffect(()=>{
         fetch('http://localhost:5000/api/retrieve-request').then(res => res.json()).then((data) => setRoleRequests(data)).catch((err) => console.log(err));
     });
+    //retrieves the inventory
+    useEffect(()=>{
+        fetch('http://localhost:5000/api/retrieve-inventory').then(res => res.json()).then((data) => setInventoryItem(data)).catch((err) => console.log(err));
+    });
+    //orders the inventory in alphabetical
+    InventoryItem.sort((a,b) => a.name.localeCompare(b.name))
     return (
         <div className="staff-view">
             <div className="section">
@@ -162,9 +196,16 @@ const StaffView = () => {
                     ))}
                 </ul>
             </div>
-            <div className="section">
+            <select value={inventorymenu} className='inventorymenu' 
+            onChange={(e) => setinventorymenu(e.target.value)}>
+                 <option value="">Select inventory options</option>
+                 <option value="add_item">add item to inventory</option>
+                 <option value="update_item">update inventory item</option>
+            </select>
+            {inventorymenu ==='add_item' && (
+                <div className="section">
                 <h2>Add item to Inventory</h2>
-                <p><span style ={{fontWeight: 'bold'}}> Warning: Don't spam the confirm button. And there are no validations </span></p>
+                <p><span style ={{fontWeight: 'bold'}}> Warning: there are no input validations </span></p>
                 <table className="inventory-add-table">
                     <thead>
                     <tr>
@@ -192,7 +233,7 @@ const StaffView = () => {
                                     onChange={(e) => setitem_url(e.target.value)}
                                 /></td>
                         <td><input
-                                    type="Int32"
+                                    type="text"
                                     placeholder="Item Quantity"
                                     value={item_quantity}
                                     onChange={(e) => setitem_quantity(e.target.value)}
@@ -209,13 +250,13 @@ const StaffView = () => {
                             </div>
                         </td>
                         <td><input
-                                    type="Int32"
+                                    type="text"
                                     placeholder="Item Calories"
                                     value={item_calories}
                                     onChange={(e) => setitem_calories(e.target.value)}
                                 /></td>
                         <td><input
-                                    type="Double"
+                                    type="text"
                                     placeholder="Item Protein"
                                     value={item_protein}
                                     onChange={(e) => setitem_protein(e.target.value)}
@@ -231,6 +272,84 @@ const StaffView = () => {
                     </tbody>
                 </table>
             </div>
+            )}
+            {inventorymenu ==='update_item' &&(
+                <div className="section">
+                <h2>Edit item to Inventory</h2>
+                <p><span style ={{fontWeight: 'bold'}}> Warning: there are no input validations </span></p>
+                <table className="inventory-add-table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>imageUrl</th>
+                        <th>Quantity</th>
+                        <th>Category</th>
+                        <th>Calories</th>
+                        <th>Protein</th>
+                        <th>Confirm</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td> 
+                            <select 
+                            value={item_name} className = "name_dropdown"
+                            onChange={(e) => setitem_name(e.target.value)}>
+                                <option value="">select a item</option>
+                                {InventoryItem.map(item => (
+                                    <option>{item.name}</option>
+                                ))}
+                            </select>
+
+                        </td>
+                        <td><input
+                                    type="text"
+                                    placeholder="Item Url"
+                                    value={item_url}
+                                    onChange={(e) => setitem_url(e.target.value)}
+                                /></td>
+                        <td><input
+                                    type="text"
+                                    placeholder="Item Quantity"
+                                    value={item_quantity}
+                                    onChange={(e) => setitem_quantity(e.target.value)}
+                                /></td>
+                        <td>
+                            <div>
+                                <select 
+                                value={item_category}  className="category"
+                                onChange={(e) => setitem_category(e.target.value)}>
+                                    <option value="">select a category</option>
+                                    <option value="perishable">perishable</option>
+                                    <option value="non-perishable">non-perishable</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td><input
+                                    type="text"
+                                    placeholder="Item Calories"
+                                    value={item_calories}
+                                    onChange={(e) => setitem_calories(e.target.value)}
+                                /></td>
+                        <td><input
+                                    type="text"
+                                    placeholder="Item Protein"
+                                    value={item_protein}
+                                    onChange={(e) => setitem_protein(e.target.value)}
+                                /></td>
+                        <td>
+                        <div className="action-btn">
+                            <button className="accept" onClick={handleupdateItem}> 
+                                Update item
+                            </button>
+                        </div>
+                        </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            )}
+            
         </div>
     );
 };
