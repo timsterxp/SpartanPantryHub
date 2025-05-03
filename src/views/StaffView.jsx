@@ -12,24 +12,9 @@ const StaffView = () => {
     const [item_protein, setitem_protein] = useState('');
     const [InventoryItem, setInventoryItem] = useState([]);
     const [inventorymenu, setinventorymenu] = useState('');
-    const [orders, setOrders] = useState([
-        {
-            id: 1,
-            user: 'Charlie',
-            items: [
-                { name: 'Milk', quantity: 2 },
-                { name: 'Cereal: Frosted Flakes ', quantity: 1 }
-            ]
-        },
-        {
-            id: 2,
-            user: 'Dana',
-            items: [
-                { name: 'Radish', quantity: 12 },
-                { name: 'RTE', quantity: 1 }
-            ]
-        }
-    ]);
+    const [orders, setOrders] = useState([]);
+    const [readyForPickUp, setReadyForPickUp] = useState([]);
+    const [updatePage, setUpdatePage] = useState(false);
 
 
     const handleConfirmRoleRequest = async (id,email,role,text) => {
@@ -69,13 +54,40 @@ const StaffView = () => {
         setRoleRequests( prev => prev.filter(req => req.email!==email));
     };
 
-    const handleConfirmOrder = (id) => {
+    const handleConfirmOrder = async (userID) => {
         // add code to change order status to ready
-        // Note that code down there needs to change from using dummy order ids to using order ids in database
+        try {
+            const res = await fetch("http://localhost:5000/api/order/ready", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({userID: userID}),
+            });
+        } catch (error){
+            console.log(error);
+        }
 
+        setOrders(prev => prev.filter(req => req.userID!==userID));
+        setUpdatePage(prev => !prev);
+    };
 
+    const handlePickUpOrder = async (userID) => {
+        // add code to change order status to ready
+        try {
+            const res = await fetch("http://localhost:5000/api/order/complete", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({userID: userID}),
+            });
+        } catch (error){
+            console.log(error);
+        }
 
-        setOrders(prev => prev.filter(req => req.id!==id));
+        setOrders(prev => prev.filter(req => req.userID!==userID));
+        setUpdatePage(prev => !prev);
     };
     //handles when the adding button
     const handleAddItem = async () => {
@@ -86,7 +98,6 @@ const StaffView = () => {
         //tells the users what item was added
         alert("You added " + item_name + " to the inventory list")
         //connecting to the api to tell it add a new item
-
          try {
              const res = await fetch("http://localhost:5000/api/inventory-add/send", {
                  method: "POST",
@@ -122,9 +133,22 @@ const StaffView = () => {
      };
 
 
-    useEffect(()=>{
-        fetch('http://localhost:5000/api/retrieve-request').then(res => res.json()).then((data) => setRoleRequests(data)).catch((err) => console.log(err));
-    });
+    useEffect(() => {
+        fetch('http://localhost:5000/api/retrieve-request')
+            .then(res => res.json())
+            .then((data) => setRoleRequests(data))
+            .catch((err) => console.log(err));
+
+        fetch('http://localhost:5000/api/retrieve-orders')
+            .then(res => res.json())
+            .then((data) => {
+                const placedOrders = data.filter(order => order.status === "placed");
+                const readyForPickupOrders = data.filter(order => order.status === "Ready for pickup");
+                setOrders(placedOrders);
+                setReadyForPickUp(readyForPickupOrders);
+            })
+            .catch((err) => console.log(err));
+    }, []);
     //retrieves the inventory
     useEffect(()=>{
         fetch('http://localhost:5000/api/retrieve-inventory').then(res => res.json()).then((data) => setInventoryItem(data)).catch((err) => console.log(err));
@@ -190,13 +214,13 @@ const StaffView = () => {
             </div>
 
             <div className="section">
-                <h2>Orders Requiring Action</h2>
+                <h2>Confirm Orders</h2>
                 <h6>*Warning* You cannot undo an order. Ensure all items are accounted before confirming an order.</h6>
                 <ul className="orders-list">
                     {orders.map((order) => (
                         <li key={order.id} className="order-item">
                             <div className="order-info">
-                                <strong>{order.user}</strong>
+                                <strong>{order.userName} | {order.userID}</strong>
                                 <ul className="item-list">
                                     {order.items.map((item, index) => (
                                         <li key={index}>
@@ -205,7 +229,29 @@ const StaffView = () => {
                                     ))}
                                 </ul>
                             </div>
-                            <button onClick={() => handleConfirmOrder(order.id)}>Confirm</button>
+                            <button onClick={() => handleConfirmOrder(order.userID)}>Ready for Pick Up</button>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
+            <div className="section">
+                <h2>Confirm Pick-Up</h2>
+                <h6>*Warning* You cannot undo a pick up. Ensure the student has provided an ID.</h6>
+                <ul className="orders-list">
+                    {readyForPickUp.map((order) => (
+                        <li key={readyForPickUp.id} className="order-item">
+                            <div className="order-info">
+                                <strong>{order.userName} | {order.userID}</strong>
+                                <ul className="item-list">
+                                    {order.items.map((item, index) => (
+                                        <li key={index}>
+                                            {item.name} (x{item.quantity})
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <button onClick={() => handlePickUpOrder(order.userID)}>Completed</button>
                         </li>
                     ))}
                 </ul>

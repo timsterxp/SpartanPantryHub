@@ -10,6 +10,27 @@ const InventoryView = () => {
     const handleToggle = (id) => {
         setExpandedItem(prev => (prev === id ? null : id));
     };
+
+    const handleAddItem =(item) => {
+
+        // Get the existing cart from localStorage
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        // Check for existing item by name
+        const existingItemIndex = cart.findIndex(cartItem => cartItem.name === item.name);
+
+        if (existingItemIndex >= 0) {
+            // Item exists: increment quantity
+            cart[existingItemIndex].quantity += 1;
+        } else {
+            // New item: add with quantity 1
+            cart.push({ ...item, quantity: 1 });
+        }
+
+        // Save updated cart to localStorage
+        localStorage.setItem("cart", JSON.stringify(cart));
+        alert ("Added "+ item.name);
+    };
     //allows the inventory to get data using the api
     useEffect(()=>{
             fetch('http://localhost:5000/api/retrieve-inventory').then(res => res.json()).then((data) => setInventoryItem(data)).catch((err) => console.log(err));  
@@ -33,6 +54,9 @@ const InventoryView = () => {
                             <p><strong>Calories:</strong> {item.calories} </p>
                             <p><strong>Protein:</strong> {item.protein} g</p>
                             <p><strong>Category:</strong> {item.category}</p>
+                            <button className="add-to-cart" onClick={() => handleAddItem(item)}>
+                            Add to Cart
+                            </button>
                         </div>
                     )}
                 </div>

@@ -40,6 +40,19 @@ async function retrieveRequests(req,res) {
         console.error("Error connecting to MongoDB:", err);
     }
 }
+
+async function retrieveOrders(req,res) {
+    try {
+        if (!db){
+            const db = await connectToDB();
+        }
+        const ordersCollections = db.collection("orders");
+        const allRequests = await ordersCollections.find({}).toArray();
+        res.json(allRequests);
+    } catch (err) {
+        console.error("Error connecting to MongoDB:", err);
+    }
+}
 //retrieves inventory from the db
 async function retrieveInventory(req,res) {
     try {
@@ -94,6 +107,40 @@ async function retrieveRecipe(req,res) {
     }
 }
 
+async function changeOrderToReady(userID) {
+    try {
+        if (!db){
+            const db = await connectToDB();
+        }
+        const ordersCollections = db.collection("orders");
+        const update = await ordersCollections.updateOne(
+            { userID},  // Corrected: use req.userID instead of req
+            { $set: { status: 'Ready for pickup' } }  // Set the status to "Ready for Pickup"
+        );
+
+        console.log("Updated");
+    } catch (err) {
+        console.error("Error connecting to MongoDB:", err);
+    }
+}
+
+async function changeOrderToComplete(userID) {
+    try {
+        if (!db){
+            const db = await connectToDB();
+        }
+        const ordersCollections = db.collection("orders");
+        const update = await ordersCollections.updateOne(
+            { userID},  // Corrected: use req.userID instead of req
+            { $set: { status: 'Completed' } }  // Set the status to "Ready for Pickup"
+        );
+
+        console.log("Updated");
+    } catch (err) {
+        console.error("Error connecting to MongoDB:", err);
+    }
+}
+
 
 //Fx to test the users collection db and that MongoDB can read it
 
@@ -139,6 +186,10 @@ async function sendRequestToDB(name,email, role, text){
         console.error("Error creating request:", error);
     }
 }
+
+
+
+
 //Need to add studentID aspect if student
 async function changeRole(email, role, text){
     try {
@@ -224,4 +275,4 @@ async function listCollections() {
 
 
 
-module.exports = { connectToDB, getUserNames, listCollections, checkUser, sendRequestToDB, retrieveRequests, changeRole,removeRequest, retrieveRequest, retrieveInventory, retrieveRecipe, senditemToinventoryDB, updateItem };
+module.exports = { connectToDB, getUserNames, listCollections, checkUser, sendRequestToDB, retrieveRequests, changeRole,removeRequest, retrieveRequest, retrieveInventory, retrieveRecipe, senditemToinventoryDB,retrieveOrders, changeOrderToReady, changeOrderToComplete, updateItem };

@@ -1,8 +1,11 @@
 // add code for viewing checkout screen
 
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './CheckoutView.css'
+import {getUser} from "../models/UserModel";
+
+const user = getUser();
 
 //dummyitems
 const cartItems = [
@@ -17,6 +20,7 @@ const DummyCheckout = () => {
     // use state for the cart items
     const [cart, setCart] = useState(cartItems);
     const [errorMessage, setErrorMessage] = useState("");
+    const [updateCart, setUpdateCart] = useState(false);
 
     // filter cart items by category
     const perishables = cart.filter((item) => item.category === "perishable");
@@ -34,23 +38,71 @@ const DummyCheckout = () => {
     const isAboveLimit = totalNonPerishableQty > nonPerishableLimit;
 
     // decrease the quantity of the specified item
-    const handleDecrease = (id) => {
-        setCart((prevCart) =>
-            prevCart
-                .map((item) =>
-                    item.id === id ? { ...item, quantity: item.quantity - 1 } : item
-                )
-                .filter((item) => item.quantity > 0) // remove items with 0 quantity
-        );
+    const handleDecrease = (item) => {
+        const existingItemIndex = cart.findIndex(cartItem => cartItem.name === item.name);
+
+        if (cart[existingItemIndex].quantity > 1) {
+
+            cart[existingItemIndex].quantity -= 1;
+        }
+        if (cart[existingItemIndex].quantity === 1) {
+
+           cart.splice(existingItemIndex, 1);
+        }
+
+        // Save updated cart to localStorage
+        localStorage.setItem("cart", JSON.stringify(cart));
+        setCart(cart);
+        setUpdateCart(prev => !prev);
     };
 
     // increase the quantity of the specified item
-    const handleIncrease = (id) => {
-        setCart((prevCart) =>
-            prevCart.map((item) =>
-                item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-            )
-        );
+    const handleIncrease = (item) => {
+        const existingItemIndex = cart.findIndex(cartItem => cartItem.name === item.name);
+
+            cart[existingItemIndex].quantity += 1;
+
+        // Save updated cart to localStorage
+        localStorage.setItem("cart", JSON.stringify(cart));
+        setCart(cart);
+        setUpdateCart(prev => !prev);
+    };
+
+    const prepareCartForDatabase = () => {
+        const cartData = cart.map(item => ({
+            name: item.name,
+            quantity: item.quantity,
+        }));
+        return cartData;
+    };
+
+    const sendCartToDatabase = async () => {
+        const cartData = prepareCartForDatabase();  // Get the prepared cart data
+
+        // Retrieve user information from localStorage
+        const userName = user.name;
+        const userID = user.text;
+
+        const payload = {
+            items: cartData,  // Items in the cart (name and quantity)
+            userName: userName,  // User's name
+            userID: userID,  // User's ID
+        };
+
+        try {
+            const response = await fetch("http://localhost:5000/api/create-order", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+
+            const result = await response.json();
+            console.log("Cart sent to database:", result);
+        } catch (error) {
+            console.error("Error sending cart to database:", error);
+        }
     };
 
     // handle place order, checking the non-perishable limit
@@ -61,12 +113,22 @@ const DummyCheckout = () => {
         }
         setErrorMessage("");
         // Proceed with placing the order
+        sendCartToDatabase();
         alert("Order placed!");
 
         //add order to database, and set cart to empty
         const emptyCart = []
         setCart(emptyCart)
+        localStorage.removeItem("cart");
     };
+
+
+
+    useEffect(() => {
+        const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+        setCart(storedCart);
+    }, [updateCart]);
+
 
     return (
         <div className="checkout-container">
@@ -83,13 +145,13 @@ const DummyCheckout = () => {
                             <div className="quantity-controls">
                                 <button
                                     className="reduce-btn"
-                                    onClick={() => handleDecrease(item.id)}
+                                    onClick={() => handleDecrease(item)}
                                 >
                                     &ndash;
                                 </button>
                                 <button
                                     className="increase-btn"
-                                    onClick={() => handleIncrease(item.id)}
+                                    onClick={() => handleIncrease(item)}
                                 >
                                     +
                                 </button>
