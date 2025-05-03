@@ -113,12 +113,14 @@ const HomeView = () => {
 
                     </div>
                     <div className="hours-container">
-                        <div className="hours">
+                        <div className="hours" style={{paddingLeft: '100px'}}>
                             <p style ={{fontSize: '30px'}}> <span style = {{fontWeight:'bold'}} > Monday </span> 10:00 AM - 5:00 PM</p>
                             <p style ={{fontSize: '30px'}}> <span style = {{fontWeight:'bold'}} > Tuesday </span> 10:00 AM - 5:00 PM</p>
                             <p style ={{fontSize: '30px'}}> <span style = {{fontWeight:'bold'}} > Wednesday </span> 10:00 AM - 5:00 PM</p>
                             <p style ={{fontSize: '30px'}}> <span style = {{fontWeight:'bold'}} > Thursday </span> 10:00 AM - 5:00 PM</p>
                             <p style ={{fontSize: '30px'}}> <span style = {{fontWeight:'bold'}} > Friday </span> 10:00 AM - 5:00 PM</p>
+                            <p style ={{fontSize: '30px'}}> <span style = {{fontWeight:'bold'}} > Saturday </span> Closed</p>
+                            <p style ={{fontSize: '30px'}}> <span style = {{fontWeight:'bold'}} > Sunday </span> Closed</p>
                         </div>
 
                         <div className="map">
