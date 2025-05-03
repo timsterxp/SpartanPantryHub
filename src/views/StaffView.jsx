@@ -55,7 +55,7 @@ const StaffView = () => {
         window.location.reload();
     };
 
-    const handleConfirmOrder = async (userID) => {
+    const handleConfirmOrder = async (id) => {
         // add code to change order status to ready
         try {
             const res = await fetch("http://localhost:5000/api/order/ready", {
@@ -63,32 +63,32 @@ const StaffView = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({userID: userID}),
+                body: JSON.stringify({_id: id}),
             });
         } catch (error){
             console.log(error);
         }
 
-        setOrders(prev => prev.filter(req => req.userID!==userID));
+        setOrders(prev => prev.filter(req => req.id!==id));
         setUpdatePage(prev => !prev);
         window.location.reload();
     };
 
-    const handlePickUpOrder = async (userID) => {
-        // add code to change order status to ready
+    const handlePickUpOrder = async (id) => {
+        console.log(id);
         try {
             const res = await fetch("http://localhost:5000/api/order/complete", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({userID: userID}),
+                body: JSON.stringify({_id:id}),
             });
         } catch (error){
             console.log(error);
         }
 
-        setOrders(prev => prev.filter(req => req.userID!==userID));
+        setOrders(prev => prev.filter(req => req.id!==id));
         setUpdatePage(prev => !prev);
         window.location.reload();
     };
@@ -126,6 +126,7 @@ const StaffView = () => {
                 const readyForPickupOrders = data.filter(order => order.status === "Ready for pickup");
                 setOrders(placedOrders);
                 setReadyForPickUp(readyForPickupOrders);
+
             })
             .catch((err) => console.log(err));
     }, [updatePage]);
@@ -189,7 +190,7 @@ const StaffView = () => {
                                     ))}
                                 </ul>
                             </div>
-                            <button onClick={() => handleConfirmOrder(order.userID)}>Ready for Pick Up</button>
+                            <button onClick={() => handleConfirmOrder(order._id)}>Ready for Pick Up</button>
                         </li>
                     ))}
                 </ul>
@@ -211,7 +212,7 @@ const StaffView = () => {
                                     ))}
                                 </ul>
                             </div>
-                            <button onClick={() => handlePickUpOrder(order.userID)}>Completed</button>
+                            <button onClick={() => handlePickUpOrder(order._id)}>Completed</button>
                         </li>
                     ))}
                 </ul>

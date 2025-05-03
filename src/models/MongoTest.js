@@ -40,18 +40,18 @@ app.post("/api/inventory-add/send", async(req, res) => {
 });
 
 app.post("/api/order/ready", async(req, res) => {
-    const {userID} = req.body;
+    const {_id} = req.body;
     try {
-        await changeOrderToReady(userID);
+        await changeOrderToReady(_id);
     } catch (err) {
         console.error("MongoDB error:", err);
     }
 });
 
 app.post("/api/order/complete", async(req, res) => {
-    const {userID} = req.body;
+    const {_id} = req.body;
     try {
-        await changeOrderToComplete(userID);
+        await changeOrderToComplete(_id);
     } catch (err) {
         console.error("MongoDB error:", err);
     }

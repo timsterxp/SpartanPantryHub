@@ -71,8 +71,8 @@ const HomeView = () => {
             {user ? (
                 <>
 
-                    <h2 className="centered">Hello, {user.name}
-                        .                                       <button onClick = {()=>handleLogout()}>Logout</button></h2>
+                    <h1 className="centered">Hello, {user.name}
+                        .                                       <button onClick = {()=>handleLogout()}>Logout</button></h1>
 
                     <div className="image-container">
                         <figure className="button-3d">
@@ -107,22 +107,22 @@ const HomeView = () => {
                     <div className="centered">
                         <h1> Welcome to PantryHub, your one stop for the food pantry located on campus!</h1>
                         <img src="/PantryLogo.png" alt="Logo"/>
-                        <p> The pantry is located next to the Student Union, in front of the Engineering Building and is
+                        <p style ={{fontSize: '35px'}}> The pantry is located next to the Student Union, in front of the Engineering Building and is
                             open:
                         </p>
 
                     </div>
                     <div className="hours-container">
                         <div className="hours">
-                            <p> <span style = {{fontWeight:'bold'}} > Monday </span> 10:00 AM - 5:00 PM</p>
-                            <p> <span style = {{fontWeight:'bold'}} > Tuesday </span> 10:00 AM - 5:00 PM</p>
-                            <p> <span style = {{fontWeight:'bold'}} > Wednesday </span> 10:00 AM - 5:00 PM</p>
-                            <p> <span style = {{fontWeight:'bold'}} > Thursday </span> 10:00 AM - 5:00 PM</p>
-                            <p> <span style = {{fontWeight:'bold'}} > Friday </span> 10:00 AM - 5:00 PM</p>
+                            <p style ={{fontSize: '30px'}}> <span style = {{fontWeight:'bold'}} > Monday </span> 10:00 AM - 5:00 PM</p>
+                            <p style ={{fontSize: '30px'}}> <span style = {{fontWeight:'bold'}} > Tuesday </span> 10:00 AM - 5:00 PM</p>
+                            <p style ={{fontSize: '30px'}}> <span style = {{fontWeight:'bold'}} > Wednesday </span> 10:00 AM - 5:00 PM</p>
+                            <p style ={{fontSize: '30px'}}> <span style = {{fontWeight:'bold'}} > Thursday </span> 10:00 AM - 5:00 PM</p>
+                            <p style ={{fontSize: '30px'}}> <span style = {{fontWeight:'bold'}} > Friday </span> 10:00 AM - 5:00 PM</p>
                         </div>
 
                         <div className="map">
-                            <img src="https://i.gyazo.com/db39be6249840d8aa20f65b4be6c42ec.png" alt="Map Location"/>
+                            <img src="https://i.gyazo.com/4e4f36b0100c7b385bb79cf00da8d4ce.png" alt="Map Location"/>
                         </div>
                     </div>
 
