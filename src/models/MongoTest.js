@@ -1,5 +1,5 @@
 const express = require('express');
-const {connectToDB,  checkUser, sendRequestToDB,retrieveRequests, changeRole,removeRequest, retrieveRequest, retrieveInventory, retrieveRecipe, senditemToinventoryDB, retrieveOrders, changeOrderToReady, changeOrderToComplete } = require('./MongoModel');
+const {connectToDB,  checkUser, sendRequestToDB,retrieveRequests, changeRole,removeRequest, retrieveRequest, retrieveInventory, retrieveRecipe, senditemToinventoryDB, retrieveOrders, changeOrderToReady, changeOrderToComplete, getOrderHistory } = require('./MongoModel');
 const cors = require ('cors');
 const mongoose = require("mongoose");
 
@@ -52,6 +52,16 @@ app.post("/api/order/complete", async(req, res) => {
     const {userID} = req.body;
     try {
         await changeOrderToComplete(userID);
+    } catch (err) {
+        console.error("MongoDB error:", err);
+    }
+});
+
+app.post("/api/order/history", async(req, res) => {
+    const {userID} = req.body;
+    try {
+        const orders = await getOrderHistory(userID);
+        res.json(orders);
     } catch (err) {
         console.error("MongoDB error:", err);
     }

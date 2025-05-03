@@ -171,6 +171,17 @@ async function sendRequestToDB(name,email, role, text){
     }
 }
 
+async function getOrderHistory(studentID) {
+    try {
+        const db = await connectToDB();
+        const orders = await db.collection("orders");
+        const myOrders = await orders.find({userID:studentID}).toArray();
+        console.log(myOrders);
+        return myOrders;
+    }catch (err) {
+        console.error("Error getting order history:", err);
+    }
+}
 
 
 
@@ -259,4 +270,4 @@ async function listCollections() {
 
 
 
-module.exports = { connectToDB, getUserNames, listCollections, checkUser, sendRequestToDB, retrieveRequests, changeRole,removeRequest, retrieveRequest, retrieveInventory, retrieveRecipe, senditemToinventoryDB,retrieveOrders, changeOrderToReady, changeOrderToComplete };
+module.exports = { connectToDB, getUserNames, listCollections, checkUser, sendRequestToDB, retrieveRequests, changeRole,removeRequest, retrieveRequest, retrieveInventory, retrieveRecipe, senditemToinventoryDB,retrieveOrders, getOrderHistory, changeOrderToReady, changeOrderToComplete };
