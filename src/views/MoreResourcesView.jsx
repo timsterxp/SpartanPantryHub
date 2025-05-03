@@ -2,7 +2,7 @@ import React from 'react';
 
 const MoreResourcesView = () => {
     return(
-    <div style={{padding:'20px 20px 20px 20px'}}>
+    <div style={{padding:'100px 100px 100px 100px'}}>
         <h1> How Spartan Food Pantry Works: </h1>
         <h2> Step 1: Check In </h2>
         <p>  Complete the  <a href="https://sjsu.qualtrics.com/jfe/form/SV_3jDkvbK7IA0xeWG" style={{ color: 'blue', textDecoration: 'underline' }}> Spartan Food Pantry Intake & Agreement Form</a>.
