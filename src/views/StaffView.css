@@ -98,21 +98,39 @@
 .deny:hover {
     background-color: #c82333;
 }
+.inventorysection {
+    margin-bottom: 200px;
+    right: 20px;
+}
 .inventory-add-table {
-    width: 100%;
+    width: 110%;
+    height: 70px;
     border-collapse: collapse;
     margin-top: 10px;
 }
-
+.inventory-add-table table,
 .inventory-add-table th,
 .inventory-add-table td {
     border: 1px solid #ffffff;
     padding: 10px;
     text-align: left;
+    font-size: 1.3rem;
 }
-
+.name_dropdown{
+    font-size: 0.8rem;
+}
 .inventory-add-table input {
     width: 100%;
     padding: 6px;
+    font-size: 0.8rem;
     box-sizing: border-box;
+}
+
+.inventorymenu {
+    width: 30%;
+    margin-top: 16px;
+    font-size: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }

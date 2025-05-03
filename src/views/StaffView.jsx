@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import './StaffView.css';
+import { isValidDateValue } from '@testing-library/user-event/dist/utils';
 
 const StaffView = () => {
     const [roleRequests, setRoleRequests] = useState([]);
@@ -85,6 +86,7 @@ const StaffView = () => {
         //tells the users what item was added
         alert("You added " + item_name + " to the inventory list")
         //connecting to the api to tell it add a new item
+
          try {
              const res = await fetch("http://localhost:5000/api/inventory-add/send", {
                  method: "POST",
@@ -127,6 +129,18 @@ const StaffView = () => {
     useEffect(()=>{
         fetch('http://localhost:5000/api/retrieve-inventory').then(res => res.json()).then((data) => setInventoryItem(data)).catch((err) => console.log(err));
     });
+
+    const handlefillin = (e) =>{
+        const item_name = e.target.value;
+        const itemindex = InventoryItem.findIndex((item) => item.name === item_name);
+        console.log(item_name, item_url, item_quantity, item_category, item_calories, item_protein)
+        setitem_name(item_name);
+        setitem_url(InventoryItem[itemindex].imageUrl);
+        setitem_quantity(InventoryItem[itemindex].quantity);
+        setitem_category(InventoryItem[itemindex].category);
+        setitem_calories(InventoryItem[itemindex].calories);
+        setitem_protein(InventoryItem[itemindex].protein);
+    }
     //orders the inventory in alphabetical
     InventoryItem.sort((a,b) => a.name.localeCompare(b.name))
     return (
@@ -203,7 +217,7 @@ const StaffView = () => {
                  <option value="update_item">update inventory item</option>
             </select>
             {inventorymenu ==='add_item' && (
-                <div className="section">
+                <div className="inventorysection">
                 <h2>Add item to Inventory</h2>
                 <p><span style ={{fontWeight: 'bold'}}> Warning: there are no input validations </span></p>
                 <table className="inventory-add-table">
@@ -274,7 +288,7 @@ const StaffView = () => {
             </div>
             )}
             {inventorymenu ==='update_item' &&(
-                <div className="section">
+                <div className="inventorysection">
                 <h2>Edit item to Inventory</h2>
                 <p><span style ={{fontWeight: 'bold'}}> Warning: there are no input validations </span></p>
                 <table className="inventory-add-table">
@@ -293,8 +307,8 @@ const StaffView = () => {
                     <tr>
                         <td> 
                             <select 
-                            value={item_name} className = "name_dropdown"
-                            onChange={(e) => setitem_name(e.target.value)}>
+                            value={item_name} className = "name_dropdown" 
+                            onChange={handlefillin}>
                                 <option value="">select a item</option>
                                 {InventoryItem.map(item => (
                                     <option>{item.name}</option>
