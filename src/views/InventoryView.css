@@ -45,3 +45,19 @@
     font-size: 0.9rem;
     color: #333;
 }
+
+.add-to-cart {
+    background-color: #2563eb; /* Blue-600 */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-to-cart:hover {
+    background-color: #1d4ed8; /* Blue-700 */
+}

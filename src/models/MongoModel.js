@@ -123,6 +123,8 @@ async function sendRequestToDB(name,email, role, text){
         console.error("Error creating request:", error);
     }
 }
+
+
 //Need to add studentID aspect if student
 async function changeRole(email, role, text){
     try {
