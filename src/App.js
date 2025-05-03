@@ -40,9 +40,10 @@ function App() {
                                 </>
                             ):null}
 
-                            {role === 'staff' ? (
+                            {role === 'Staff' ? (
                                 <>
                                     <li><Link to="/StaffActions" className="navItems">Staff Actions</Link></li>
+                                    <li><Link to="/Inventory" className="navItems">Check Inventory</Link></li>
                                 </>
                             ):null}
 
