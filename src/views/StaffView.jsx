@@ -14,6 +14,16 @@ const StaffView = () => {
     const [updatePage, setUpdatePage] = useState(false);
     const [showReasonBoxId, setShowReasonBoxId] = useState(null);
     const [cancelReason, setCancelReason] = useState('');
+    const [inventory, setInventory] = useState([]);
+    const [selectedItemName, setSelectedItemName] = useState('');
+    const [formData, setFormData] = useState({
+        name: '',
+        imageurl: '',
+        quantity: '',
+        category: '',
+        calories: '',
+        protein: ''
+    });
 
 
     const handleConfirmRoleRequest = async (id,email,role,text) => {
@@ -133,6 +143,39 @@ const StaffView = () => {
          }
         window.location.reload();
      };
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const updateInventoryItem = async () => {
+        if (!selectedItemName) {
+            alert("Please select an item");
+            return;
+        }
+        const payload = {
+            name: selectedItemName,
+            ...formData
+        };
+        console.log(payload);
+        try {
+            const res = await fetch("http://localhost:5000/api/inventory/update", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify( payload)
+            });
+
+            const result = await res.json();
+            if (result.success) {
+                alert("Item updated successfully!");
+                setFormData({ imageurl: '', quantity: '', category: '', calories: '', protein: '' });
+            } else {
+                alert("Failed to update item.");
+            }
+        } catch (err) {
+            console.error('Update error:', err);
+            alert("Error updating item.");
+        }
+    };
 
     useEffect(() => {
         fetch('http://localhost:5000/api/retrieve-request')
@@ -150,7 +193,22 @@ const StaffView = () => {
 
             })
             .catch((err) => console.log(err));
+        fetch('http://localhost:5000/api/retrieve-inventory')
+            .then(res => res.json())
+            .then(data => setInventory(data))
+            .catch((err) => console.log(err));
+
+        const item = inventory.find(i => i.name === selectedItemName);
+        if (item) {
+            setFormData({ ...item });
+        }
     }, [updatePage]);
+    useEffect(() => {
+        const item = inventory.find(i => i.name === selectedItemName);
+        if (item) {
+            setFormData({ ...item }); // includes item.name
+        }
+    }, [selectedItemName, inventory]);
     return (
         <div className="staff-view">
             <div className="section">
@@ -326,7 +384,28 @@ const StaffView = () => {
                     </tbody>
                 </table>
             </div>
+            <div>
+                <h2>Edit Inventory Item</h2>
+                <h4 style={{textAlign:'center'}}>(You may leave fields blank to keep the previous value)</h4>
+                <select value={selectedItemName} onChange={e => setSelectedItemName(e.target.value)}>
+                    <option value="">-- Select Item --</option>
+                    {inventory.map((item, index) => (
+                        <option key={index} value={item.name}>{item.name}</option>
+                    ))}
+                </select>
+
+                <div>
+                    <p> <input type="text" name="imageurl" placeholder="Image URL" value={formData.imageurl} onChange={handleChange} /></p>
+                    <p> <input type="number" name="quantity" placeholder="Quantity" value={formData.quantity} onChange={handleChange}  /></p>
+                        <p><input type="text" name="category" placeholder="Category" value={formData.category} onChange={handleChange} /></p>
+                            <p> <input type="number" name="calories" placeholder="Calories" value={formData.calories} onChange={handleChange}  /></p>
+                                <p><input type="number" name="protein" placeholder="Protein" value={formData.protein} onChange={handleChange}  /></p>
+                </div>
+
+                <button onClick={updateInventoryItem}>Update Item</button>
+            </div>
         </div>
+
     );
 };
 
