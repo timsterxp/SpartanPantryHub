@@ -91,6 +91,24 @@ async function retrieveRecipe(req,res) {
     }
 }
 
+async function denyOrder(_id,text ) {
+    try {
+        if (!db){
+            const db = await connectToDB();
+        }
+        const { ObjectId } = require('mongodb');
+        const ordersCollections = db.collection("orders");
+        const update = await ordersCollections.updateOne(
+            { _id: new ObjectId(_id) },
+            { $set: { status: 'Cancelled', notes: text } }
+        );
+
+        console.log("Updated");
+    } catch (err) {
+        console.error("Error connecting to MongoDB:", err);
+    }
+}
+
 async function changeOrderToReady(_id) {
     try {
         if (!db){
@@ -288,4 +306,4 @@ async function listCollections() {
 
 
 
-module.exports = { connectToDB, getUserNames, listCollections, checkUser, sendRequestToDB, retrieveRequests, changeRole,removeRequest, retrieveRequest, retrieveInventory, retrieveRecipe, reduceVisits, senditemToinventoryDB,retrieveOrders, getOrderHistory, changeOrderToReady, changeOrderToComplete };
+module.exports = { connectToDB, getUserNames, listCollections, checkUser, sendRequestToDB, retrieveRequests, changeRole,removeRequest, retrieveRequest, retrieveInventory, retrieveRecipe, reduceVisits,denyOrder, senditemToinventoryDB,retrieveOrders, getOrderHistory, changeOrderToReady, changeOrderToComplete };

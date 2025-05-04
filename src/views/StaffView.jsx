@@ -12,6 +12,8 @@ const StaffView = () => {
     const [orders, setOrders] = useState([]);
     const [readyForPickUp, setReadyForPickUp] = useState([]);
     const [updatePage, setUpdatePage] = useState(false);
+    const [showReasonBoxId, setShowReasonBoxId] = useState(null);
+    const [cancelReason, setCancelReason] = useState('');
 
 
     const handleConfirmRoleRequest = async (id,email,role,text) => {
@@ -64,6 +66,25 @@ const StaffView = () => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({_id: id}),
+            });
+        } catch (error){
+            console.log(error);
+        }
+
+        setOrders(prev => prev.filter(req => req.id!==id));
+        setUpdatePage(prev => !prev);
+        window.location.reload();
+    };
+
+    const problemWithOrder = async (id, text) => {
+        // add code to change order status to ready
+        try {
+            const res = await fetch("http://localhost:5000/api/order/problem", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({_id: id, notes: text}),
             });
         } catch (error){
             console.log(error);
@@ -175,7 +196,7 @@ const StaffView = () => {
             </div>
 
             <div className="section">
-                <h2>Confirm Orders</h2>
+                <h2>Set Orders As Ready To Pickup</h2>
                 <h6>*Warning* You cannot undo an order. Ensure all items are accounted before confirming an order.</h6>
                 <ul className="orders-list">
                     {orders.map((order) => (
@@ -191,6 +212,25 @@ const StaffView = () => {
                                 </ul>
                             </div>
                             <button onClick={() => handleConfirmOrder(order._id)}>Ready for Pick Up</button>
+                            <button onClick={() => setShowReasonBoxId(order._id)}>Cancel Order</button>
+                            {showReasonBoxId === order._id && (
+                                <div>
+                                    <input
+                                        type="text"
+                                        placeholder="Enter reason for cancellation"
+                                        value={cancelReason}
+                                        onChange={(e) => setCancelReason(e.target.value)}
+                                    />
+                                    <button onClick={() => {
+                                        problemWithOrder(order._id, cancelReason);
+                                        setShowReasonBoxId(null);
+                                        setCancelReason('');
+                                    }}>
+                                        Submit
+                                    </button>
+                                    <button onClick={() => setShowReasonBoxId(null)}>Cancel</button>
+                                </div>
+                            )}
                         </li>
                     ))}
                 </ul>

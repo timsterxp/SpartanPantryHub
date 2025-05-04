@@ -102,7 +102,7 @@ const DummyCheckout = () => {
             if (result.ok){
                 alert("Your order has been placed successfully");
             }else {
-                alert(result.error);
+
             }
         } catch (error) {
             console.error("Error sending cart to database:", error);
