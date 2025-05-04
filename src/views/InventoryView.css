@@ -1,3 +1,7 @@
+/*
+Inventory CSS will focus on trying to show pantry inventory in an intuitive and user-friendly format of cards
+ */
+
 .inventory-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -47,7 +51,7 @@
 }
 
 .add-to-cart {
-    background-color: #2563eb; /* Blue-600 */
+    background-color: #2563eb;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -59,5 +63,5 @@
 }
 
 .add-to-cart:hover {
-    background-color: #1d4ed8; /* Blue-700 */
+    background-color: #1d4ed8;
 }

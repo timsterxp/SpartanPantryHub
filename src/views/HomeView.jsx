@@ -3,6 +3,12 @@ import {useNavigate, Link} from "react-router-dom";
 import {useEffect} from "react";
 import "./HomeView.css";
 
+/**
+ * HomeView will be where users are first validated for entry/access.
+ * It will contain basic pantry information.
+ * @returns {JSX.Element}
+ * @constructor
+ */
 
 const HomeView = () => {
     const navigate = useNavigate();

@@ -40,6 +40,9 @@ const recipes = [
     // Add more recipes as needed
 ];
 
+/*
+RecipeView will provide card-format of Official Card Recipes as well as an option to generate one via AI (OpenAI powered)
+ */
 
 const RecipeView = () => {
     const [inputValue, setInputValue] = useState("");

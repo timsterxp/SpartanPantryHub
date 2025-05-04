@@ -12,7 +12,9 @@ import OrderView from "./views/OrdersView";
 import OrderEdit from "./views/OrderEditView";
 import MoreResourcesView from "./views/MoreResourcesView";
 
-
+/**
+ * Main App.JS in charge of providing the routing via navBar and set up the links to the other files.
+ */
 // npm install react-router-dom
 const clientId= process.env.REACT_APP_GOOGLE_CLIENT_ID;
 function App() {
