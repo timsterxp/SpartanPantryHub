@@ -1,92 +1,98 @@
-// page for order
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
 
-const OrderEdit = () => {
-  const [orders, setOrders] = useState([
-    {
-      id: 1,
-      customerName: "Alice",
-      items: [
-        { name: "Apple", quantity: 2 },
-        { name: "Banana", quantity: 3 },
-      ]
-    },
-    {
-      id: 2,
-      customerName: "Bob",
-      items: [
-        { name: "Orange", quantity: 1 },
-        { name: "Grapes", quantity: 2 },
-      ]
-    }
-  ]);
+function OrderEditView() {
+  const [orders, setOrders] = useState([]);
+  const [editOrderId, setEditOrderId] = useState(null);
+  const [editForm, setEditForm] = useState({});
 
-  // Handle input changes for editing
-  const handleChange = (orderId, itemIndex, field, value) => {
-    const updatedOrders = orders.map(order => {
-      if (order.id === orderId) {
-        const updatedItems = order.items.map((item, index) => {
-          if (index === itemIndex) {
-            return { ...item, [field]: field === 'quantity' ? Number(value) : value };
-          }
-          return item;
-        });
-        return { ...order, items: updatedItems };
-      }
-      return order;
+  useEffect(() => {
+    fetch("http://localhost:5000/api/orders")
+      .then((res) => res.json())
+      .then((data) => setOrders(data));
+  }, []);
+
+  const handleEditClick = (order) => {
+    setEditOrderId(order._id);
+    setEditForm({
+      ...order,
+      items: order.items.map(item => ({ ...item })) // deep copy
     });
-
-    setOrders(updatedOrders);
+  };
+  
+  const handleChangeQuantity = (index, value) => {
+    const updatedItems = [...editForm.items];
+    updatedItems[index].quantity = parseInt(value);
+    setEditForm({ ...editForm, items: updatedItems });
+  };
+  
+  const handleSave = async () => {
+    await fetch(`http://localhost:5000/api/orders/${editOrderId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(editForm),
+    });
+  
+    const updated = await fetch("http://localhost:5000/api/orders").then(res => res.json());
+    setOrders(updated);
+    setEditOrderId(null);
   };
 
   return (
-    <div className="order-view">
-      <h1>Order List</h1>
-      {orders.map((order) => (
-        <div key={order.id} className="order-card" style={styles.card}>
-          <h2>Order #{order.id}</h2>
-          <p><strong>Customer:</strong> {order.customerName}</p>
-          <h3>Items:</h3>
-          {order.items.map((item, index) => (
-            <div key={index} style={styles.itemRow}>
-              <input
-                type="text"
-                value={item.name}
-                onChange={(e) => handleChange(order.id, index, 'name', e.target.value)}
-                style={styles.input}
-              />
-              <input
-                type="number"
-                value={item.quantity}
-                onChange={(e) => handleChange(order.id, index, 'quantity', e.target.value)}
-                style={styles.input}
-              />
-            </div>
-          ))}
-        </div>
-      ))}
+    <div>
+      <h2>Edit Orders</h2>
+      {orders.map((order) => {
+        const hasItems = order.items && order.items.length > 0;
+        const firstItem = hasItems ? order.items[0] : {};
+  
+        return (
+          <div
+            key={order._id}
+            style={{ border: "1px solid #ccc", margin: "10px", padding: "10px", background: "#e6f1f7" }}
+          >
+            {hasItems ? (
+              <>
+                <p><strong>User:</strong> {firstItem.userName} (ID: {firstItem.userID})</p>
+                <p><strong>Date Placed:</strong> {firstItem.datePlaced}</p>
+                <p><strong>Status:</strong> {firstItem.status}</p>
+                <p><strong>Notes:</strong> {firstItem.notes || "None"}</p>
+  
+                <h4>Items:</h4>
+                {editOrderId === order._id ? (
+                  <>
+                    {editForm.items.map((item, idx) => (
+                      <div key={idx}>
+                        <span>{item.name}: </span>
+                        <input
+                          type="number"
+                          value={item.quantity}
+                          onChange={(e) => handleChangeQuantity(idx, e.target.value)}
+                          min="0"
+                        />
+                      </div>
+                    ))}
+                    <button onClick={handleSave}>Save</button>
+                  </>
+                ) : (
+                  <>
+                    <ul>
+                      {order.items.map((item, idx) => (
+                        <li key={idx}>
+                          {item.name}: {item.quantity}
+                        </li>
+                      ))}
+                    </ul>
+                    <button onClick={() => handleEditClick(order)}>Edit</button>
+                  </>
+                )}
+              </>
+            ) : (
+              <p><em>No items in this order.</em></p>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
-};
+}
 
-// Basic styling
-const styles = {
-  card: {
-    border: '1px solid #ccc',
-    borderRadius: '12px',
-    padding: '16px',
-    marginBottom: '16px',
-    backgroundColor: '#f9f9f9'
-  },
-  itemRow: {
-    display: 'flex',
-    gap: '8px',
-    marginBottom: '8px'
-  },
-  input: {
-    padding: '4px 8px',
-    borderRadius: '4px',
-    border: '1px solid #ccc'
-  }
-};
-export default OrderEdit;
+export default OrderEditView;

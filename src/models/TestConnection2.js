@@ -1,6 +1,8 @@
 const { MongoClient } = require('mongodb');
 
-//const uri = removedLinkAsthishadapassword
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
+const uri = process.env.MONGO_URL;
 
 async function testConnection() {
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });

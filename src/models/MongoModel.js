@@ -139,6 +139,39 @@ async function retrieveRequest(req,res,email) {
     }
 }
 
+async function getAllOrders(req, res) {
+    try {
+        const db = await connectToDB();
+        const ordersCollection = db.collection("orders");
+        const orders = await ordersCollection.find({}).toArray();
+        res.json(orders);
+    } catch (err) {
+        console.error("Error fetching orders:", err);
+        res.status(500).send("Failed to fetch orders");
+    }
+}
+
+async function updateOrder(req, res) {
+    const { id } = req.params;
+    const updateData = req.body;
+
+    try {
+        const db = await connectToDB();
+        const ordersCollection = db.collection("orders");
+        const result = await ordersCollection.findOneAndUpdate(
+            { _id: new require('mongodb').ObjectId(id) },
+            { $set: updateData },
+            { returnDocument: "after" }
+        );
+
+        if (!result.value) return res.status(404).send("Order not found");
+        res.json(result.value);
+    } catch (err) {
+        console.error("Error updating order:", err);
+        res.status(500).send("Failed to update order");
+    }
+}
+
 //Fx to test all collections in MongoDB ' delete later.
 async function listCollections() {
     if (!db) {
@@ -160,4 +193,4 @@ async function listCollections() {
 
 
 
-module.exports = { connectToDB, getUserNames, listCollections, checkUser, sendRequestToDB, retrieveRequests, changeRole,removeRequest, retrieveRequest };
+module.exports = { connectToDB, getUserNames, listCollections, checkUser, sendRequestToDB, retrieveRequests, changeRole,removeRequest, retrieveRequest, getAllOrders, updateOrder };

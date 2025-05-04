@@ -1,12 +1,16 @@
 const express = require('express');
-const {connectToDB,  checkUser, sendRequestToDB,retrieveRequests, changeRole,removeRequest, retrieveRequest } = require('./MongoModel');
+const {connectToDB,  checkUser, sendRequestToDB,retrieveRequests, changeRole,removeRequest, retrieveRequest, getAllOrders, updateOrder } = require('./MongoModel');
 const cors = require ('cors');
 
 
 const app = express();
 const PORT =  5000;
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:3000" }));
+app.use(cors({
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true
+  }));
 
 app.get("/api/test-db-connection", async (req, res) => {
     try {
@@ -22,6 +26,10 @@ app.get("/api/test-db-connection", async (req, res) => {
 
 //Note, need to fix send role-request to also send current role.
 app.get("/api/retrieve-request", retrieveRequests);
+
+//getting orders
+app.get("/api/orders", getAllOrders);
+app.put("/api/orders/:id", updateOrder);
 
 app.post("/api/user-check", async(req, res) => {
     const {name, email} = req.body;
