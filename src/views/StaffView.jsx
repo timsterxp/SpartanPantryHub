@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import './StaffView.css';
-import { isValidDateValue } from '@testing-library/user-event/dist/utils';
+import {isValidDateValue} from '@testing-library/user-event/dist/utils';
 
 /*
 StaffView will provide Staff members multiple options:
@@ -55,6 +55,7 @@ const StaffView = () => {
         setRoleRequests(prev => prev.filter(req => req.email !== email));
         setUpdatePage(prev => !prev);
 
+
     };
 
     //If deny, cancel their request
@@ -75,6 +76,7 @@ const StaffView = () => {
         }
         setRoleRequests(prev => prev.filter(req => req.email !== email));
         setUpdatePage(prev => !prev);
+
     };
 
     /**
@@ -282,7 +284,6 @@ const StaffView = () => {
             });
 
             const result = await response.json();
-            alert("Logged the Students Order");
         } catch (error) {
             console.error("Error sending cart to database:", error);
         }
@@ -332,13 +333,13 @@ const StaffView = () => {
         }
     }, [selectedItemName, inventory]);
     //retrieves the inventory
-    useEffect(()=>{
+    useEffect(() => {
         fetch('http://localhost:5000/api/retrieve-inventory').then(res => res.json()).then((data) => setInventoryItem(data)).catch((err) => console.log(err));
     });
 
     //orders the inventory in alphabetical
-    InventoryItem.sort((a,b) => a.name.localeCompare(b.name))
-    inventory.sort((a,b) => a.name.localeCompare(b.name))
+    InventoryItem.sort((a, b) => a.name.localeCompare(b.name))
+    inventory.sort((a, b) => a.name.localeCompare(b.name))
     return (
         <div className="staff-view">
             <div className="section">
@@ -370,11 +371,17 @@ const StaffView = () => {
                                 <div className="action-btn">
 
                                     <button className="accept"
-                                            onClick={() => handleConfirmRoleRequest(req.id, req.email, req.role, req.text)}>
+                                            onClick={() => {
+                                                handleConfirmRoleRequest(req.id, req.email, req.role, req.text);
+                                                alert("You have set " + req.name + " as a " + req.role);
+                                            }}>
                                         Accept
                                     </button>
 
-                                    <button className="deny" onClick={() => handleDenyRoleRequest(req.id, req.email)}>
+                                    <button className="deny" onClick={() => {
+                                        handleDenyRoleRequest(req.id, req.email);
+                                            alert("You have denied the request for " + req.role);
+                                    }}>
                                         Deny
                                     </button>
                                 </div>
@@ -401,7 +408,11 @@ const StaffView = () => {
                                     ))}
                                 </ul>
                             </div>
-                            <button onClick={() => handleConfirmOrder(order._id)}>Ready for Pick Up</button>
+                            <button onClick={() => {
+                                handleConfirmOrder(order._id);
+                                    alert("You have confirmed " + order.userName + "'s order is ready for pickup.");
+                            }}>Ready for Pick Up
+                            </button>
                             <button onClick={() => setShowReasonBoxId(order._id)}>Cancel Order</button>
                             {showReasonBoxId === order._id && (
                                 <div>
@@ -415,6 +426,7 @@ const StaffView = () => {
                                         problemWithOrder(order._id, cancelReason);
                                         setShowReasonBoxId(null);
                                         setCancelReason('');
+                                        alert("You have cancelled " + order.userName + "'s order due to "+ cancelReason);
                                     }}>
                                         Submit
                                     </button>
@@ -442,16 +454,17 @@ const StaffView = () => {
                                     ))}
                                 </ul>
                             </div>
-                            <button onClick={() => handlePickUpOrder(order._id)}>Completed</button>
+                            <button onClick={() => {handlePickUpOrder(order._id);
+                            alert("You have confirmed pick up of " + order.userName + "'s order.");}}>Completed</button>
                         </li>
                     ))}
                 </ul>
             </div>
             <div className="inventorysection-add">
-            <h2>Add item to Inventory</h2>
-            <p><span style ={{fontWeight: 'bold'}}> Warning: there are no input validations </span></p>
-            <table className="inventory-add-table">
-                <thead>
+                <h2>Add item to Inventory</h2>
+                <p><span style={{fontWeight: 'bold'}}> Warning: there are no input validations </span></p>
+                <table className="inventory-add-table">
+                    <thead>
                     <tr>
                         <th>Name</th>
                         <th>imageUrl</th>
@@ -516,10 +529,10 @@ const StaffView = () => {
                     </tbody>
                 </table>
             </div>
-                <div className="inventorysection">
+            <div className="inventorysection">
                 <h2>Edit item to Inventory</h2>
-                <h4 style={{textAlign:'center'}}>(You may leave fields blank to keep the previous value)</h4>      
-                 <table className="inventory-add-table">
+                <h4 style={{textAlign: 'center'}}>(You may leave fields blank to keep the previous value)</h4>
+                <table className="inventory-add-table">
                     <thead>
                     <tr>
                         <th>Name</th>
@@ -533,39 +546,44 @@ const StaffView = () => {
                     </thead>
                     <tbody>
                     <tr>
-                        <td> 
-                            <select 
-                           value={selectedItemName} onChange={e => setSelectedItemName(e.target.value)}>
-                           <option value="">-- Select Item --</option>
-                           {inventory.map((item, index) => (
-                               <option key={index} value={item.name}>{item.name}</option>
-                           ))}
+                        <td>
+                            <select
+                                value={selectedItemName} onChange={e => setSelectedItemName(e.target.value)}>
+                                <option value="">-- Select Item --</option>
+                                {inventory.map((item, index) => (
+                                    <option key={index} value={item.name}>{item.name}</option>
+                                ))}
                             </select>
 
                         </td>
                         <td>
-                            <input type="text" name="imageurl" placeholder="Image URL" value={formData.imageurl} onChange={handleChange}
-                                /></td>
+                            <input type="text" name="imageurl" placeholder="Image URL" value={formData.imageurl}
+                                   onChange={handleChange}
+                            /></td>
                         <td>
-                            <input type="number" name="quantity" placeholder="Quantity" value={formData.quantity} onChange={handleChange}
-                                /></td>
+                            <input type="number" name="quantity" placeholder="Quantity" value={formData.quantity}
+                                   onChange={handleChange}
+                            /></td>
                         <td>
-                             <input type="text" name="category" placeholder="Category" value={formData.category} onChange={handleChange}  />
+                            <input type="text" name="category" placeholder="Category" value={formData.category}
+                                   onChange={handleChange}/>
                         </td>
-                        <td>    
-                            <input  type="number" name="calories" placeholder="Calories" value={formData.calories} onChange={handleChange}
-                                /></td>
                         <td>
-                            <input  type="text" name="protein" placeholder="Protein" value={formData.protein} onChange={handleChange} 
-                                /></td>
+                            <input type="number" name="calories" placeholder="Calories" value={formData.calories}
+                                   onChange={handleChange}
+                            /></td>
                         <td>
-                        <div className="action-btn">
-                            <button className="accept" onClick={updateInventoryItem}> 
-                                Update item
-                            </button>
-                        </div>
+                            <input type="text" name="protein" placeholder="Protein" value={formData.protein}
+                                   onChange={handleChange}
+                            /></td>
+                        <td>
+                            <div className="action-btn">
+                                <button className="accept" onClick={updateInventoryItem}>
+                                    Update item
+                                </button>
+                            </div>
                         </td>
-                        </tr>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -586,7 +604,7 @@ const StaffView = () => {
                     ))}
 
                 </select>
-                <p> </p>
+                <p></p>
                 <label>
 
                     <input
@@ -596,9 +614,9 @@ const StaffView = () => {
                         placeholder="quantity"
                     />
                 </label>
-                <p> </p>
+                <p></p>
                 <button className="accept" onClick={() => addLocalCart(selectedItemName, quantity)}>Add Item</button>
-                <p> </p>
+                <p></p>
                 <h2>Cart Items</h2>
                 {cart.length === 0 ? (
                     <p>The Cart Is Empty</p>
@@ -620,8 +638,9 @@ const StaffView = () => {
                         </tbody>
                     </table>
                 )}
-                <p style = {{paddingBottom: '20px'}}></p>
-                <p style = {{fontWeight:'bold'}}>Warning. Place a students name and ID after you have finished creating their cart to prevent accidental orders. </p>
+                <p style={{paddingBottom: '20px'}}></p>
+                <p style={{fontWeight: 'bold'}}>Warning. Place a students name and ID after you have finished creating
+                    their cart to prevent accidental orders. </p>
                 <label>
                     Student Name:
                     <input
@@ -642,9 +661,12 @@ const StaffView = () => {
                     />
                 </label>
                 <p></p>
-                <button className="accept" onClick={() => sendCartToDatabase(studentName, studentID)}>Confirm Student's Items</button>
+                <button className="accept" onClick={() => {sendCartToDatabase(studentName, studentID);
+                alert("You have logged a transaction for " + studentName);}}>Confirm Student's
+                    Items
+                </button>
             </div>
-            
+
         </div>
 
     );
