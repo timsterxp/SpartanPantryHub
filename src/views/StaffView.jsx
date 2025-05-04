@@ -26,28 +26,27 @@ const StaffView = () => {
     });
 
 
-    const handleConfirmRoleRequest = async (id,email,role,text) => {
-       // add code to change in database
+    const handleConfirmRoleRequest = async (id, email, role, text) => {
+        // add code to change in database
         try {
             const res = await fetch("http://localhost:5000/api/role-change/confirm", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({email: email, role:role, text:text}),
+                body: JSON.stringify({email: email, role: role, text: text}),
             });
 
 
-        } catch (error){
+        } catch (error) {
             console.log(error);
         }
-        setRoleRequests( prev => prev.filter(req => req.email!==email));
-        setUpdatePage(prev=> !prev);
-        window.location.reload();
+        setRoleRequests(prev => prev.filter(req => req.email !== email));
+        setUpdatePage(prev => !prev);
 
     };
 
-    const handleDenyRoleRequest = async (id,email) => {
+    const handleDenyRoleRequest = async (id, email) => {
         // add code to change in database
         try {
             const res = await fetch("http://localhost:5000/api/role-change/deny", {
@@ -59,12 +58,11 @@ const StaffView = () => {
             });
 
 
-        } catch (error){
+        } catch (error) {
             console.log(error);
         }
-        setRoleRequests( prev => prev.filter(req => req.email!==email));
-        setUpdatePage(prev=> !prev);
-        window.location.reload();
+        setRoleRequests(prev => prev.filter(req => req.email !== email));
+        setUpdatePage(prev => !prev);
     };
 
     const handleConfirmOrder = async (id) => {
@@ -77,13 +75,12 @@ const StaffView = () => {
                 },
                 body: JSON.stringify({_id: id}),
             });
-        } catch (error){
+        } catch (error) {
             console.log(error);
         }
 
-        setOrders(prev => prev.filter(req => req.id!==id));
+        setOrders(prev => prev.filter(req => req.id !== id));
         setUpdatePage(prev => !prev);
-        window.location.reload();
     };
 
     const problemWithOrder = async (id, text) => {
@@ -96,13 +93,12 @@ const StaffView = () => {
                 },
                 body: JSON.stringify({_id: id, notes: text}),
             });
-        } catch (error){
+        } catch (error) {
             console.log(error);
         }
 
-        setOrders(prev => prev.filter(req => req.id!==id));
+        setOrders(prev => prev.filter(req => req.id !== id));
         setUpdatePage(prev => !prev);
-        window.location.reload();
     };
 
     const handlePickUpOrder = async (id) => {
@@ -113,38 +109,49 @@ const StaffView = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({_id:id}),
+                body: JSON.stringify({_id: id}),
             });
-        } catch (error){
+        } catch (error) {
             console.log(error);
         }
 
-        setOrders(prev => prev.filter(req => req.id!==id));
+        setOrders(prev => prev.filter(req => req.id !== id));
         setUpdatePage(prev => !prev);
-        window.location.reload();
+
     };
 
 
     const handleAddItem = async () => {
         //resets the input boxes
-        setitem_name(""); setitem_url(""); setitem_quantity(""); setitem_calories(""); setitem_protein("");
+        setitem_name("");
+        setitem_url("");
+        setitem_quantity("");
+        setitem_calories("");
+        setitem_protein("");
         //check if the items variables were there
         console.log(item_name, item_url, item_quantity, item_category, item_calories, item_protein)
-         try {
-             const res = await fetch("http://localhost:5000/api/inventory-add/send", {
-                 method: "POST",
-                 headers: {
-                     "Content-Type": "application/json",
-                 },
-                 body: JSON.stringify({name: item_name, imageUrl: item_url, quantity: item_quantity, category: item_category, calories: item_calories, protein: item_protein}),
-             }); 
-         } catch (error){
-             console.log(error);
-         }
+        try {
+            const res = await fetch("http://localhost:5000/api/inventory-add/send", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    name: item_name,
+                    imageUrl: item_url,
+                    quantity: item_quantity,
+                    category: item_category,
+                    calories: item_calories,
+                    protein: item_protein
+                }),
+            });
+        } catch (error) {
+            console.log(error);
+        }
         window.location.reload();
-     };
+    };
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setFormData({...formData, [e.target.name]: e.target.value});
     };
 
     const updateInventoryItem = async () => {
@@ -160,14 +167,14 @@ const StaffView = () => {
         try {
             const res = await fetch("http://localhost:5000/api/inventory/update", {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify( payload)
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(payload)
             });
 
             const result = await res.json();
             if (result.success) {
                 alert("Item updated successfully!");
-                setFormData({ imageurl: '', quantity: '', category: '', calories: '', protein: '' });
+                setFormData({imageurl: '', quantity: '', category: '', calories: '', protein: ''});
             } else {
                 alert("Failed to update item.");
             }
@@ -200,20 +207,21 @@ const StaffView = () => {
 
         const item = inventory.find(i => i.name === selectedItemName);
         if (item) {
-            setFormData({ ...item });
+            setFormData({...item});
         }
     }, [updatePage]);
     useEffect(() => {
         const item = inventory.find(i => i.name === selectedItemName);
         if (item) {
-            setFormData({ ...item }); // includes item.name
+            setFormData({...item}); // includes item.name
         }
     }, [selectedItemName, inventory]);
     return (
         <div className="staff-view">
             <div className="section">
                 <h2>Role Requests</h2>
-                <p><span style ={{fontWeight: 'bold', textDecoration: 'underline' }}> *Important*. Before confirming students, check that they have completed the online survey. </span></p>
+                <p><span style={{fontWeight: 'bold', textDecoration: 'underline'}}> *Important*. Before confirming students, check that they have completed the online survey. </span>
+                </p>
                 <table className="role-table">
                     <thead>
                     <tr>
@@ -232,15 +240,16 @@ const StaffView = () => {
                             <td>{req.role}</td>
                             <td>
 
-                                  {req.text}
+                                {req.text}
 
                             </td>
                             <td>
                                 <div className="action-btn">
 
-                                        <button className="accept" onClick={() => handleConfirmRoleRequest(req.id, req.email, req.role,req.text)}>
-                                            Accept
-                                        </button>
+                                    <button className="accept"
+                                            onClick={() => handleConfirmRoleRequest(req.id, req.email, req.role, req.text)}>
+                                        Accept
+                                    </button>
 
                                     <button className="deny" onClick={() => handleDenyRoleRequest(req.id, req.email)}>
                                         Deny
@@ -317,7 +326,8 @@ const StaffView = () => {
             </div>
             <div className="section">
                 <h2>Add item to Inventory</h2>
-                <p><span style ={{fontWeight: 'bold'}}> Warning: Don't spam the confirm button. And there are no validations </span></p>
+                <p><span style={{fontWeight: 'bold'}}> Warning: Don't spam the confirm button. And there are no validations </span>
+                </p>
                 <table className="inventory-add-table">
                     <thead>
                     <tr>
@@ -332,29 +342,29 @@ const StaffView = () => {
                     </thead>
                     <tbody>
                     <tr>
-                        <td> <input
-                                    type="text"
-                                    placeholder="Item Name"
-                                    value={item_name}
-                                    onChange={(e) => setitem_name(e.target.value)}
-                                /></td>
                         <td><input
-                                    type="text"
-                                    placeholder="Item Url"
-                                    value={item_url}
-                                    onChange={(e) => setitem_url(e.target.value)}
-                                /></td>
+                            type="text"
+                            placeholder="Item Name"
+                            value={item_name}
+                            onChange={(e) => setitem_name(e.target.value)}
+                        /></td>
                         <td><input
-                                    type="Int32"
-                                    placeholder="Item Quantity"
-                                    value={item_quantity}
-                                    onChange={(e) => setitem_quantity(e.target.value)}
-                                /></td>
+                            type="text"
+                            placeholder="Item Url"
+                            value={item_url}
+                            onChange={(e) => setitem_url(e.target.value)}
+                        /></td>
+                        <td><input
+                            type="Int32"
+                            placeholder="Item Quantity"
+                            value={item_quantity}
+                            onChange={(e) => setitem_quantity(e.target.value)}
+                        /></td>
                         <td>
                             <div>
-                                <select 
-                                value={item_category}  className="category"
-                                onChange={(e) => setitem_category(e.target.value)}>
+                                <select
+                                    value={item_category} className="category"
+                                    onChange={(e) => setitem_category(e.target.value)}>
                                     <option value="">select a category</option>
                                     <option value="perishable">perishable</option>
                                     <option value="non-perishable">non-perishable</option>
@@ -362,31 +372,31 @@ const StaffView = () => {
                             </div>
                         </td>
                         <td><input
-                                    type="Int32"
-                                    placeholder="Item Calories"
-                                    value={item_calories}
-                                    onChange={(e) => setitem_calories(e.target.value)}
-                                /></td>
+                            type="Int32"
+                            placeholder="Item Calories"
+                            value={item_calories}
+                            onChange={(e) => setitem_calories(e.target.value)}
+                        /></td>
                         <td><input
-                                    type="Double"
-                                    placeholder="Item Protein"
-                                    value={item_protein}
-                                    onChange={(e) => setitem_protein(e.target.value)}
-                                /></td>
+                            type="Double"
+                            placeholder="Item Protein"
+                            value={item_protein}
+                            onChange={(e) => setitem_protein(e.target.value)}
+                        /></td>
                         <td>
-                        <div className="action-btn">
-                            <button className="accept" onClick={handleAddItem}> 
-                                Add item
-                            </button>
-                        </div>
+                            <div className="action-btn">
+                                <button className="accept" onClick={handleAddItem}>
+                                    Add item
+                                </button>
+                            </div>
                         </td>
-                        </tr>
+                    </tr>
                     </tbody>
                 </table>
             </div>
             <div>
                 <h2>Edit Inventory Item</h2>
-                <h4 style={{textAlign:'center'}}>(You may leave fields blank to keep the previous value)</h4>
+                <h4 style={{textAlign: 'center'}}>(You may leave fields blank to keep the previous value)</h4>
                 <select value={selectedItemName} onChange={e => setSelectedItemName(e.target.value)}>
                     <option value="">-- Select Item --</option>
                     {inventory.map((item, index) => (
@@ -395,11 +405,16 @@ const StaffView = () => {
                 </select>
 
                 <div>
-                    <p> <input type="text" name="imageurl" placeholder="Image URL" value={formData.imageurl} onChange={handleChange} /></p>
-                    <p> <input type="number" name="quantity" placeholder="Quantity" value={formData.quantity} onChange={handleChange}  /></p>
-                        <p><input type="text" name="category" placeholder="Category" value={formData.category} onChange={handleChange} /></p>
-                            <p> <input type="number" name="calories" placeholder="Calories" value={formData.calories} onChange={handleChange}  /></p>
-                                <p><input type="number" name="protein" placeholder="Protein" value={formData.protein} onChange={handleChange}  /></p>
+                    <p><input type="text" name="imageurl" placeholder="Image URL" value={formData.imageurl}
+                              onChange={handleChange}/></p>
+                    <p><input type="number" name="quantity" placeholder="Quantity" value={formData.quantity}
+                              onChange={handleChange}/></p>
+                    <p><input type="text" name="category" placeholder="Category" value={formData.category}
+                              onChange={handleChange}/></p>
+                    <p><input type="number" name="calories" placeholder="Calories" value={formData.calories}
+                              onChange={handleChange}/></p>
+                    <p><input type="number" name="protein" placeholder="Protein" value={formData.protein}
+                              onChange={handleChange}/></p>
                 </div>
 
                 <button onClick={updateInventoryItem}>Update Item</button>

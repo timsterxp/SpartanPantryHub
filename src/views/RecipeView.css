@@ -1,3 +1,5 @@
+/*CSS File for Recipes Screen. Focuses on Card-layouts and expanding features. Also attempts to recreate a more clean/smooth animation */
+
 .recipe-container {
     display: flex;
     flex-direction: column;

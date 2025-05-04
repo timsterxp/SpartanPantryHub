@@ -1,13 +1,10 @@
-// add code for viewing / adding recipes here
-
-
 import React, {useEffect} from 'react';
 import {useState} from "react";
 import RecipeController from "../controllers/RecipeController";
 import "./RecipeView.css";
 
-// Move the below code elsewhere later. Set up dummy cards.
 
+// These are dummy recipes meant to only appear if database did not load
 const recipes = [
     {
         id: 1,
@@ -45,19 +42,23 @@ const recipes = [
 
 
 const RecipeView = () => {
-        const [inputValue, setInputValue] = useState("");
-        const [recipe, setRecipe] = useState({
-            recipeName:"",
-            ingredients: [],
-            instructions: [],
-        })
+    const [inputValue, setInputValue] = useState("");
+    const [recipe, setRecipe] = useState({
+        recipeName: "",
+        ingredients: [],
+        instructions: [],
+    })
 
-        const [officalRecipe, setOfficialRecipe] = useState(  []);
+    const [officalRecipe, setOfficialRecipe] = useState([]);
 
+    //Code for searching, but removed it temporarily.
     const [searchQuery, setSearchQuery] = useState('');
+
+    //Different states for expand/clicked
     const [expanded, setExpanded] = useState(null);
     const [clickedButton, setClickedButton] = useState(false);
 
+    //Provide an option for filtering; also temporarily removed
     const filteredRecipes = recipes.filter(recipe =>
         recipe.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -66,29 +67,32 @@ const RecipeView = () => {
         setExpanded(prev => (prev === id ? null : id));
     };
 
-        const handleChange = (event) => {
-            setInputValue(event.target.value);
-        };
+    const handleChange = (event) => {
+        setInputValue(event.target.value);
+    };
 
+    //Send input values to a back-end OpenAI server for AI-Generated Recipes
     const handleConfirm = async () => {
         if (!inputValue) return;
         setClickedButton(true);
         const response = await RecipeController.sendRecipeToAPI(inputValue);
-        setRecipe (response);
+        setRecipe(response);
     };
 
-    useEffect(()=>{
+    useEffect(() => {
         fetch('http://localhost:5000/api/retrieve-recipe').then(res => res.json()).then((data) => setOfficialRecipe(data)).catch((err) => console.log(err));
     });
 
+    //Remove extra characters that are normally within AI and ensure it is in a nice list
     const renderList = (items) => {
         return items.map((item, index) => (
-            <p key={index} >
+            <p key={index}>
                 {item}
             </p>
         ));
     };
 
+    //Due to MongoDB structure, divide items by commas or numbers
     const renderRecipeList = (str) => {
         const items = str.split(/\d+\.\s/).filter(item => item.trim() !== '');
         return (
@@ -100,6 +104,7 @@ const RecipeView = () => {
         );
     };
 
+    //Due to MongoDB structure, divide items by commas or numbers
     const renderOrderedList = (str) => {
         const items = str.split(/\d+\.\s/).filter(item => item.trim() !== '');
         return (
@@ -144,7 +149,8 @@ const RecipeView = () => {
                     <p className="no-results">No recipes match your search.</p>
                 )}
             </div>
-            <h2> Can't find a recipe you like? Generate one here with your ingredients! Note that it'll take a few seconds to generate! </h2>
+            <h2> Can't find a recipe you like? Generate one here with your ingredients! Note that it'll take a few
+                seconds to generate! </h2>
             <input
                 type="text"
                 value={inputValue}
@@ -156,10 +162,10 @@ const RecipeView = () => {
             {clickedButton &&
                 <div>
                     <h2>{recipe.recipeName}</h2>
-                <h2>Ingredients:</h2>
-            {renderList(recipe.ingredients)}
-                <h2>Instructions:</h2>
-            {renderList(recipe.instructions)}
+                    <h2>Ingredients:</h2>
+                    {renderList(recipe.ingredients)}
+                    <h2>Instructions:</h2>
+                    {renderList(recipe.instructions)}
                 </div>
 
 

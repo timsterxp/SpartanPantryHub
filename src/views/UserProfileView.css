@@ -1,6 +1,10 @@
-#user1:checked ~ #studentid{
-    display:block;
+/*CSS file for the Profile Screen. Meant to provide a central container and disable/enable certain text fields, e.g. for students there is a student ID field */
+
+
+#user1:checked ~ #studentid {
+    display: block;
 }
+
 /*
 Might not use these 2 anymore
  */

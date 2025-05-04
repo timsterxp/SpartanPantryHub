@@ -6,12 +6,12 @@ import './InventoryView.css';
 const InventoryView = () => {
     const [expandedItem, setExpandedItem] = useState(null);
     const [InventoryItem, setInventoryItem] = useState([]);
-    
+
     const handleToggle = (id) => {
         setExpandedItem(prev => (prev === id ? null : id));
     };
 
-    const handleAddItem =(item) => {
+    const handleAddItem = (item) => {
 
         // Get the existing cart from localStorage
         const cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -24,18 +24,18 @@ const InventoryView = () => {
             cart[existingItemIndex].quantity += 1;
         } else {
             // New item: add with quantity 1
-            cart.push({ ...item, quantity: 1 });
+            cart.push({...item, quantity: 1});
         }
 
         // Save updated cart to localStorage
         localStorage.setItem("cart", JSON.stringify(cart));
-        alert ("Added "+ item.name);
+        alert("Added " + item.name);
     };
-     useEffect(()=>{
-            fetch('http://localhost:5000/api/retrieve-inventory').then(res => res.json()).then((data) => setInventoryItem(data)).catch((err) => console.log(err));
-        });
-  
-    InventoryItem.sort((a,b) => a.name.localeCompare(b.name))
+    useEffect(() => {
+        fetch('http://localhost:5000/api/retrieve-inventory').then(res => res.json()).then((data) => setInventoryItem(data)).catch((err) => console.log(err));
+    });
+
+    InventoryItem.sort((a, b) => a.name.localeCompare(b.name))
     return (
         <div className="inventory-grid">
             {InventoryItem.map(item => (
@@ -44,7 +44,7 @@ const InventoryView = () => {
                     className={`item-card-inventory ${expandedItem === item.id ? 'expanded' : ''}`}
                     onClick={() => handleToggle(item.id)}
                 >
-                    <img src={item.imageUrl} alt={item.name} className="item-image" />
+                    <img src={item.imageUrl} alt={item.name} className="item-image"/>
                     <h3 className="item-name">{item.name}</h3>
                     <p><strong>Quantity:</strong> {item.quantity}</p>
 
@@ -54,7 +54,7 @@ const InventoryView = () => {
                             <p><strong>Protein:</strong> {item.protein} g</p>
                             <p><strong>Category:</strong> {item.category}</p>
                             <button className="add-to-cart" onClick={() => handleAddItem(item)}>
-                            Add to Cart
+                                Add to Cart
                             </button>
                         </div>
                     )}
