@@ -365,7 +365,7 @@ const StaffView = () => {
                             onChange={(e) => setitem_url(e.target.value)}
                         /></td>
                         <td><input
-                            type="Int32"
+                            type="number"
                             placeholder="Item Quantity"
                             value={item_quantity}
                             onChange={(e) => setitem_quantity(e.target.value)}
@@ -382,7 +382,7 @@ const StaffView = () => {
                             </div>
                         </td>
                         <td><input
-                            type="Int32"
+                            type="number"
                             placeholder="Item Calories"
                             value={item_calories}
                             onChange={(e) => setitem_calories(e.target.value)}
