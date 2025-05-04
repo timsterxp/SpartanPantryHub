@@ -169,6 +169,53 @@ app.post("/api/create-order", async  (req, res) => {
     }
 });
 
+app.post("/api/create-order/inperson", async  (req, res) => {
+    try {
+        const { items, userName, userID } = req.body;  // Get data sent from React
+        const cartData = {
+            items: items,
+            userName: userName,
+            userID: userID,
+            status: "completed",
+            datePlaced: new Date().toISOString().split('T')[0],
+        };
+
+        const db = await connectToDB();
+        const ordersCollections = db.collection("orders");
+        const result = await ordersCollections.insertOne(cartData);
+        await reduceVisits(userID);
+
+
+        const inventoryCollection = db.collection("inventory");
+
+        for (let item of items) {
+            const { name, quantity } = item;
+
+            // Find the item in the inventory and decrement the quantity
+            const inventoryItem = await inventoryCollection.findOne({ name: name });
+
+            if (inventoryItem) {
+                if (inventoryItem.quantity >= quantity) {
+                    // Update inventory by decreasing the quantity
+                    await inventoryCollection.updateOne(
+                        { name: name },
+                        { $inc: { quantity: -quantity } }  // Decrease by ordered quantity
+                    );
+                } else {
+                    // If not enough stock, handle the error (optional)
+                    res.status(400).json({ error: `Not enough stock for item: ${name}` });
+                    return;
+                }
+            }
+        }
+
+        res.status(201).json({ message: "Cart saved successfully!" });
+    } catch (error) {
+        console.error("Error saving cart:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
 app.post("/api/role-change/confirm", async(req, res) => {
     const {email, role, text} = req.body;
     await changeRole(email,role,text);
