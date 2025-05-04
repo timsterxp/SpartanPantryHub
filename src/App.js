@@ -3,7 +3,7 @@ import {BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import LoginView from './views/LoginView';
 import RecipeView from './views/RecipeView';
 import InventoryView from './views/InventoryView';
-import DummyCheckout from './views/DummyCheckout';
+import CheckoutView from './views/CheckoutView';
 import HomeView from "./views/HomeView";
 import {GoogleOAuthProvider} from "@react-oauth/google";
 import UserProfileView from "./views/UserProfileView";
@@ -68,7 +68,7 @@ function App() {
                         <Route path="/recipe" element={<RecipeView />} />
                         <Route path="/RoleRequest" element={<UserProfileView />} />
                         <Route path="/Inventory" element={<InventoryView />} />
-                        <Route path="/Checkout" element={<DummyCheckout />} />
+                        <Route path="/Checkout" element={<CheckoutView />} />
                         <Route path="/StaffActions" element={<StaffView />} />
                         <Route path="/Orders" element={<OrderView />} />
                         <Route path="/OrderEditView" element={<OrderEdit />} />
