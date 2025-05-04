@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import './StaffView.css';
 
+
 const StaffView = () => {
     const [roleRequests, setRoleRequests] = useState([]);
     const [item_name, setitem_name] = useState('');
@@ -183,6 +184,92 @@ const StaffView = () => {
             alert("Error updating item.");
         }
     };
+    const [selectedItems, setSelectedItems] = useState(['']);
+
+    const addDropdown = () => {
+        setSelectedItems([...selectedItems, '']);
+    };
+
+    const handleSelectionChange = (index, value) => {
+        const updated = [...selectedItems];
+        updated[index] = value;
+        setSelectedItems(updated);
+    };
+
+    const [studentID, setStudentID] = useState('');
+    const handleStudentIDChange = (e) => {
+        setStudentID(e.target.value);
+    };
+
+    const [quantity, setQuantity] = useState('');
+    const handleQuantityChange = (e) => {
+        setQuantity(e.target.value);
+    }
+
+    function addLocalCart(item, quantity) {
+        // Get cart from localStorage or initialize empty array
+        let myCart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        // Check if item already exists in the cart
+        const existingIndex = myCart.findIndex(cartItem => cartItem.item === item);
+
+        if (existingIndex !== -1) {
+            // Update quantity if item already exists
+            myCart[existingIndex].quantity += quantity;
+        } else {
+            // Add new item
+            myCart.push({item, quantity});
+        }
+
+        // Save updated cart back to localStorage
+        localStorage.setItem('cart', JSON.stringify(myCart));
+        window.location.reload();
+    }
+
+    const [studentName, setStudentName] = useState('');
+    const handleStudentName = (e) => {
+        setStudentName(e.target.value);
+    }
+    const sendCartToDatabase = async (studentName, studentID) => {
+        const cartData = JSON.parse(localStorage.getItem('cart'));
+        // Retrieve user information from localStorage
+        const userName = studentName;
+        const userID = studentID;
+
+        const payload = {
+            items: cartData,  // Items in the cart (name and quantity)
+            userName: userName,  // User's name
+            userID: userID,  // User's ID
+        };
+
+        try {
+            const response = await fetch("http://localhost:5000/api/create-order/inperson", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+
+            const result = await response.json();
+            if (result.ok) {
+                alert("Your order has been placed successfully");
+            } else {
+
+            }
+        } catch (error) {
+            console.error("Error sending cart to database:", error);
+        }
+    };
+
+    const [cart, setCart] = useState([]);
+
+    // Fetch cart from localStorage when the component mounts
+
+    useEffect(() => {
+        const storedCart = JSON.parse(localStorage.getItem("cart")) || []; // Get cart from localStorage
+        setCart(storedCart); // Update state with the cart data
+    }, []);
 
     useEffect(() => {
         fetch('http://localhost:5000/api/retrieve-request')
@@ -394,6 +481,8 @@ const StaffView = () => {
                     </tbody>
                 </table>
             </div>
+
+            {/* Section that allows you to edit an inventory item */}
             <div>
                 <h2>Edit Inventory Item</h2>
                 <h4 style={{textAlign: 'center'}}>(You may leave fields blank to keep the previous value)</h4>
@@ -418,6 +507,80 @@ const StaffView = () => {
                 </div>
 
                 <button onClick={updateInventoryItem}>Update Item</button>
+            </div>
+            <p style={{paddingBottom: '20px'}}></p>
+
+
+            {/* Section that allows you to log an in-person transaction*/}
+            <div>
+                <h2>Log an in-person transaction</h2>
+                <h3>Add items to a cart and place it under a student's ID</h3>
+                <p></p>
+
+                <select value={selectedItemName} onChange={e => setSelectedItemName(e.target.value)}>
+                    <option value="">-- Select Item --</option>
+                    {inventory.map((item, index) => (
+                        <option key={index} value={item.name}>{item.name}</option>
+                    ))}
+
+                </select>
+                <p> </p>
+                <label>
+
+                    <input
+                        type="text"
+                        value={quantity}
+                        onChange={handleQuantityChange}
+                        placeholder="quantity"
+                    />
+                </label>
+                <p> </p>
+                <button className="accept" onClick={() => addLocalCart(selectedItemName, quantity)}>Add Item</button>
+                <p> </p>
+                <h2>Cart Items</h2>
+                {cart.length === 0 ? (
+                    <p>The Cart Is Empty</p>
+                ) : (
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Quantity</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {cart.map((item, index) => (
+                            <tr key={index}>
+                                <td>{item.item}</td>
+                                <td>{item.quantity}</td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                )}
+                <p style = {{paddingBottom: '20px'}}></p>
+                <p style = {{fontWeight:'bold'}}>Warning. Place a students name and ID after you have finished creating their cart to prevent accidental orders. </p>
+                <label>
+                    Student ID:
+                    <input
+                        type="text"
+                        value={studentName}
+                        onChange={handleStudentName}
+                        placeholder="Enter Student Name"
+                    />
+                </label>
+                <p></p>
+                <label>
+                    Student ID:
+                    <input
+                        type="text"
+                        value={studentID}
+                        onChange={handleStudentIDChange}
+                        placeholder="Enter Student ID"
+                    />
+                </label>
+                <p></p>
+                <button className="accept" onClick={() => sendCartToDatabase(studentName, studentID)}>Confirm Student's Items</button>
             </div>
         </div>
 

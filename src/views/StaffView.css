@@ -117,3 +117,59 @@
     padding: 6px;
     box-sizing: border-box;
 }
+
+/* Basic table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white; /* White background for the table */
+    margin-top: 20px;
+}
+
+/* Table borders and padding */
+table, th, td {
+    border: 1px solid #ddd; /* Light gray border */
+}
+
+th, td {
+    padding: 12px 15px; /* Add padding for cells */
+    text-align: left; /* Align text to the left */
+}
+
+/* Header row background and text style */
+th {
+    background-color: #f4f4f4; /* Light gray background for header */
+    font-weight: bold; /* Make header text bold */
+    color: #333; /* Dark text color for contrast */
+}
+
+/* Zebra striping for table rows */
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* Slightly gray background for even rows */
+}
+
+/* Hover effect for table rows */
+tbody tr:hover {
+    background-color: #f1f1f1; /* Light gray background on hover */
+}
+
+select {
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    color: #333;
+    width: 100%;
+    max-width: 300px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+input {
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #333;
+    font-size: 14px;
+}
