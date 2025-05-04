@@ -35,6 +35,7 @@ const OrdersView = () => {
                     userID: order.userID,
                     status: order.status,
                     datePlaced: order.datePlaced || 'N/A', // add fallback or generate if missing
+                    notes: order.notes,
                 }));
                 setOrders(formatted);
             })
@@ -54,13 +55,22 @@ const OrdersView = () => {
                         </div>
 
                         {expandedOrderId === order.id && (
-                            <ul className="order-items">
-                                {order.items.map((item, index) => (
-                                    <li key={index}>
-                                        {item.name} (x{item.quantity})
-                                    </li>
-                                ))}
-                            </ul>
+                            <>
+                                <ul className="order-items">
+                                    {order.items.map((item, index) => (
+                                        <li key={index}>
+                                            {item.name} (x{item.quantity})
+                                        </li>
+                                    ))}
+                                </ul>
+
+
+                                {order.status.toLowerCase() === 'cancelled' && order.notes && (
+                                    <div className="cancellation-notes">
+                                        <strong>Cancellation Reason:</strong> {order.notes}
+                                    </div>
+                                )}
+                            </>
                         )}
                     </li>
                 ))}

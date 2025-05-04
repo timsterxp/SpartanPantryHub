@@ -58,6 +58,10 @@ h2 {
     background-color: #28a745;
     color: #fff;
 }
+.status.cancelled{
+    background-color: #dc3545;
+    color: #fff;
+}
 
 .order-items {
     padding: 12px 20px;
