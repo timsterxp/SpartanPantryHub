@@ -15,6 +15,8 @@ const StaffView = () => {
     const [orders, setOrders] = useState([]);
     const [readyForPickUp, setReadyForPickUp] = useState([]);
     const [updatePage, setUpdatePage] = useState(false);
+    const [showReasonBoxId, setShowReasonBoxId] = useState(null);
+    const [cancelReason, setCancelReason] = useState('');
 
 
     const handleConfirmRoleRequest = async (id,email,role,text) => {
@@ -33,6 +35,8 @@ const StaffView = () => {
             console.log(error);
         }
         setRoleRequests( prev => prev.filter(req => req.email!==email));
+        setUpdatePage(prev=> !prev);
+        window.location.reload();
 
     };
 
@@ -52,9 +56,11 @@ const StaffView = () => {
             console.log(error);
         }
         setRoleRequests( prev => prev.filter(req => req.email!==email));
+        setUpdatePage(prev=> !prev);
+        window.location.reload();
     };
 
-    const handleConfirmOrder = async (userID) => {
+    const handleConfirmOrder = async (id) => {
         // add code to change order status to ready
         try {
             const res = await fetch("http://localhost:5000/api/order/ready", {
@@ -62,32 +68,53 @@ const StaffView = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({userID: userID}),
+                body: JSON.stringify({_id: id}),
             });
         } catch (error){
             console.log(error);
         }
 
-        setOrders(prev => prev.filter(req => req.userID!==userID));
+        setOrders(prev => prev.filter(req => req.id!==id));
         setUpdatePage(prev => !prev);
+        window.location.reload();
     };
 
-    const handlePickUpOrder = async (userID) => {
+    const problemWithOrder = async (id, text) => {
         // add code to change order status to ready
+        try {
+            const res = await fetch("http://localhost:5000/api/order/problem", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({_id: id, notes: text}),
+            });
+        } catch (error){
+            console.log(error);
+        }
+
+        setOrders(prev => prev.filter(req => req.id!==id));
+        setUpdatePage(prev => !prev);
+        window.location.reload();
+    };
+
+    const handlePickUpOrder = async (id) => {
+        console.log(id);
         try {
             const res = await fetch("http://localhost:5000/api/order/complete", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({userID: userID}),
+                body: JSON.stringify({_id:id}),
             });
         } catch (error){
             console.log(error);
         }
 
-        setOrders(prev => prev.filter(req => req.userID!==userID));
+        setOrders(prev => prev.filter(req => req.id!==id));
         setUpdatePage(prev => !prev);
+        window.location.reload();
     };
     //handles when the adding button
     const handleAddItem = async () => {
@@ -109,6 +136,7 @@ const StaffView = () => {
          } catch (error){
              console.log(error);
          }
+        window.location.reload();
      };
      //handles updating an item.
      const handleupdateItem = async () => {
@@ -146,9 +174,10 @@ const StaffView = () => {
                 const readyForPickupOrders = data.filter(order => order.status === "Ready for pickup");
                 setOrders(placedOrders);
                 setReadyForPickUp(readyForPickupOrders);
+
             })
             .catch((err) => console.log(err));
-    }, []);
+    }, [updatePage]);
     //retrieves the inventory
     useEffect(()=>{
         fetch('http://localhost:5000/api/retrieve-inventory').then(res => res.json()).then((data) => setInventoryItem(data)).catch((err) => console.log(err));
@@ -177,7 +206,6 @@ const StaffView = () => {
                     <tr>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>Current Role</th>
                         <th>Requested Role</th>
                         <th>Student ID / Extra Info</th>
                         <th>Action</th>
@@ -188,7 +216,6 @@ const StaffView = () => {
                         <tr key={req.id}>
                             <td>{req.name}</td>
                             <td>{req.email}</td>
-                            <td>{req.currentRole}</td>
                             <td>{req.role}</td>
                             <td>
 
@@ -214,7 +241,7 @@ const StaffView = () => {
             </div>
 
             <div className="section">
-                <h2>Confirm Orders</h2>
+                <h2>Set Orders As Ready To Pickup</h2>
                 <h6>*Warning* You cannot undo an order. Ensure all items are accounted before confirming an order.</h6>
                 <ul className="orders-list">
                     {orders.map((order) => (
@@ -229,7 +256,26 @@ const StaffView = () => {
                                     ))}
                                 </ul>
                             </div>
-                            <button onClick={() => handleConfirmOrder(order.userID)}>Ready for Pick Up</button>
+                            <button onClick={() => handleConfirmOrder(order._id)}>Ready for Pick Up</button>
+                            <button onClick={() => setShowReasonBoxId(order._id)}>Cancel Order</button>
+                            {showReasonBoxId === order._id && (
+                                <div>
+                                    <input
+                                        type="text"
+                                        placeholder="Enter reason for cancellation"
+                                        value={cancelReason}
+                                        onChange={(e) => setCancelReason(e.target.value)}
+                                    />
+                                    <button onClick={() => {
+                                        problemWithOrder(order._id, cancelReason);
+                                        setShowReasonBoxId(null);
+                                        setCancelReason('');
+                                    }}>
+                                        Submit
+                                    </button>
+                                    <button onClick={() => setShowReasonBoxId(null)}>Cancel</button>
+                                </div>
+                            )}
                         </li>
                     ))}
                 </ul>
@@ -251,7 +297,7 @@ const StaffView = () => {
                                     ))}
                                 </ul>
                             </div>
-                            <button onClick={() => handlePickUpOrder(order.userID)}>Completed</button>
+                            <button onClick={() => handlePickUpOrder(order._id)}>Completed</button>
                         </li>
                     ))}
                 </ul>

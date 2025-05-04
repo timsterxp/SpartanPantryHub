@@ -1,5 +1,5 @@
 const express = require('express');
-const {connectToDB,  checkUser, sendRequestToDB,retrieveRequests, changeRole,removeRequest, retrieveRequest, retrieveInventory, retrieveRecipe, senditemToinventoryDB, retrieveOrders, changeOrderToReady, changeOrderToComplete, updateItem } = require('./MongoModel');
+const {connectToDB,  checkUser, sendRequestToDB,retrieveRequests, changeRole,removeRequest, retrieveRequest, denyOrder, retrieveInventory, retrieveRecipe, reduceVisits, senditemToinventoryDB, retrieveOrders, changeOrderToReady, changeOrderToComplete, getOrderHistory, updateItem } = require('./MongoModel');
 const cors = require ('cors');
 const mongoose = require("mongoose");
 
@@ -42,18 +42,37 @@ app.post("/api/inventory-add/send", async(req, res) => {
 });
 
 app.post("/api/order/ready", async(req, res) => {
-    const {userID} = req.body;
+    const {_id} = req.body;
     try {
-        await changeOrderToReady(userID);
+        await changeOrderToReady(_id);
+    } catch (err) {
+        console.error("MongoDB error:", err);
+    }
+});
+app.post("/api/order/problem", async(req, res) => {
+    const {_id, notes} = req.body;
+    console.log("I am sending" +notes);
+    try {
+        await denyOrder(_id, notes);
     } catch (err) {
         console.error("MongoDB error:", err);
     }
 });
 
 app.post("/api/order/complete", async(req, res) => {
+    const {_id} = req.body;
+    try {
+        await changeOrderToComplete(_id);
+    } catch (err) {
+        console.error("MongoDB error:", err);
+    }
+});
+
+app.post("/api/order/history", async(req, res) => {
     const {userID} = req.body;
     try {
-        await changeOrderToComplete(userID);
+        const orders = await getOrderHistory(userID);
+        res.json(orders);
     } catch (err) {
         console.error("MongoDB error:", err);
     }
@@ -80,17 +99,43 @@ app.post("/api/user-check", async(req, res) => {
 app.post("/api/create-order", async  (req, res) => {
     try {
         const { items, userName, userID } = req.body;  // Get data sent from React
-
         const cartData = {
             items: items,
             userName: userName,
             userID: userID,
             status: "placed",
+            datePlaced: new Date().toISOString().split('T')[0],
         };
 
         const db = await connectToDB();
         const ordersCollections = db.collection("orders");
         const result = await ordersCollections.insertOne(cartData);
+        await reduceVisits(userID);
+
+
+        const inventoryCollection = db.collection("inventory");
+
+        for (let item of items) {
+            const { name, quantity } = item;
+
+            // Find the item in the inventory and decrement the quantity
+            const inventoryItem = await inventoryCollection.findOne({ name: name });
+
+            if (inventoryItem) {
+                if (inventoryItem.quantity >= quantity) {
+                    // Update inventory by decreasing the quantity
+                    await inventoryCollection.updateOne(
+                        { name: name },
+                        { $inc: { quantity: -quantity } }  // Decrease by ordered quantity
+                    );
+                } else {
+                    // If not enough stock, handle the error (optional)
+                    res.status(400).json({ error: `Not enough stock for item: ${name}` });
+                    return;
+                }
+            }
+        }
+
         res.status(201).json({ message: "Cart saved successfully!" });
     } catch (error) {
         console.error("Error saving cart:", error);

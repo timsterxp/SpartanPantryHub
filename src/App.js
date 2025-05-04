@@ -16,6 +16,8 @@ import MoreResourcesView from "./views/MoreResourcesView";
 // npm install react-router-dom
 const clientId= process.env.REACT_APP_GOOGLE_CLIENT_ID;
 function App() {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const role = user?.role || 'guest';
   return (
 
     <GoogleOAuthProvider clientId={clientId}>
@@ -27,14 +29,32 @@ function App() {
                     <div className="appleNavigation">
                         <ul>
                             <li><Link to="/home" className="navItems">Home</Link></li>
-                            <li><Link to="/recipe" className="navItems">Recipes</Link></li>
                             <li><Link to="/RoleRequest" className="navItems">Profile</Link></li>
-                            <li><Link to="/Inventory" className="navItems">Check Inventory</Link></li>
-                            <li><Link to="/Checkout" className="navItems">Checkout</Link></li>
-                            <li><Link to="/Orders" className="navItems">Order History</Link></li>
-                            <li><Link to="/StaffActions" className="navItems">Staff Actions</Link></li>
-                            <li><Link to="/OrderEditView" className="navItems">Edit Order</Link></li>
-                            <li><Link to="/MoreResourcesView" className = "navItems">More Resources</Link></li>
+
+                            {role=== 'Student' ? (
+                                <>
+                                    <li><Link to="/recipe" className="navItems">Recipes</Link></li>
+                                    <li><Link to="/Inventory" className="navItems">Check Inventory</Link></li>
+                                    <li><Link to="/Checkout" className="navItems">Checkout</Link></li>
+                                    <li><Link to="/Orders" className="navItems">Order History</Link></li>
+                                </>
+                            ):null}
+
+                            {role === 'Staff' ? (
+                                <>
+                                    <li><Link to="/StaffActions" className="navItems">Staff Actions</Link></li>
+                                    <li><Link to="/Inventory" className="navItems">Check Inventory</Link></li>
+                                </>
+                            ):null}
+
+                            {    /*         <li><Link to="/OrderEditView" className="navItems">Edit Order</Link></li> */}
+
+                            {role === 'Student' || role === 'guest' ? (
+                                <>
+                                    <li><Link to="/MoreResourcesView" className = "navItems">More Resources</Link></li>
+                                </>
+                            ):null}
+
                         </ul>
                     </div>
                 </nav>
