@@ -78,21 +78,6 @@ async function senditemToinventoryDB(name, imageUrl, quantity, category, calorie
     }
 }
 
-async function updateItem(name, imageUrl, quantity, category, calories, protein){
-    try {
-        if (!db){
-            const db = await connectToDB();
-        }
-        const usersCollections = db.collection("inventory");
-        const updating = await usersCollections.findOneAndUpdate(//find and updates and existing item
-            { name},
-            { $set: {imageUrl: imageUrl, quantity: quantity, category: category, calories: calories, protein: protein}},
-        )
-
-    } catch (err) {
-        console.error("Error connecting to MongoDB:", err);
-    }
-}
 
 async function retrieveRecipe(req,res) {
     try {
@@ -322,4 +307,4 @@ async function listCollections() {
 
 
 
-module.exports = { connectToDB, getUserNames, listCollections, checkUser, sendRequestToDB, retrieveRequests, changeRole,removeRequest, retrieveRequest, retrieveInventory, retrieveRecipe, reduceVisits,denyOrder, senditemToinventoryDB,retrieveOrders, getOrderHistory, changeOrderToReady, changeOrderToComplete, updateItem };
+module.exports = { connectToDB, getUserNames, listCollections, checkUser, sendRequestToDB, retrieveRequests, changeRole,removeRequest, retrieveRequest, retrieveInventory, retrieveRecipe, reduceVisits,denyOrder, senditemToinventoryDB,retrieveOrders, getOrderHistory, changeOrderToReady, changeOrderToComplete };

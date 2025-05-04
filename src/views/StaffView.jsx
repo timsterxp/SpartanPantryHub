@@ -11,7 +11,6 @@ const StaffView = () => {
     const [item_calories, setitem_calories] = useState('');
     const [item_protein, setitem_protein] = useState('');
     const [InventoryItem, setInventoryItem] = useState([]);
-    const [inventorymenu, setinventorymenu] = useState('');
     const [orders, setOrders] = useState([]);
     const [readyForPickUp, setReadyForPickUp] = useState([]);
     const [updatePage, setUpdatePage] = useState(false);
@@ -181,29 +180,6 @@ const StaffView = () => {
             alert("Error updating item.");
         }
     };
-     //handles updating an item.
-     const handleupdateItem = async () => {
-        //resets the input boxes
-        setitem_name(""); setitem_url(""); setitem_quantity(""); setitem_calories(""); setitem_protein("");
-        //check if the items variables were there
-        console.log(item_name, item_url, item_quantity, item_category, item_calories, item_protein)
-        //tells the users what item was added
-        alert("You updated " + item_name + " to the inventory list")
-        //tell api to update a certain item
-         try {
-             const res = await fetch("http://localhost:5000/api/inventory-update/send", {
-                 method: "POST",
-                 headers: {
-                     "Content-Type": "application/json",
-                 },
-                 body: JSON.stringify({name: item_name, imageUrl: item_url, quantity: item_quantity, category: item_category, calories: item_calories, protein: item_protein}),
-             }); 
-         } catch (error){
-             console.log(error);
-         }
-     };
-
-
     useEffect(() => {
         fetch('http://localhost:5000/api/retrieve-request')
             .then(res => res.json())
@@ -241,19 +217,9 @@ const StaffView = () => {
         fetch('http://localhost:5000/api/retrieve-inventory').then(res => res.json()).then((data) => setInventoryItem(data)).catch((err) => console.log(err));
     });
 
-    const handlefillin = (e) =>{
-        const item_name = e.target.value;
-        const itemindex = InventoryItem.findIndex((item) => item.name === item_name);
-        console.log(item_name, item_url, item_quantity, item_category, item_calories, item_protein)
-        setitem_name(item_name);
-        setitem_url(InventoryItem[itemindex].imageUrl);
-        setitem_quantity(InventoryItem[itemindex].quantity);
-        setitem_category(InventoryItem[itemindex].category);
-        setitem_calories(InventoryItem[itemindex].calories);
-        setitem_protein(InventoryItem[itemindex].protein);
-    }
     //orders the inventory in alphabetical
     InventoryItem.sort((a,b) => a.name.localeCompare(b.name))
+    inventory.sort((a,b) => a.name.localeCompare(b.name))
     return (
         <div className="staff-view">
             <div className="section">
@@ -360,18 +326,11 @@ const StaffView = () => {
                     ))}
                 </ul>
             </div>
-            <select value={inventorymenu} className='inventorymenu' 
-            onChange={(e) => setinventorymenu(e.target.value)}>
-                 <option value="">Select inventory options</option>
-                 <option value="add_item">add item to inventory</option>
-                 <option value="update_item">update inventory item</option>
-            </select>
-            {inventorymenu ==='add_item' && (
-                <div className="inventorysection">
-                <h2>Add item to Inventory</h2>
-                <p><span style ={{fontWeight: 'bold'}}> Warning: there are no input validations </span></p>
-                <table className="inventory-add-table">
-                    <thead>
+            <div className="inventorysection-add">
+            <h2>Add item to Inventory</h2>
+            <p><span style ={{fontWeight: 'bold'}}> Warning: there are no input validations </span></p>
+            <table className="inventory-add-table">
+                <thead>
                     <tr>
                         <th>Name</th>
                         <th>imageUrl</th>
@@ -397,7 +356,7 @@ const StaffView = () => {
                                     onChange={(e) => setitem_url(e.target.value)}
                                 /></td>
                         <td><input
-                                    type="text"
+                                    type="number"
                                     placeholder="Item Quantity"
                                     value={item_quantity}
                                     onChange={(e) => setitem_quantity(e.target.value)}
@@ -414,7 +373,7 @@ const StaffView = () => {
                             </div>
                         </td>
                         <td><input
-                                    type="text"
+                                    type="number"
                                     placeholder="Item Calories"
                                     value={item_calories}
                                     onChange={(e) => setitem_calories(e.target.value)}
@@ -435,40 +394,15 @@ const StaffView = () => {
                         </tr>
                     </tbody>
                 </table>
-                <div>
-                <h2>Edit Inventory Item</h2>
-                <h4 style={{textAlign:'center'}}>(You may leave fields blank to keep the previous value)</h4>
-                <select value={selectedItemName} onChange={e => setSelectedItemName(e.target.value)}>
-                    <option value="">-- Select Item --</option>
-                    {inventory.map((item, index) => (
-                        <option key={index} value={item.name}>{item.name}</option>
-                    ))}
-                </select>
-
-                <div>
-                    <p> <input type="text" name="imageurl" placeholder="Image URL" value={formData.imageurl} onChange={handleChange} /></p>
-                    <p> <input type="number" name="quantity" placeholder="Quantity" value={formData.quantity} onChange={handleChange}  /></p>
-                        <p><input type="text" name="category" placeholder="Category" value={formData.category} onChange={handleChange} /></p>
-                            <p> <input type="number" name="calories" placeholder="Calories" value={formData.calories} onChange={handleChange}  /></p>
-                                <p><input type="number" name="protein" placeholder="Protein" value={formData.protein} onChange={handleChange}  /></p>
-                </div>
-
-                <button onClick={updateInventoryItem}>Update Item</button>
             </div>
-            </div>
-            
-
-            
-            )}
-            {inventorymenu ==='update_item' &&(
                 <div className="inventorysection">
                 <h2>Edit item to Inventory</h2>
-                <p><span style ={{fontWeight: 'bold'}}> Warning: there are no input validations </span></p>
-                <table className="inventory-add-table">
+                <h4 style={{textAlign:'center'}}>(You may leave fields blank to keep the previous value)</h4>      
+                 <table className="inventory-add-table">
                     <thead>
                     <tr>
                         <th>Name</th>
-                        <th>imageUrl</th>
+                        <th>ImageUrl</th>
                         <th>Quantity</th>
                         <th>Category</th>
                         <th>Calories</th>
@@ -480,53 +414,32 @@ const StaffView = () => {
                     <tr>
                         <td> 
                             <select 
-                            value={item_name} className = "name_dropdown" 
-                            onChange={handlefillin}>
-                                <option value="">select a item</option>
-                                {InventoryItem.map(item => (
-                                    <option>{item.name}</option>
-                                ))}
+                           value={selectedItemName} onChange={e => setSelectedItemName(e.target.value)}>
+                           <option value="">-- Select Item --</option>
+                           {inventory.map((item, index) => (
+                               <option key={index} value={item.name}>{item.name}</option>
+                           ))}
                             </select>
 
                         </td>
-                        <td><input
-                                    type="text"
-                                    placeholder="Item Url"
-                                    value={item_url}
-                                    onChange={(e) => setitem_url(e.target.value)}
-                                /></td>
-                        <td><input
-                                    type="text"
-                                    placeholder="Item Quantity"
-                                    value={item_quantity}
-                                    onChange={(e) => setitem_quantity(e.target.value)}
+                        <td>
+                            <input type="text" name="imageurl" placeholder="Image URL" value={formData.imageurl} onChange={handleChange}
                                 /></td>
                         <td>
-                            <div>
-                                <select 
-                                value={item_category}  className="category"
-                                onChange={(e) => setitem_category(e.target.value)}>
-                                    <option value="">select a category</option>
-                                    <option value="perishable">perishable</option>
-                                    <option value="non-perishable">non-perishable</option>
-                                </select>
-                            </div>
-                        </td>
-                        <td><input
-                                    type="text"
-                                    placeholder="Item Calories"
-                                    value={item_calories}
-                                    onChange={(e) => setitem_calories(e.target.value)}
+                            <input type="number" name="quantity" placeholder="Quantity" value={formData.quantity} onChange={handleChange}
                                 /></td>
-                        <td><input
-                                    type="text"
-                                    placeholder="Item Protein"
-                                    value={item_protein}
-                                    onChange={(e) => setitem_protein(e.target.value)}
+                        <td>
+                             <input type="text" name="category" placeholder="Category" value={formData.category} onChange={handleChange}  />
+                        </td>
+                        <td>    
+                            <input  type="number" name="calories" placeholder="Calories" value={formData.calories} onChange={handleChange}
+                                /></td>
+                        <td>
+                            <input  type="text" name="protein" placeholder="Protein" value={formData.protein} onChange={handleChange} 
                                 /></td>
                         <td>
                         <div className="action-btn">
-                            <button className="accept" onClick={handleupdateItem}> 
+                            <button className="accept" onClick={updateInventoryItem}> 
                                 Update item
                             </button>
                         </div>
@@ -535,7 +448,6 @@ const StaffView = () => {
                     </tbody>
                 </table>
             </div>
-            )}
             
         </div>
 

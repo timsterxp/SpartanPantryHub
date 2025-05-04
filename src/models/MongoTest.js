@@ -1,5 +1,5 @@
 const express = require('express');
-const {connectToDB,  checkUser, sendRequestToDB,retrieveRequests, changeRole,removeRequest, retrieveRequest, denyOrder, retrieveInventory, retrieveRecipe, reduceVisits, senditemToinventoryDB, retrieveOrders, changeOrderToReady, changeOrderToComplete, getOrderHistory, updateItem } = require('./MongoModel');
+const {connectToDB,  checkUser, sendRequestToDB,retrieveRequests, changeRole,removeRequest, retrieveRequest, denyOrder, retrieveInventory, retrieveRecipe, reduceVisits, senditemToinventoryDB, retrieveOrders, changeOrderToReady, changeOrderToComplete, getOrderHistory } = require('./MongoModel');
 const cors = require ('cors');
 const mongoose = require("mongoose");
 
@@ -108,10 +108,6 @@ app.post("/api/order/history", async(req, res) => {
     }
 });
 
-app.post("/api/inventory-update/send", async(req, res) => {
-    const {name, imageUrl, quantity, category, calories, protein} = req.body;
-    await updateItem(name, imageUrl, quantity, category, calories, protein);
-})
 
 app.post("/api/user-check", async(req, res) => {
     const {name, email} = req.body;
