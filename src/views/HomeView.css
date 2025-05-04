@@ -1,10 +1,11 @@
 .centered {
-    width: 800px;       /* Set your desired width */
-    margin: 0 auto;     /* Horizontally center the div */
+    width: 800px; /* Set your desired width */
+    margin: 0 auto; /* Horizontally center the div */
     text-align: center; /* Optional: center text inside the div */
 }
+
 figcaption {
-    text-align:center;
+    text-align: center;
 }
 
 .button-3d {
@@ -22,6 +23,7 @@ figcaption {
     flex: 1;
     text-align: left;
 }
+
 .hours-container {
     display: flex;
     align-items: flex-start;
@@ -29,6 +31,7 @@ figcaption {
     gap: 0px;
     padding: 20px;
 }
+
 .map img {
     max-width: 100%;
     height: auto;

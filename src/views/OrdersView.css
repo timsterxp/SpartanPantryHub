@@ -1,3 +1,5 @@
+/*CSS for Order History Screen. Contains different colors for different statuses */
+
 .orders-view {
     padding: 20px;
     font-family: sans-serif;
@@ -58,7 +60,8 @@ h2 {
     background-color: #28a745;
     color: #fff;
 }
-.status.cancelled{
+
+.status.cancelled {
     background-color: #dc3545;
     color: #fff;
 }
