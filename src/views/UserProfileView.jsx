@@ -1,89 +1,92 @@
-import { getUser, clearUser } from "../models/UserModel";
+import {getUser, clearUser} from "../models/UserModel";
 import './UserProfileView.css';
-import React, {useState,useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 
 const user = getUser();
 
 
 const UserProfileView = () => {
     const [showDropdown, setShowDropdown] = useState(false);
-    const [selectedRole,setSelectedRole] = useState('');
+    const [selectedRole, setSelectedRole] = useState('');
     const [text, setText] = useState('');
     const [roleRequested, setRoleRequested] = useState('');
 
+
     const handleConfirm = async () => {
+        //Ensure that if requesting student status that user provides a student ID
         if (selectedRole === 'Student' && !text) {
             alert('Please enter a Student ID.');
             return;
         }
-        if (roleRequested.role === selectedRole){
+
+        //Remove duplicate requests
+        if (roleRequested.role === selectedRole) {
             alert("This is a role you are already requesting. Please be patient");
             return;
         }
-        if (roleRequested){
+        if (roleRequested) {
             alert("You already have a pending request");
             return;
         }
 
         alert("You submitted the request!");
+        //Close drop down to prevent multiple requests before DB can react
         setShowDropdown(!showDropdown);
 
         try {
-            const res = await fetch("http://localhost:5000/api/role-change/send",{
+            const res = await fetch("http://localhost:5000/api/role-change/send", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({name:user.name,email:user.email,role:selectedRole,text:text}),
+                body: JSON.stringify({name: user.name, email: user.email, role: selectedRole, text: text}),
             });
 
-        }catch (error){
+        } catch (error) {
             console.error("Error creating request:", error);
         }
 
     }
 
 
+    const updatedData = {
+        role: selectedRole,
+        studentId: selectedRole === 'Student' ? text : null,
+    };
 
-        const updatedData = {
-            role: selectedRole,
-            studentId: selectedRole === 'Student' ? text : null,
-        };
-
-
-    const checkCurrentRequests = async() => {
+    //Pull from MongoDB all current requests to be able to ensure no duplicate requests
+    const checkCurrentRequests = async () => {
         try {
             const res = await fetch("http://localhost:5000/api/role-change/check", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({email:user.email}),
+                body: JSON.stringify({email: user.email}),
             });
             const data = await res.json();
             setRoleRequested(data);
 
-        } catch (error){
+        } catch (error) {
             console.log(error);
         }
     }
 
 
-
-
-        return (
-            <div className="user-profile-container">
+    return (
+        <div className="user-profile-container">
             <h2>You are logged in with the following information:</h2>
             <h2>Name: {user.name}</h2>
             <p>Email: {user.email}</p>
-                <p> Role: {user.role}</p>
-                {user.text && (
-                    <p>{user.role === "Student" ? "Student ID:" : "Extra Info:"} {user.text}</p>
-                )}
+            <p> Role: {user.role}</p>
+            {user.text && (
+                <p>{user.role === "Student" ? "Student ID:" : "Extra Info:"} {user.text}</p>
+            )}
 
-                {user.visits !== undefined && (
-                    <p>You have {user.visits} remaining visit{user.visits !== 1 && 's'} available this week</p>
-                )}
+            {/* Change text based on visits */}
+            {user.visits !== undefined && (
+                <p>You have {user.visits} remaining visit{user.visits !== 1 && 's'} available this week</p>
+            )}
 
             <div>
 
@@ -112,7 +115,8 @@ const UserProfileView = () => {
 
                         {selectedRole === 'Student' && (
                             <>
-                                <p className ="instruction-text">Important: You must have completed the online survey before requesting online access to the pantry.</p>
+                                <p className="instruction-text">Important: You must have completed the online survey
+                                    before requesting online access to the pantry.</p>
                                 <p>
                                     If you have already done so, please enter your Student ID here.
                                 </p>
@@ -127,23 +131,25 @@ const UserProfileView = () => {
 
                         {selectedRole === 'Staff' && (
                             <>
-                                <p className ="instruction-text">Important: Please notify your supervisor prior to requesting staff access</p>
+                                <p className="instruction-text">Important: Please notify your supervisor prior to
+                                    requesting staff access</p>
 
                             </>
                         )}
 
                         {selectedRole === 'Donor' && (
                             <>
-                                <p className ="instruction-text">Thank you for signing up to be a donor. Please provide any information you think may be necessary such as company affiliation or contact information below</p>
+                                <p className="instruction-text">Thank you for signing up to be a donor. Please provide
+                                    any information you think may be necessary such as company affiliation or contact
+                                    information below</p>
                                 <input
                                     type="text"
                                     placeholder=""
-                                    value = {text}
+                                    value={text}
                                     onChange={(e) => setText(e.target.value)}
                                 />
                             </>
                         )}
-
 
 
                         <button
@@ -154,17 +160,18 @@ const UserProfileView = () => {
                     </div>
                 )}
             </div>
-                <div>
-                    {roleRequested ? (
-                        <>
+            <div>
+                {roleRequested ? (
+                    <>
 
-                        <p>Warning! You already have a request pending. You are currently requesting the role below. Please wait for the previous request to be reviewed before requesting another.</p>
-                            <td> {roleRequested.role}</td>
-                        </>
-                    ) : null}
+                        <p>Warning! You already have a request pending. You are currently requesting the role below.
+                            Please wait for the previous request to be reviewed before requesting another.</p>
+                        <td> {roleRequested.role}</td>
+                    </>
+                ) : null}
 
 
-                </div>
+            </div>
 
         </div>
 

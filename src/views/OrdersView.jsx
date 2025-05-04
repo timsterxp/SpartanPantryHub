@@ -7,13 +7,14 @@ const user = getUser();
 const OrdersView = () => {
     const [expandedOrderId, setExpandedOrderId] = useState(null);
 
-    // Orders needs to be retrieved from DB, most likely by email
-    const [orders, setOrders]  = useState( []);
+    // Set orders from the DB
+    const [orders, setOrders] = useState([]);
 
     const toggleExpand = (id) => {
         setExpandedOrderId(expandedOrderId === id ? null : id);
     };
 
+    //Retrieve history by the users.text (which is studentID)
     useEffect(() => {
         fetch('http://localhost:5000/api/order/history', {
             method: 'POST',
@@ -26,8 +27,8 @@ const OrdersView = () => {
         })
             .then(res => res.json())
             .then((data) => {
-                console.log("Raw data from backend:", data);
 
+                // Format the data again to prevent issues in mongoDB
                 const formatted = data.map(order => ({
                     id: order._id, // rename _id to id
                     items: order.items,
@@ -41,6 +42,7 @@ const OrdersView = () => {
             })
             .catch(err => console.log("Error fetching orders:", err));
     }, []);
+
     return (
         <div className="orders-view">
             <h2>My Orders</h2>

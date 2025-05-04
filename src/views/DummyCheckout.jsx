@@ -7,7 +7,7 @@ import {getUser} from "../models/UserModel";
 
 const user = getUser();
 
-//dummyitems
+//dummyitems that appear if database is having problems
 const cartItems = [
     { id: 1, name: "Milk", category: "perishable", quantity: 1 },
     { id: 2, name: "Apple", category: "perishable", quantity: 1 },
@@ -17,7 +17,7 @@ const cartItems = [
 ];
 
 const DummyCheckout = () => {
-    // use state for the cart items
+
     const [cart, setCart] = useState(cartItems);
     const [errorMessage, setErrorMessage] = useState("");
     const [updateCart, setUpdateCart] = useState(false);
@@ -41,10 +41,12 @@ const DummyCheckout = () => {
     const handleDecrease = (item) => {
         const existingItemIndex = cart.findIndex(cartItem => cartItem.name === item.name);
 
-        if (cart[existingItemIndex].quantity > 1) {
 
+        if (cart[existingItemIndex].quantity > 1) {
             cart[existingItemIndex].quantity -= 1;
         }
+
+        //Remove from cart if quantity is 1 and decreasing
         if (cart[existingItemIndex].quantity === 1) {
 
            cart.splice(existingItemIndex, 1);
@@ -68,6 +70,7 @@ const DummyCheckout = () => {
         setUpdateCart(prev => !prev);
     };
 
+    //Set Cart into a better format for sending to MongoDB
     const prepareCartForDatabase = () => {
         const cartData = cart.map(item => ({
             name: item.name,
@@ -76,6 +79,7 @@ const DummyCheckout = () => {
         return cartData;
     };
 
+    //use POST to send to database and let user know if success
     const sendCartToDatabase = async () => {
         const cartData = prepareCartForDatabase();  // Get the prepared cart data
 
@@ -117,19 +121,22 @@ const DummyCheckout = () => {
             return;
         }
 
+        //If user has no more visits, alert user
         if (updateUser.visits===0){
             setErrorMessage("You have used up your visits for the week");
             return;
         }
         setErrorMessage("");
+
         // Proceed with placing the order
         sendCartToDatabase();
         alert("Order placed!");
 
+        //Subtract localStorage visits, as to prevent multiple checkouts if the DB does not update in time
         updateUser.visits -=1;
         localStorage.setItem("user", JSON.stringify(updateUser));
 
-        //add order to database, and set cart to empty
+        //and set cart to empty and then remove it to ensure no traces
         const emptyCart = []
         setCart(emptyCart)
         localStorage.removeItem("cart");
