@@ -1,5 +1,7 @@
 //Starter code directly fron MongoDB start + minor fixes
 
+//File that contains many of the Mongo Functions we utilize over in MongoTest.
+
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
@@ -16,6 +18,11 @@ const client = new MongoClient(uri, {
 });
 
 let db;
+
+/**
+ * Basic connection to DB; Provided by MongoDB documentation
+ * @returns {Promise<Db>}
+ */
 async function connectToDB() {
     try {
         await client.connect();
@@ -28,32 +35,44 @@ async function connectToDB() {
     return db;
 }
 
-async function retrieveRequests(req,res) {
+/**
+ * Method to either create a new db entry for user, or retrieve current db entry
+ * @param name - Name of gmail account logged in
+ * @param email - Email of gmail account
+ * @returns {Promise<Document>}
+ */
+async function checkUser(name, email){
     try {
-        if (!db){
-            const db = await connectToDB();
+        const db = await connectToDB();
+        const usersCollections = db.collection("users");
+        let user = await usersCollections.findOne({ email });
+        if (!user) {
+            const newUser = {name: name, email: email, role: 'guest'};
+            const result = await usersCollections.insertOne(newUser);
+            user = {_id: result._id, ...newUser};
+        }else {
+            return user;
         }
-        const requestCollections = db.collection("requests");
-        const allRequests = await requestCollections.find({}).toArray();
-        res.json(allRequests);
-    } catch (err) {
-        console.error("Error connecting to MongoDB:", err);
+    }catch (error){
+        console.error("Error creating user:", error);
     }
+
 }
 
-async function retrieveOrders(req,res) {
-    try {
-        if (!db){
-            const db = await connectToDB();
-        }
-        const ordersCollections = db.collection("orders");
-        const allRequests = await ordersCollections.find({}).toArray();
-        res.json(allRequests);
-    } catch (err) {
-        console.error("Error connecting to MongoDB:", err);
-    }
-}
-//retrieves inventory from the db
+
+
+
+
+/**
+ * Below will be the set of database methods that a pantry-user will call
+ */
+
+/**
+ * Method to retrieve current pantry stock
+ * @param req
+ * @param res- Response contains all the inventory items for a pantry user to view
+ * @returns {Promise<void>}
+ */
 async function retrieveInventory(req,res) {
     try {
         if (!db){
@@ -66,19 +85,13 @@ async function retrieveInventory(req,res) {
         console.error("Error connecting to MongoDB:", err);
     }
 }
-//adds an item to the db
-async function senditemToinventoryDB(name, imageUrl, quantity, category, calories, protein){//item parameters that are needed for the db
-    try {
-        const db = await connectToDB();
-        const inventoryCollections = db.collection("inventory");
-        const newitem = {name: name, imageUrl: imageUrl, quantity: quantity, category: category, calories: calories, protein: protein};//creates the new item
-        const result = await inventoryCollections.insertOne(newitem);
-    }catch (error){
-        console.error("Error creating request:", error);
-    }
-}
 
-
+/**
+ * Method for pantry user to view recipes
+ * @param req
+ * @param res- Response contains the list of recipes
+ * @returns {Promise<void>}
+ */
 async function retrieveRecipe(req,res) {
     try {
         if (!db){
@@ -92,6 +105,97 @@ async function retrieveRecipe(req,res) {
     }
 }
 
+/**
+ * Guests and Students may utilize this to gain a new role
+ * @param name - User Name
+ * @param email - User Email
+ * @param role - Role Requested
+ * @param text - Extra info (Such as Student ID)
+ * @returns {Promise<void>}
+ */
+async function sendRequestToDB(name,email, role, text){
+    try {
+        const db = await connectToDB();
+        const requestCollections = db.collection("requests");
+        const newRequest = {name: name, email: email, role: role, text: text};
+        const result = await requestCollections.insertOne(newRequest);
+    }catch (error){
+        console.error("Error creating request:", error);
+    }
+}
+
+
+
+/**
+ * Below is the set of methods that the staff have access to
+ */
+
+
+/**
+ * Method to retrieve all requests for staff to review
+ * @param req - request info
+ * @param res - response contains all the requests
+ * @returns {Promise<void>}
+ */
+async function retrieveRequests(req,res) {
+    try {
+        if (!db){
+            const db = await connectToDB();
+        }
+        const requestCollections = db.collection("requests");
+        const allRequests = await requestCollections.find({}).toArray();
+        res.json(allRequests);
+    } catch (err) {
+        console.error("Error connecting to MongoDB:", err);
+    }
+}
+
+/**
+ * Retrieve all the orders for staff to review
+ * @param req
+ * @param res-Response is an array of all the orders
+ * @returns {Promise<void>}
+ */
+async function retrieveOrders(req,res) {
+    try {
+        if (!db){
+            const db = await connectToDB();
+        }
+        const ordersCollections = db.collection("orders");
+        const allRequests = await ordersCollections.find({}).toArray();
+        res.json(allRequests);
+    } catch (err) {
+        console.error("Error connecting to MongoDB:", err);
+    }
+}
+
+/**
+ * Create a new item to add to inventory db
+ * @param name - item name
+ * @param imageUrl - url of picture
+ * @param quantity - quantity #
+ * @param category - perishable vs non perishable
+ * @param calories - nutrition #1
+ * @param protein - nutrition #2
+ * @returns {Promise<void>}
+ */
+async function senditemToinventoryDB(name, imageUrl, quantity, category, calories, protein){//item parameters that are needed for the db
+    try {
+        const db = await connectToDB();
+        const inventoryCollections = db.collection("inventory");
+        const newitem = {name: name, imageUrl: imageUrl, quantity: quantity, category: category, calories: calories, protein: protein};//creates the new item
+        const result = await inventoryCollections.insertOne(newitem);
+    }catch (error){
+        console.error("Error creating request:", error);
+    }
+}
+
+/**
+ *  Deny an order and append with reason
+ * @param _id - Order ID to locate an order
+ * @param text - Denial reason
+ * @returns {Promise<void>}
+ */
 async function denyOrder(_id,text ) {
     try {
         if (!db){
@@ -110,6 +214,11 @@ async function denyOrder(_id,text ) {
     }
 }
 
+/**
+ * Change an order to ready for pick up
+ * @param _id - Locate order by ID
+ * @returns {Promise<void>}
+ */
 async function changeOrderToReady(_id) {
     try {
         if (!db){
@@ -128,6 +237,11 @@ async function changeOrderToReady(_id) {
     }
 }
 
+/**
+ * Change an order to completed (Picked Up)
+ * @param _id - Order ID to locate order
+ * @returns {Promise<void>}
+ */
 async function changeOrderToComplete(_id) {
     console.log("changing this" + _id);
     const { ObjectId } = require('mongodb');
@@ -148,51 +262,11 @@ async function changeOrderToComplete(_id) {
 }
 
 
-//Fx to test the users collection db and that MongoDB can read it
-
-async function getUserNames() {
-    try {
-        const usersCollection = db.collection("users"); // Access "users" collection
-        const users = await usersCollection.find({}).toArray(); // Get all users
-        console.log("User Names: ");
-        users.forEach(user => {
-            console.log(user.name); // Assuming the user object has a "name" field
-        });
-    } catch (err) {
-        console.error("Error fetching users:", err);
-    }
-
-}
-
-async function checkUser(name, email){
-    try {
-        const db = await connectToDB();
-        const usersCollections = db.collection("users");
-        let user = await usersCollections.findOne({ email });
-        if (!user) {
-            const newUser = {name: name, email: email, role: 'guest'};
-            const result = await usersCollections.insertOne(newUser);
-            user = {_id: result._id, ...newUser};
-        }else {
-            return user;
-        }
-    }catch (error){
-        console.error("Error creating user:", error);
-    }
-
-}
-
-async function sendRequestToDB(name,email, role, text){
-    try {
-        const db = await connectToDB();
-        const requestCollections = db.collection("requests");
-        const newRequest = {name: name, email: email, role: role, text: text};
-        const result = await requestCollections.insertOne(newRequest);
-    }catch (error){
-        console.error("Error creating request:", error);
-    }
-}
-
+/**
+ * Helper method to reduce amounts  of visits after placing an order
+ * @param studentID - Locate user by studentID
+ * @returns {Promise<void>}
+ */
 async function reduceVisits(studentID) {
     try {
         const db = await connectToDB();
@@ -207,7 +281,11 @@ async function reduceVisits(studentID) {
     }
 }
 
-
+/**
+ * Retrieve a users order history
+ * @param studentID - Locate a student's history
+ * @returns {Promise<Document[]>}
+ */
 async function getOrderHistory(studentID) {
     try {
         const db = await connectToDB();
@@ -221,8 +299,13 @@ async function getOrderHistory(studentID) {
 }
 
 
-
-//Need to add studentID aspect if student
+/**
+ * Changes the role of the user with said email
+ * @param email Email being used
+ * @param role Role that is being requested
+ * @param text Extra information (such as Student ID if student)
+ * @returns {Promise<void>}
+ */
 async function changeRole(email, role, text){
     try {
         if (!db){
@@ -250,6 +333,11 @@ async function changeRole(email, role, text){
     }
 }
 
+/**
+ * Removes a role upgrade request by utilizing their email
+ * @param email - Users email to locate them
+ * @returns {Promise<void>}
+ */
 async function removeRequest(email){
     try {
         if (!db){
@@ -265,7 +353,13 @@ async function removeRequest(email){
 
 }
 
-
+/**
+ * Retrieves a users requests; used to prevent duplicates
+ * @param req - Request should contain email
+ * @param res - Response
+ * @param email - Email to use to view requests
+ * @returns {Promise<void>}
+ */
 async function retrieveRequest(req,res,email) {
     try {
         if (!db){
@@ -286,7 +380,16 @@ async function retrieveRequest(req,res,email) {
     }
 }
 
-//Fx to test all collections in MongoDB ' delete later.
+
+/**
+ * The below methods are meant for testing our database connection and are used for reference for building other database requests
+ */
+
+
+/**
+ * Method just to test connections to DB.
+ * @returns {Promise<void>}
+ */
 async function listCollections() {
     if (!db) {
         console.error("❌ DB connection is not established.");
@@ -305,6 +408,23 @@ async function listCollections() {
     }
 }
 
+/**
+ * Method to test connecting and retrieving from a DB. Not used
+ * @returns {Promise<void>}
+ */
+async function getUserNames() {
+    try {
+        const usersCollection = db.collection("users"); // Access "users" collection
+        const users = await usersCollection.find({}).toArray(); // Get all users
+        console.log("User Names: ");
+        users.forEach(user => {
+            console.log(user.name); // Assuming the user object has a "name" field
+        });
+    } catch (err) {
+        console.error("Error fetching users:", err);
+    }
+
+}
 
 
 module.exports = { connectToDB, getUserNames, listCollections, checkUser, sendRequestToDB, retrieveRequests, changeRole,removeRequest, retrieveRequest, retrieveInventory, retrieveRecipe, reduceVisits,denyOrder, senditemToinventoryDB,retrieveOrders, getOrderHistory, changeOrderToReady, changeOrderToComplete };

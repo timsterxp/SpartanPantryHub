@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap');
 
+/**
+General CSS for app-wide including a basic gradient color change background, and a default font type.
+ */
+
 .App {
   text-align: center;
 }

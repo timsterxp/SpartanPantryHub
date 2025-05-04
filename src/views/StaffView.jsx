@@ -2,6 +2,14 @@ import React, {useEffect, useState} from 'react';
 import './StaffView.css';
 import { isValidDateValue } from '@testing-library/user-event/dist/utils';
 
+/*
+StaffView will provide Staff members multiple options:
+- Accept/Deny pantry users
+- Set an order as ready to pick up/Confirm a pick up
+- Add an item to inventory
+- Edit an item in inventory
+- Log an inperson transaction
+ */
 const StaffView = () => {
     const [roleRequests, setRoleRequests] = useState([]);
     const [item_name, setitem_name] = useState('');
@@ -28,6 +36,7 @@ const StaffView = () => {
     });
 
 
+    //If confirming, change their role
     const handleConfirmRoleRequest = async (id, email, role, text) => {
         // add code to change in database
         try {
@@ -48,6 +57,7 @@ const StaffView = () => {
 
     };
 
+    //If deny, cancel their request
     const handleDenyRoleRequest = async (id, email) => {
         // add code to change in database
         try {
@@ -67,6 +77,11 @@ const StaffView = () => {
         setUpdatePage(prev => !prev);
     };
 
+    /**
+     * Confirm an order
+     * @param id- Order ID to confirm
+     * @returns {Promise<void>}
+     */
     const handleConfirmOrder = async (id) => {
         // add code to change order status to ready
         try {
@@ -84,7 +99,12 @@ const StaffView = () => {
         setOrders(prev => prev.filter(req => req.id !== id));
         setUpdatePage(prev => !prev);
     };
-
+    /**
+     * If problem with order, append it with reason
+     * @param id - Order ID
+     * @param text - Denial Reason
+     * @returns {Promise<void>}
+     */
     const problemWithOrder = async (id, text) => {
         // add code to change order status to ready
         try {
@@ -103,6 +123,11 @@ const StaffView = () => {
         setUpdatePage(prev => !prev);
     };
 
+    /**
+     * Set order as picked up
+     * @param id- Order to change
+     * @returns {Promise<void>}
+     */
     const handlePickUpOrder = async (id) => {
         console.log(id);
         try {
@@ -121,7 +146,8 @@ const StaffView = () => {
         setUpdatePage(prev => !prev);
 
     };
-    //handles when the adding button
+
+    //Add Item Button is clicked
     const handleAddItem = async () => {
         //resets the input boxes
         setitem_name("");
@@ -188,8 +214,6 @@ const StaffView = () => {
         }
     };
 
-    const [selectedItems, setSelectedItems] = useState(['']);
-
     const [studentID, setStudentID] = useState('');
     const handleStudentIDChange = (e) => {
         setStudentID(e.target.value);
@@ -200,6 +224,11 @@ const StaffView = () => {
         setQuantity(e.target.value);
     }
 
+    /**
+     * Utilizes local cart to log in-person transactions
+     * @param item - Item added
+     * @param quantity - Quantity of item
+     */
     function addLocalCart(item, quantity) {
         // Get cart from localStorage or initialize empty array
         let myCart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -224,6 +253,13 @@ const StaffView = () => {
     const handleStudentName = (e) => {
         setStudentName(e.target.value);
     }
+
+    /**
+     * Slight change to original; will utilize an input student name instead of current user name for in-person transaction done by staff
+     * @param studentName - Student name to log order
+     * @param studentID - Student ID to log order
+     * @returns {Promise<void>}
+     */
     const sendCartToDatabase = async (studentName, studentID) => {
         const cartData = JSON.parse(localStorage.getItem('cart'));
         // Retrieve user information from localStorage

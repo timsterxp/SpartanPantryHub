@@ -1,8 +1,12 @@
-// add UI code for viewing inventory
+
 import React, {useEffect, useId, useRef, useState} from 'react';
 import './InventoryView.css';
 
-
+/**
+ * InventoryView focuses on providing the user the pantry stock and an option to add to cart
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const InventoryView = () => {
     const [expandedItem, setExpandedItem] = useState(null);
     const [InventoryItem, setInventoryItem] = useState([]);

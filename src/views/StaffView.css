@@ -1,3 +1,6 @@
+/*
+CSS For the Staff Actions Page to provide more intuitiveness between the multiple actions
+ */
 .staff-view {
     padding: 20px;
     font-family: sans-serif;
@@ -136,39 +139,39 @@
     gap: 12px;
 }
 
-/* Basic table styling */
+
 table {
     width: 100%;
     border-collapse: collapse;
-    background-color: white; /* White background for the table */
+    background-color: white;
     margin-top: 20px;
 }
 
-/* Table borders and padding */
+
 table, th, td {
-    border: 1px solid #ddd; /* Light gray border */
+    border: 1px solid #ddd;
 }
 
 th, td {
-    padding: 12px 15px; /* Add padding for cells */
-    text-align: left; /* Align text to the left */
+    padding: 12px 15px;
+    text-align: left;
 }
 
-/* Header row background and text style */
+
 th {
-    background-color: #f4f4f4; /* Light gray background for header */
-    font-weight: bold; /* Make header text bold */
-    color: #333; /* Dark text color for contrast */
+    background-color: #f4f4f4;
+    font-weight: bold;
+    color: #333;
 }
 
-/* Zebra striping for table rows */
+
 tbody tr:nth-child(even) {
-    background-color: #f9f9f9; /* Slightly gray background for even rows */
+    background-color: #f9f9f9;
 }
 
-/* Hover effect for table rows */
+
 tbody tr:hover {
-    background-color: #f1f1f1; /* Light gray background on hover */
+    background-color: #f1f1f1;
 }
 
 select {

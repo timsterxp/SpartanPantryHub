@@ -4,12 +4,18 @@ import {getUser} from "../models/UserModel";
 
 const user = getUser();
 
+/**
+ * Provide the user their history of orders and their statuses
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const OrdersView = () => {
     const [expandedOrderId, setExpandedOrderId] = useState(null);
 
     // Set orders from the DB
     const [orders, setOrders] = useState([]);
 
+    //Expand orders for more information
     const toggleExpand = (id) => {
         setExpandedOrderId(expandedOrderId === id ? null : id);
     };

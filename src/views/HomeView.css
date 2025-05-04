@@ -1,7 +1,12 @@
+/**
+Basic CSS for homeview to try and create specific sections and centering
+ */
+
+
 .centered {
-    width: 800px; /* Set your desired width */
-    margin: 0 auto; /* Horizontally center the div */
-    text-align: center; /* Optional: center text inside the div */
+    width: 800px;
+    margin: 0 auto;
+    text-align: center;
 }
 
 figcaption {
@@ -14,7 +19,7 @@ figcaption {
     box-shadow: 0 6px 0 #999, 0 6px 15px rgba(0, 0, 0, 0.2);
     transition: all 0.2s ease;
     cursor: pointer;
-    background-color: #fdfdfd; /* almost white */
+    background-color: #fdfdfd;
     padding: 0;
     margin: 10px;
 }

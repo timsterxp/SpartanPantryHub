@@ -1,37 +1,57 @@
 const express = require('express');
-const {connectToDB,  checkUser, sendRequestToDB,retrieveRequests, changeRole,removeRequest, retrieveRequest, denyOrder, retrieveInventory, retrieveRecipe, reduceVisits, senditemToinventoryDB, retrieveOrders, changeOrderToReady, changeOrderToComplete, getOrderHistory } = require('./MongoModel');
-const cors = require ('cors');
+const {
+    connectToDB,
+    checkUser,
+    sendRequestToDB,
+    retrieveRequests,
+    changeRole,
+    removeRequest,
+    retrieveRequest,
+    denyOrder,
+    retrieveInventory,
+    retrieveRecipe,
+    reduceVisits,
+    senditemToinventoryDB,
+    retrieveOrders,
+    changeOrderToReady,
+    changeOrderToComplete,
+    getOrderHistory
+} = require('./MongoModel');
+const cors = require('cors');
 const mongoose = require("mongoose");
-
 const app = express();
-const PORT =  5000;
+const PORT = 5000;
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:3000" }));
+app.use(cors({origin: "http://localhost:3000"}));
 
+
+/**
+ * Below is a list of GET routes, which are fairly intuitive based on their retrieval name
+ */
 app.get("/api/test-db-connection", async (req, res) => {
     try {
         await connectToDB(); // This will ping MongoDB
-    //    await listCollections();
-        res.json({ message: "Connected to MongoDB!" });
-     // await getUserNames();
+        //    await listCollections();
+        res.json({message: "Connected to MongoDB!"});
+        // await getUserNames();
     } catch (err) {
         console.error("MongoDB error:", err);
-        res.status(500).json({ error: "MongoDB connection failed", details: err.message });
+        res.status(500).json({error: "MongoDB connection failed", details: err.message});
     }
 });
 
-//Note, need to fix send role-request to also send current role.
 app.get("/api/retrieve-request", retrieveRequests);
-
 app.get("/api/retrieve-orders", retrieveOrders);
-
 app.get("/api/retrieve-orders", retrieveOrders);
-
-app.get("/api/retrieve-inventory", retrieveInventory);// an api call to retrieve the inventory
-
+app.get("/api/retrieve-inventory", retrieveInventory);
 app.get("/api/retrieve-recipe", retrieveRecipe);
 
-app.post("/api/inventory-add/send", async(req, res) => {
+
+/**
+ * Below is a list of POST routes. The methods have been documented/commented in MongoModel.js
+ */
+
+app.post("/api/inventory-add/send", async (req, res) => {
     const {name, imageUrl, quantity, category, calories, protein} = req.body;
 
     try {
@@ -41,7 +61,7 @@ app.post("/api/inventory-add/send", async(req, res) => {
     }
 });
 
-app.post("/api/order/ready", async(req, res) => {
+app.post("/api/order/ready", async (req, res) => {
     const {_id} = req.body;
     try {
         await changeOrderToReady(_id);
@@ -49,9 +69,9 @@ app.post("/api/order/ready", async(req, res) => {
         console.error("MongoDB error:", err);
     }
 });
-app.post("/api/order/problem", async(req, res) => {
+app.post("/api/order/problem", async (req, res) => {
     const {_id, notes} = req.body;
-    console.log("I am sending" +notes);
+    console.log("I am sending" + notes);
     try {
         await denyOrder(_id, notes);
     } catch (err) {
@@ -60,15 +80,15 @@ app.post("/api/order/problem", async(req, res) => {
 });
 
 app.post("/api/inventory/update", async (req, res) => {
-    const { name, imageurl, quantity, category, calories, protein } = req.body;
+    const {name, imageurl, quantity, category, calories, protein} = req.body;
     try {
         const db = await connectToDB();
         const collection = db.collection('inventory');
 
         // Get current item from the DB
-        const currentItem = await collection.findOne({ name });
+        const currentItem = await collection.findOne({name});
         if (!currentItem) {
-            return res.status(404).json({ error: "Item not found" });
+            return res.status(404).json({error: "Item not found"});
         }
 
         // Build the update object conditionally
@@ -80,16 +100,16 @@ app.post("/api/inventory/update", async (req, res) => {
             protein: protein !== '' ? parseInt(protein) : currentItem.protein,
         };
 
-        await collection.updateOne({ name }, { $set: updatedFields });
+        await collection.updateOne({name}, {$set: updatedFields});
 
-        res.json({ success: true });
+        res.json({success: true});
     } catch (err) {
         console.error("Error updating item:", err);
-        res.status(500).json({ error: "Update failed" });
+        res.status(500).json({error: "Update failed"});
     }
 });
 
-app.post("/api/order/complete", async(req, res) => {
+app.post("/api/order/complete", async (req, res) => {
     const {_id} = req.body;
     try {
         await changeOrderToComplete(_id);
@@ -98,7 +118,7 @@ app.post("/api/order/complete", async(req, res) => {
     }
 });
 
-app.post("/api/order/history", async(req, res) => {
+app.post("/api/order/history", async (req, res) => {
     const {userID} = req.body;
     try {
         const orders = await getOrderHistory(userID);
@@ -109,22 +129,21 @@ app.post("/api/order/history", async(req, res) => {
 });
 
 
-app.post("/api/user-check", async(req, res) => {
+app.post("/api/user-check", async (req, res) => {
     const {name, email} = req.body;
 
     try {
-        const user=await checkUser(name, email);
+        const user = await checkUser(name, email);
         res.status(200).json(user);
-    } catch (error){
+    } catch (error) {
         console.error("MongoDB error:", error);
     }
 });
 
 
-
-app.post("/api/create-order", async  (req, res) => {
+app.post("/api/create-order", async (req, res) => {
     try {
-        const { items, userName, userID } = req.body;  // Get data sent from React
+        const {items, userName, userID} = req.body;  // Get data sent from React
         const cartData = {
             items: items,
             userName: userName,
@@ -142,36 +161,36 @@ app.post("/api/create-order", async  (req, res) => {
         const inventoryCollection = db.collection("inventory");
 
         for (let item of items) {
-            const { name, quantity } = item;
+            const {name, quantity} = item;
 
             // Find the item in the inventory and decrement the quantity
-            const inventoryItem = await inventoryCollection.findOne({ name: name });
+            const inventoryItem = await inventoryCollection.findOne({name: name});
 
             if (inventoryItem) {
                 if (inventoryItem.quantity >= quantity) {
                     // Update inventory by decreasing the quantity
                     await inventoryCollection.updateOne(
-                        { name: name },
-                        { $inc: { quantity: -quantity } }  // Decrease by ordered quantity
+                        {name: name},
+                        {$inc: {quantity: -quantity}}  // Decrease by ordered quantity
                     );
                 } else {
                     // If not enough stock, handle the error (optional)
-                    res.status(400).json({ error: `Not enough stock for item: ${name}` });
+                    res.status(400).json({error: `Not enough stock for item: ${name}`});
                     return;
                 }
             }
         }
 
-        res.status(201).json({ message: "Cart saved successfully!" });
+        res.status(201).json({message: "Cart saved successfully!"});
     } catch (error) {
         console.error("Error saving cart:", error);
-        res.status(500).json({ error: "Internal server error" });
+        res.status(500).json({error: "Internal server error"});
     }
 });
 
-app.post("/api/create-order/inperson", async  (req, res) => {
+app.post("/api/create-order/inperson", async (req, res) => {
     try {
-        const { items, userName, userID } = req.body;  // Get data sent from React
+        const {items, userName, userID} = req.body;  // Get data sent from React
         const cartData = {
             items: items,
             userName: userName,
@@ -189,45 +208,45 @@ app.post("/api/create-order/inperson", async  (req, res) => {
         const inventoryCollection = db.collection("inventory");
 
         for (let item of items) {
-            const { name, quantity } = item;
+            const {name, quantity} = item;
 
             // Find the item in the inventory and decrement the quantity
-            const inventoryItem = await inventoryCollection.findOne({ name: name });
+            const inventoryItem = await inventoryCollection.findOne({name: name});
 
             if (inventoryItem) {
                 if (inventoryItem.quantity >= quantity) {
                     // Update inventory by decreasing the quantity
                     await inventoryCollection.updateOne(
-                        { name: name },
-                        { $inc: { quantity: -quantity } }  // Decrease by ordered quantity
+                        {name: name},
+                        {$inc: {quantity: -quantity}}  // Decrease by ordered quantity
                     );
                 } else {
                     // If not enough stock, handle the error (optional)
-                    res.status(400).json({ error: `Not enough stock for item: ${name}` });
+                    res.status(400).json({error: `Not enough stock for item: ${name}`});
                     return;
                 }
             }
         }
 
-        res.status(201).json({ message: "Cart saved successfully!" });
+        res.status(201).json({message: "Cart saved successfully!"});
     } catch (error) {
         console.error("Error saving cart:", error);
-        res.status(500).json({ error: "Internal server error" });
+        res.status(500).json({error: "Internal server error"});
     }
 });
 
-app.post("/api/role-change/confirm", async(req, res) => {
+app.post("/api/role-change/confirm", async (req, res) => {
     const {email, role, text} = req.body;
-    await changeRole(email,role,text);
+    await changeRole(email, role, text);
 })
 
-app.post("/api/role-change/deny", async(req, res) => {
+app.post("/api/role-change/deny", async (req, res) => {
     const {email} = req.body;
     await removeRequest(email);
 })
 
 
-app.post("/api/role-change/send", async(req, res) => {
+app.post("/api/role-change/send", async (req, res) => {
     const {name, email, role, text} = req.body;
 
     try {
@@ -237,11 +256,11 @@ app.post("/api/role-change/send", async(req, res) => {
     }
 });
 
-app.post("/api/role-change/check", async(req, res) => {
+app.post("/api/role-change/check", async (req, res) => {
     const {email} = req.body;
     try {
-        await retrieveRequest(req,res,email);
-    }catch (err){
+        await retrieveRequest(req, res, email);
+    } catch (err) {
         console.error("MongoDB error:", err);
     }
 })

@@ -1,6 +1,8 @@
 import React from 'react';
 
-// This page is meant to provide steps for how the Pantry Works(Including Signing UP) as well as other resources SJSU-Cares Provides.
+/*
+ This page is meant to provide steps for how the Pantry Works(Including Signing UP) as well as other resources SJSU-Cares Provides.
+ */
 const MoreResourcesView = () => {
     return (
         <div style={{padding: '100px 100px 100px 100px'}}>

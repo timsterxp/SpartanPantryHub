@@ -1,5 +1,7 @@
-// add code for viewing checkout screen
-
+/**
+ * This controls the Checkout screen
+ * Users can adjust quantities if necessary and then place an order
+ */
 
 import React, {useEffect, useState} from 'react';
 import './CheckoutView.css'
@@ -7,7 +9,10 @@ import {getUser} from "../models/UserModel";
 
 const user = getUser();
 
-//dummyitems that appear if database is having problems
+/**
+ * These are dummy items meant to only appear if database is having issues connecting
+ * @type {[{id: number, name: string, category: string, quantity: number},{id: number, name: string, category: string, quantity: number},{id: number, name: string, category: string, quantity: number},{id: number, name: string, category: string, quantity: number},{id: number, name: string, category: string, quantity: number}]}
+ */
 const cartItems = [
     { id: 1, name: "Milk", category: "perishable", quantity: 1 },
     { id: 2, name: "Apple", category: "perishable", quantity: 1 },
@@ -18,6 +23,7 @@ const cartItems = [
 
 const DummyCheckout = () => {
 
+    // Allow more ways to update Cart
     const [cart, setCart] = useState(cartItems);
     const [errorMessage, setErrorMessage] = useState("");
     const [updateCart, setUpdateCart] = useState(false);

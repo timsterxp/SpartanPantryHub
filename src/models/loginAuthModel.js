@@ -1,5 +1,3 @@
-
-
 //Token may be used for future authentications but we probably won't need it for this project
 //As we are only requiring auth for login itself and should not require anymore auths
 
@@ -7,7 +5,11 @@
 
 import { jwtDecode } from "jwt-decode";
 
-// Accepts the Google credential token, decodes it, and returns user info
+/**
+ * Process and gain information about a user. Picture is not used but may be used in future features.
+ * @param credentialResponse -> The response is then given to Google's decoder to retrieve information.
+ * @returns {{name: *, email: *, picture: *}|null}
+ */
 export const processGoogleLogin = (credentialResponse) => {
     try {
         const decoded = jwtDecode(credentialResponse.credential);

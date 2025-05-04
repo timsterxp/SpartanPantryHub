@@ -3,7 +3,9 @@ import {useNavigate} from "react-router-dom";
 import {saveUser} from "../models/UserModel";
 import {processGoogleLogin} from "../models/loginAuthModel";
 
-
+/*
+Basic LoginView that only contains a Google Login button
+ */
 const LoginView = () => {
     const navigate = useNavigate();
 

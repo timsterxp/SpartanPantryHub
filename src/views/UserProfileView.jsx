@@ -4,6 +4,11 @@ import React, {useState, useEffect} from 'react';
 
 const user = getUser();
 
+/**
+ * Profile view will let users know who they are, their email, role, and if student, their ID and amount of visits remaining
+ * @returns {JSX.Element}
+ * @constructor
+ */
 
 const UserProfileView = () => {
     const [showDropdown, setShowDropdown] = useState(false);
