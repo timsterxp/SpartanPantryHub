@@ -25,7 +25,9 @@ app.get("/api/retrieve-request", retrieveRequests);
 
 app.get("/api/retrieve-orders", retrieveOrders);
 
-app.get("/api/retrieve-inventory", retrieveInventory);
+app.get("/api/retrieve-orders", retrieveOrders);
+
+app.get("/api/retrieve-inventory", retrieveInventory);// an api call to retrieve the inventory
 
 app.get("/api/retrieve-recipe", retrieveRecipe);
 
@@ -105,6 +107,7 @@ app.post("/api/order/history", async(req, res) => {
         console.error("MongoDB error:", err);
     }
 });
+
 
 app.post("/api/user-check", async(req, res) => {
     const {name, email} = req.body;

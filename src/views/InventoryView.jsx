@@ -1,12 +1,12 @@
 // add UI code for viewing inventory
-import React, {useEffect, useId, useState} from 'react';
+import React, {useEffect, useId, useRef, useState} from 'react';
 import './InventoryView.css';
 
 
 const InventoryView = () => {
     const [expandedItem, setExpandedItem] = useState(null);
     const [InventoryItem, setInventoryItem] = useState([]);
-
+// handles the expanding of the item cards
     const handleToggle = (id) => {
         setExpandedItem(prev => (prev === id ? null : id));
     };
@@ -38,7 +38,7 @@ const InventoryView = () => {
     InventoryItem.sort((a, b) => a.name.localeCompare(b.name))
     return (
         <div className="inventory-grid">
-            {InventoryItem.map(item => (
+            {InventoryItem.map(item => ( //map each element in the inventoryitem array and displays it
                 <div
                     key={item._id.toString()}
                     className={`item-card-inventory ${expandedItem === item.id ? 'expanded' : ''}`}
