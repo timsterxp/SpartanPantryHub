@@ -57,6 +57,36 @@ app.post("/api/order/problem", async(req, res) => {
     }
 });
 
+app.post("/api/inventory/update", async (req, res) => {
+    const { name, imageurl, quantity, category, calories, protein } = req.body;
+    try {
+        const db = await connectToDB();
+        const collection = db.collection('inventory');
+
+        // Get current item from the DB
+        const currentItem = await collection.findOne({ name });
+        if (!currentItem) {
+            return res.status(404).json({ error: "Item not found" });
+        }
+
+        // Build the update object conditionally
+        const updatedFields = {
+            imageurl: imageurl || currentItem.imageurl,
+            quantity: quantity !== '' ? parseInt(quantity) : currentItem.quantity,
+            category: category || currentItem.category,
+            calories: calories !== '' ? parseInt(calories) : currentItem.calories,
+            protein: protein !== '' ? parseInt(protein) : currentItem.protein,
+        };
+
+        await collection.updateOne({ name }, { $set: updatedFields });
+
+        res.json({ success: true });
+    } catch (err) {
+        console.error("Error updating item:", err);
+        res.status(500).json({ error: "Update failed" });
+    }
+});
+
 app.post("/api/order/complete", async(req, res) => {
     const {_id} = req.body;
     try {
