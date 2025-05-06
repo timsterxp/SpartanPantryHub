@@ -66,6 +66,8 @@ const CheckoutView = () => {
 
     // increase the quantity of the specified item
     const handleIncrease = (item) => {
+        console.log(item);
+        console.log(cart);
         const existingItemIndex = cart.findIndex(cartItem => cartItem.name === item.name);
 
             cart[existingItemIndex].quantity += 1;
@@ -92,7 +94,7 @@ const CheckoutView = () => {
         // Retrieve user information from localStorage
         const userName = user.name;
         const userID = user.text;
-
+        const updateUser = JSON.parse(localStorage.getItem("user"));
         const payload = {
             items: cartData,  // Items in the cart (name and quantity)
             userName: userName,  // User's name
@@ -109,10 +111,18 @@ const CheckoutView = () => {
             });
 
             const result = await response.json();
-            if (result.ok){
+            if (response.ok){
                 alert("Your order has been placed successfully");
-            }else {
+                //Subtract localStorage visits, as to prevent multiple checkouts if the DB does not update in time
+                updateUser.visits -=1;
+                localStorage.setItem("user", JSON.stringify(updateUser));
 
+                //and set cart to empty and then remove it to ensure no traces
+                const emptyCart = []
+                setCart(emptyCart)
+                localStorage.removeItem("cart");
+            }else {
+                alert(`Error creating your order (Status: ${response.status}): ${result.error}` );
             }
         } catch (error) {
             console.error("Error sending cart to database:", error);
@@ -128,7 +138,7 @@ const CheckoutView = () => {
         }
 
         //If user has no more visits, alert user
-        if (updateUser.visits===0){
+        if (updateUser.visits===0 || updateUser.visits<0){
             setErrorMessage("You have used up your visits for the week");
             return;
         }
@@ -136,16 +146,7 @@ const CheckoutView = () => {
 
         // Proceed with placing the order
         sendCartToDatabase();
-        alert("Order placed!");
 
-        //Subtract localStorage visits, as to prevent multiple checkouts if the DB does not update in time
-        updateUser.visits -=1;
-        localStorage.setItem("user", JSON.stringify(updateUser));
-
-        //and set cart to empty and then remove it to ensure no traces
-        const emptyCart = []
-        setCart(emptyCart)
-        localStorage.removeItem("cart");
     };
 
 
@@ -198,13 +199,13 @@ const CheckoutView = () => {
                             <div className="quantity-controls">
                                 <button
                                     className="reduce-btn"
-                                    onClick={() => handleDecrease(item.id)}
+                                    onClick={() => handleDecrease(item)}
                                 >
                                     &ndash;
                                 </button>
                                 <button
                                     className="increase-btn"
-                                    onClick={() => handleIncrease(item.id)}
+                                    onClick={() => handleIncrease(item)}
                                 >
                                     +
                                 </button>
