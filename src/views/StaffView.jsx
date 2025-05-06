@@ -30,7 +30,7 @@ const StaffView = () => {
     const [selectedItemName, setSelectedItemName] = useState('');
     const [formData, setFormData] = useState({
         name: '',
-        imageurl: '',
+        imageUrl: '',
         quantity: '',
         category: '',
         calories: '',
@@ -568,7 +568,7 @@ const StaffView = () => {
 
                         </td>
                         <td>
-                            <input type="text" name="imageurl" placeholder="Image URL" value={formData.imageurl}
+                            <input type="text" name="imageurl" placeholder="Image URL" value={formData.imageUrl}
                                    onChange={handleChange}
                             /></td>
                         <td>
