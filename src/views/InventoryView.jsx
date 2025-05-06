@@ -1,6 +1,7 @@
 
 import React, {useEffect, useId, useRef, useState} from 'react';
 import './InventoryView.css';
+import {getUser} from "../models/UserModel";
 
 /**
  * InventoryView focuses on providing the user the pantry stock and an option to add to cart
@@ -10,6 +11,7 @@ import './InventoryView.css';
 const InventoryView = () => {
     const [expandedItem, setExpandedItem] = useState(null);
     const [InventoryItem, setInventoryItem] = useState([]);
+    const user = getUser();
 // handles the expanding of the item cards
     const handleToggle = (id) => {
         setExpandedItem(prev => (prev === id ? null : id));
@@ -57,9 +59,12 @@ const InventoryView = () => {
                             <p><strong>Calories:</strong> {item.calories} </p>
                             <p><strong>Protein:</strong> {item.protein} g</p>
                             <p><strong>Category:</strong> {item.category}</p>
-                            <button className="add-to-cart" onClick={() => handleAddItem(item)}>
-                                Add to Cart
-                            </button>
+                            {user.role === 'Student' ? (
+                                <button className="add-to-cart" onClick={() => handleAddItem(item)}>
+                                    Add to Cart
+                                </button>
+                            ):null }
+
                         </div>
                     )}
                 </div>
