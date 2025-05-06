@@ -89,9 +89,9 @@ const UserProfileView = () => {
             )}
 
             {/* Change text based on visits */}
-            {user.visits !== undefined && (
+            {user.role === 'Student' ?  (
                 <p>You have {user.visits} remaining visit{user.visits !== 1 && 's'} available this week</p>
-            )}
+            ): null}
 
             <div>
 
