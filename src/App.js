@@ -31,7 +31,10 @@ function App() {
                     <div className="appleNavigation">
                         <ul>
                             <li><Link to="/home" className="navItems">Home</Link></li>
-                            <li><Link to="/RoleRequest" className="navItems">Profile</Link></li>
+                            {user ? (
+                                <li><Link to="/RoleRequest" className="navItems">Profile</Link></li>
+                            ): null }
+
 
                             {role=== 'Student' ? (
                                 <>

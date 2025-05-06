@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import './StaffView.css';
 import {isValidDateValue} from '@testing-library/user-event/dist/utils';
+import {getUser} from "../models/UserModel";
+import {Link} from "react-router-dom";
 
 /*
 StaffView will provide Staff members multiple options:
@@ -35,10 +37,13 @@ const StaffView = () => {
         protein: ''
     });
 
+    const user = getUser();
+
 
     //If confirming, change their role
     const handleConfirmRoleRequest = async (id, email, role, text) => {
         // add code to change in database
+        setRoleRequests(prev => prev.filter(req => req.email !== email));
         try {
             const res = await fetch("http://localhost:5000/api/role-change/confirm", {
                 method: "POST",
@@ -52,7 +57,7 @@ const StaffView = () => {
         } catch (error) {
             console.log(error);
         }
-        setRoleRequests(prev => prev.filter(req => req.email !== email));
+
         setUpdatePage(prev => !prev);
 
 
@@ -61,6 +66,7 @@ const StaffView = () => {
     //If deny, cancel their request
     const handleDenyRoleRequest = async (id, email) => {
         // add code to change in database
+        setRoleRequests(prev => prev.filter(req => req.email !== email));
         try {
             const res = await fetch("http://localhost:5000/api/role-change/deny", {
                 method: "POST",
@@ -74,7 +80,7 @@ const StaffView = () => {
         } catch (error) {
             console.log(error);
         }
-        setRoleRequests(prev => prev.filter(req => req.email !== email));
+
         setUpdatePage(prev => !prev);
 
     };
@@ -86,6 +92,8 @@ const StaffView = () => {
      */
     const handleConfirmOrder = async (id) => {
         // add code to change order status to ready
+
+
         try {
             const res = await fetch("http://localhost:5000/api/order/ready", {
                 method: "POST",
@@ -108,7 +116,9 @@ const StaffView = () => {
      * @returns {Promise<void>}
      */
     const problemWithOrder = async (id, text) => {
-        // add code to change order status to ready
+
+
+        setOrders(prev => prev.filter(req => req._id.toString() !== id));
         try {
             const res = await fetch("http://localhost:5000/api/order/problem", {
                 method: "POST",
@@ -121,7 +131,7 @@ const StaffView = () => {
             console.log(error);
         }
 
-        setOrders(prev => prev.filter(req => req.id !== id));
+
         setUpdatePage(prev => !prev);
     };
 
@@ -131,7 +141,7 @@ const StaffView = () => {
      * @returns {Promise<void>}
      */
     const handlePickUpOrder = async (id) => {
-        console.log(id);
+        setReadyForPickUp(prev => prev.filter(req => req._id.toString() !== id));
         try {
             const res = await fetch("http://localhost:5000/api/order/complete", {
                 method: "POST",
@@ -144,7 +154,6 @@ const StaffView = () => {
             console.log(error);
         }
 
-        setOrders(prev => prev.filter(req => req.id !== id));
         setUpdatePage(prev => !prev);
 
     };
@@ -342,6 +351,8 @@ const StaffView = () => {
     inventory.sort((a, b) => a.name.localeCompare(b.name))
     return (
         <div className="staff-view">
+            { user.role === 'Staff' ? (
+            <>
             <div className="section">
                 <h2>Role Requests</h2>
                 <p><span style={{fontWeight: 'bold', textDecoration: 'underline'}}> *Important*. Before confirming students, check that they have completed the online survey. </span>
@@ -666,6 +677,14 @@ const StaffView = () => {
                     Items
                 </button>
             </div>
+
+            </>
+            ) : (
+                <Link to='/'>
+                    <p>This is a restricted area for staff only. Please log into your staff account.</p>
+                </Link>
+
+                )}
 
         </div>
 
