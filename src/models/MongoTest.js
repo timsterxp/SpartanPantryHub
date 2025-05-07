@@ -153,10 +153,6 @@ app.post("/api/create-order", async (req, res) => {
         };
 
         const db = await connectToDB();
-        const ordersCollections = db.collection("orders");
-        const result = await ordersCollections.insertOne(cartData);
-        await reduceVisits(userID);
-
 
         const inventoryCollection = db.collection("inventory");
 
@@ -182,6 +178,10 @@ app.post("/api/create-order", async (req, res) => {
         }
 
         res.status(201).json({message: "Cart saved successfully!"});
+        const ordersCollections = db.collection("orders");
+        const result = await ordersCollections.insertOne(cartData);
+        await reduceVisits(userID);
+
     } catch (error) {
         console.error("Error saving cart:", error);
         res.status(500).json({error: "Internal server error"});
