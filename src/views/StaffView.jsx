@@ -80,7 +80,6 @@ const StaffView = () => {
         } catch (error) {
             console.log(error);
         }
-
         setUpdatePage(prev => !prev);
 
     };
@@ -92,7 +91,6 @@ const StaffView = () => {
      */
     const handleConfirmOrder = async (id) => {
         // add code to change order status to ready
-
 
         try {
             const res = await fetch("http://localhost:5000/api/order/ready", {
@@ -215,7 +213,7 @@ const StaffView = () => {
             const result = await res.json();
             if (result.success) {
                 alert("Item updated successfully!");
-                setFormData({imageurl: '', quantity: '', category: '', calories: '', protein: ''});
+                setFormData({imageUrl: '', quantity: '', category: '', calories: '', protein: ''});
             } else {
                 alert("Failed to update item.");
             }
@@ -504,7 +502,7 @@ const StaffView = () => {
                             type="number"
                             placeholder="Item Quantity"
                             value={item_quantity}
-                            onChange={(e) => setitem_quantity(e.target.value)}
+                            onChange={(e) => setitem_quantity(parseInt(e.target.value))}
                         /></td>
                         <td>
                             <div>
@@ -521,13 +519,13 @@ const StaffView = () => {
                             type="number"
                             placeholder="Item Calories"
                             value={item_calories}
-                            onChange={(e) => setitem_calories(e.target.value)}
+                            onChange={(e) => setitem_calories(parseInt(e.target.value))}
                         /></td>
                         <td><input
-                            type="Double"
+                            type="number"
                             placeholder="Item Protein"
                             value={item_protein}
-                            onChange={(e) => setitem_protein(e.target.value)}
+                            onChange={(e) => setitem_protein(parseFloat(e.target.value))}
                         /></td>
                         <td>
                             <div className="action-btn">

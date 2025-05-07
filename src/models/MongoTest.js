@@ -93,11 +93,11 @@ app.post("/api/inventory/update", async (req, res) => {
 
         // Build the update object conditionally
         const updatedFields = {
-            imageUrl: imageurl || currentItem.imageurl,
+            imageUrl: imageurl || currentItem.imageUrl,
             quantity: quantity !== '' ? parseInt(quantity) : currentItem.quantity,
             category: category || currentItem.category,
             calories: calories !== '' ? parseInt(calories) : currentItem.calories,
-            protein: protein !== '' ? parseInt(protein) : currentItem.protein,
+            protein: protein !== '' ? parseFloat(protein) : currentItem.protein,
         };
 
         await collection.updateOne({name}, {$set: updatedFields});
