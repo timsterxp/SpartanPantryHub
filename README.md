@@ -1,5 +1,5 @@
-CMPE 133 Software Engineering II Project
-by: Timothy Nguyen, Vance Nguyen, Josh Pastores, Isa Pudiyapura
+Software Engineering II Project
+Contributions by: Timothy Nguyen & Vance Nguyen
 
 SJSU Food Pantry Prototype
 
